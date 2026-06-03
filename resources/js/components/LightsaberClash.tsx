@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
+import { playClashSound } from '@/lib/audio';
 
 interface Spark {
     x: number;
@@ -19,7 +20,13 @@ export default function LightsaberClash() {
     const [leftActive, setLeftActive] = useState(true);
     const [rightActive, setRightActive] = useState(true);
     const [isClashing, setIsClashing] = useState(true);
-    const [isMuted, setIsMuted] = useState(true);
+    const [isMuted, setIsMuted] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const consent = sessionStorage.getItem('audioConsent');
+            return consent !== 'true';
+        }
+        return true;
+    });
 
     // Audio node references
     const audioCtxRef = useRef<AudioContext | null>(null);
@@ -112,49 +119,10 @@ export default function LightsaberClash() {
         osc.stop(ctx.currentTime + 0.5);
     };
 
-    // Play clash explosion sound
-    const playClashSound = () => {
-        if (isMuted || !audioCtxRef.current) return;
-        const ctx = audioCtxRef.current;
-        if (ctx.state === 'suspended') ctx.resume();
-
-        // 1. Synth sweep
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(250, ctx.currentTime);
-        osc.frequency.linearRampToValueAtTime(60, ctx.currentTime + 0.3);
-        
-        gain.gain.setValueAtTime(0.2, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.3);
-
-        // 2. White noise pop
-        const bufferSize = ctx.sampleRate * 0.15; // 0.15 seconds
-        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-        const data = buffer.getChannelData(0);
-        for (let i = 0; i < bufferSize; i++) {
-            data[i] = Math.random() * 2 - 1;
-        }
-
-        const noise = ctx.createBufferSource();
-        noise.buffer = buffer;
-
-        const noiseFilter = ctx.createBiquadFilter();
-        noiseFilter.type = 'bandpass';
-        noiseFilter.frequency.value = 800;
-
-        const noiseGain = ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.25, ctx.currentTime);
-        noiseGain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
-
-        noise.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(ctx.destination);
-        noise.start();
+    // Play clash sound using the shared audio helper
+    const playClash = () => {
+        if (isMuted) return;
+        playClashSound(0.4);
     };
 
     // Handle Mute changes
@@ -195,7 +163,7 @@ export default function LightsaberClash() {
         setIsClashing(clashing);
 
         if (clashing && leftActive && rightActive) {
-            playClashSound();
+            playClash();
         }
     }, [leftActive, rightActive]);
 
@@ -290,7 +258,7 @@ export default function LightsaberClash() {
     const triggerManualClash = () => {
         initAudio();
         if (leftActive && rightActive) {
-            playClashSound();
+            playClash();
             // Spawn intensive burst of sparks
             const canvas = canvasRef.current;
             if (canvas) {
@@ -321,7 +289,11 @@ export default function LightsaberClash() {
             <button
                 onClick={() => {
                     initAudio();
-                    setIsMuted(!isMuted);
+                    const newMuted = !isMuted;
+                    setIsMuted(newMuted);
+                    if (typeof window !== 'undefined') {
+                        sessionStorage.setItem('audioConsent', newMuted ? 'false' : 'true');
+                    }
                 }}
                 className="absolute top-0 right-4 p-2 rounded-full border border-border bg-card/60 text-muted-foreground hover:text-foreground hover:bg-card transition-colors z-20 cursor-pointer"
                 title={isMuted ? "Enable Lightsaber Sound" : "Mute Sound"}

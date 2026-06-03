@@ -1,6 +1,6 @@
 import { useAppearance } from '@/hooks/use-appearance';
 import { cn } from '@/lib/utils';
-import { ShieldAlert, ShieldCheck } from 'lucide-react';
+import { playSaberIgnite } from '@/lib/audio';
 
 const RebelIcon = ({ className }: { className?: string }) => (
     <svg viewBox="0 0 24 24" className={cn("w-5 h-5 fill-current", className)}>
@@ -14,66 +14,90 @@ const EmpireIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+const NeutralIcon = ({ className }: { className?: string }) => (
+    <svg viewBox="0 0 24 24" className={cn("w-5 h-5 fill-current", className)}>
+        {/* Mandalorian Mythosaur Skull */}
+        <path d="M12 2C11.5 2 11 2.4 10.8 2.8L9.5 5.5C9.2 6.1 9 6.8 9 7.5V11C9 12.5 10.2 13.8 11.7 14V17.5C11.7 18.3 11 19 10.2 19H8C7.4 19 7 19.4 7 20C7 20.6 7.4 21 8 21H16C16.6 21 17 20.6 17 20C17 19.4 16.6 19 16 19H13.8C13 19 12.3 18.3 12.3 17.5V14C13.8 13.8 15 12.5 15 11V7.5C15 6.8 14.8 6.1 14.5 5.5L13.2 2.8C13 2.4 12.5 2 12 2Z" />
+        <path d="M7.5 7.5C6.7 7.5 6 8.2 6 9V11.5C6 13.5 7.3 15.2 9.1 15.8L7.5 19.5C7.3 20 7.5 20.6 8 20.8C8.5 21 9.1 20.8 9.3 20.3L11.3 15.8C10 15.3 9 14.2 8.5 12.8C8.1 12.4 8 11.9 8 11.5V9C8 8.7 8.1 8.5 8.2 8.3L7.5 7.5Z" />
+        <path d="M16.5 7.5L15.8 8.3C15.9 8.5 16 8.7 16 9V11.5C16 11.9 15.9 12.4 15.5 12.8C15 14.2 14 15.3 12.7 15.8L14.7 20.3C14.9 20.8 15.5 21 16 20.8C16.5 20.6 16.7 20 16.5 19.5L14.9 15.8C16.7 15.2 18 13.5 18 11.5V9C18 8.2 17.3 7.5 16.5 7.5Z" />
+    </svg>
+);
+
 export default function ThemeToggle() {
     const { resolvedAppearance, updateAppearance } = useAppearance();
 
     const toggleTheme = () => {
-        updateAppearance(resolvedAppearance === 'light' ? 'dark' : 'light');
+        let nextTheme: 'jedi' | 'sith' | 'neutral';
+        if (resolvedAppearance === 'jedi') {
+            nextTheme = 'sith';
+        } else if (resolvedAppearance === 'sith') {
+            nextTheme = 'neutral';
+        } else {
+            nextTheme = 'jedi';
+        }
+        updateAppearance(nextTheme);
+        playSaberIgnite(nextTheme);
     };
-
-    const isDark = resolvedAppearance === 'dark';
 
     return (
         <button
             onClick={toggleTheme}
             className={cn(
-                "relative group flex items-center justify-between p-1.5 rounded-full border transition-all duration-500 overflow-hidden cursor-pointer",
-                isDark 
-                    ? "bg-neutral-900 border-red-900/50 text-red-500 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]" 
-                    : "bg-white border-blue-200 text-blue-600 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(37,99,235,0.3)]"
+                "relative group flex items-center p-1 rounded-full border transition-all duration-500 overflow-hidden cursor-pointer",
+                resolvedAppearance === 'jedi' && "bg-white border-blue-200 text-blue-600 hover:border-blue-500 hover:shadow-[0_0_15px_rgba(59,130,246,0.35)]",
+                resolvedAppearance === 'neutral' && "bg-neutral-900 border-yellow-900/40 text-yellow-500 hover:border-yellow-500 hover:shadow-[0_0_15px_rgba(250,204,21,0.35)]",
+                resolvedAppearance === 'sith' && "bg-neutral-900 border-red-900/50 text-red-500 hover:border-red-500 hover:shadow-[0_0_15px_rgba(239,68,68,0.35)]"
             )}
-            title={isDark ? "Switch to Jedi Light Side" : "Switch to Sith Dark Side"}
+            title={`Ganti Tema (Aktif: ${resolvedAppearance.toUpperCase()})`}
             aria-label="Toggle Star Wars Theme"
         >
-            {/* Dynamic Sliding Glow Background */}
+            {/* Sliding Glow Background */}
             <div 
                 className={cn(
-                    "absolute top-0 bottom-0 left-0 right-0 opacity-10 transition-all duration-500 -z-10",
-                    isDark ? "bg-red-500" : "bg-blue-500"
+                    "absolute inset-0 opacity-5 transition-all duration-500 -z-10",
+                    resolvedAppearance === 'jedi' && "bg-blue-500",
+                    resolvedAppearance === 'neutral' && "bg-yellow-500",
+                    resolvedAppearance === 'sith' && "bg-red-500"
                 )} 
             />
 
-            <div className="relative flex items-center gap-1.5 px-2 py-0.5">
+            <div className="relative flex items-center gap-3 px-2 py-0.5 z-10">
                 {/* Visual indicator (sliding capsule) */}
                 <div 
                     className={cn(
-                        "absolute top-0.5 bottom-0.5 w-7 rounded-full transition-all duration-500 -z-10 ease-out",
-                        isDark 
-                            ? "left-[calc(100%-1.875rem)] bg-red-600/20 border border-red-500/40" 
-                            : "left-0.5 bg-blue-600/10 border border-blue-500/30"
+                        "absolute top-0.5 bottom-0.5 w-8 rounded-full transition-all duration-500 -z-10 ease-out",
+                        resolvedAppearance === 'jedi' && "left-0.5 bg-blue-600/15 border border-blue-500/20",
+                        resolvedAppearance === 'neutral' && "left-[calc(50%-1rem)] bg-yellow-500/15 border border-yellow-500/20",
+                        resolvedAppearance === 'sith' && "left-[calc(100%-2.05rem)] bg-red-600/15 border border-red-500/20"
                     )}
                 />
 
-                {/* Light Side emblem */}
+                {/* Light Side / JEDI */}
                 <div className={cn(
                     "transition-all duration-500",
-                    isDark ? "opacity-35 scale-90" : "opacity-100 scale-100 drop-shadow-[0_0_4px_rgba(37,99,235,0.5)]"
+                    resolvedAppearance === 'jedi' 
+                        ? "opacity-100 scale-100 drop-shadow-[0_0_4px_rgba(59,130,246,0.6)]" 
+                        : "opacity-30 scale-85 hover:opacity-50"
                 )}>
                     <RebelIcon />
                 </div>
 
-                {/* Theme name/text */}
-                <span className={cn(
-                    "text-[10px] font-black tracking-widest uppercase transition-all duration-500 select-none",
-                    isDark ? "text-red-400" : "text-blue-500"
-                )}>
-                    {isDark ? "SITH" : "JEDI"}
-                </span>
-
-                {/* Dark Side emblem */}
+                {/* Neutral / MANDALORIAN / YELLOW */}
                 <div className={cn(
                     "transition-all duration-500",
-                    isDark ? "opacity-100 scale-100 drop-shadow-[0_0_4px_rgba(239,68,68,0.5)]" : "opacity-35 scale-90"
+                    resolvedAppearance === 'neutral' 
+                        ? "opacity-100 scale-100 drop-shadow-[0_0_4px_rgba(250,204,21,0.6)]" 
+                        : "opacity-30 scale-85 hover:opacity-50"
+                )}>
+                    <NeutralIcon />
+                </div>
+
+                {/* Dark Side / SITH */}
+                <div className={cn(
+                    "transition-all duration-500",
+                    resolvedAppearance === 'sith' 
+                        ? "opacity-100 scale-100 drop-shadow-[0_0_4px_rgba(239,68,68,0.6)]" 
+                        : "opacity-30 scale-85 hover:opacity-50"
                 )}>
                     <EmpireIcon />
                 </div>
@@ -81,3 +105,4 @@ export default function ThemeToggle() {
         </button>
     );
 }
+

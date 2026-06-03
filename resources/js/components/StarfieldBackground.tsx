@@ -23,7 +23,8 @@ interface LightParticle {
 export default function StarfieldBackground() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { resolvedAppearance } = useAppearance();
-    const isDark = resolvedAppearance === 'dark';
+    const isDark = resolvedAppearance === 'sith' || resolvedAppearance === 'neutral';
+
 
     useEffect(() => {
         const canvas = canvasRef.current;

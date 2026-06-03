@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-export type ResolvedAppearance = 'light' | 'dark';
+export type ResolvedAppearance = 'jedi' | 'sith' | 'neutral';
 export type Appearance = ResolvedAppearance | 'system';
 
 export type UseAppearanceReturn = {
@@ -34,11 +34,28 @@ const getStoredAppearance = (): Appearance => {
         return 'system';
     }
 
-    return (localStorage.getItem('appearance') as Appearance) || 'system';
+    const stored = localStorage.getItem('appearance');
+    if (stored === 'light') return 'jedi';
+    if (stored === 'dark') return 'sith';
+    return (stored as Appearance) || 'system';
+};
+
+const getResolvedAppearance = (appearance: Appearance): ResolvedAppearance => {
+    if (appearance === 'system') {
+        return prefersDark() ? 'sith' : 'jedi';
+    }
+    if (appearance === 'dark') {
+        return 'sith';
+    }
+    if (appearance === 'light') {
+        return 'jedi';
+    }
+    return appearance as ResolvedAppearance;
 };
 
 const isDarkMode = (appearance: Appearance): boolean => {
-    return appearance === 'dark' || (appearance === 'system' && prefersDark());
+    const resolved = getResolvedAppearance(appearance);
+    return resolved === 'sith' || resolved === 'neutral';
 };
 
 const applyTheme = (appearance: Appearance): void => {
@@ -46,10 +63,16 @@ const applyTheme = (appearance: Appearance): void => {
         return;
     }
 
-    const isDark = isDarkMode(appearance);
+    const resolved = getResolvedAppearance(appearance);
+    const isDark = resolved === 'sith' || resolved === 'neutral';
 
     document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+
+    // Set theme classes on document Element
+    document.documentElement.classList.toggle('theme-jedi', resolved === 'jedi');
+    document.documentElement.classList.toggle('theme-sith', resolved === 'sith');
+    document.documentElement.classList.toggle('theme-neutral', resolved === 'neutral');
 };
 
 const subscribe = (callback: () => void) => {
@@ -94,9 +117,7 @@ export function useAppearance(): UseAppearanceReturn {
         () => 'system',
     );
 
-    const resolvedAppearance: ResolvedAppearance = isDarkMode(appearance)
-        ? 'dark'
-        : 'light';
+    const resolvedAppearance: ResolvedAppearance = getResolvedAppearance(appearance);
 
     const updateAppearance = (mode: Appearance): void => {
         currentAppearance = mode;
@@ -113,3 +134,4 @@ export function useAppearance(): UseAppearanceReturn {
 
     return { appearance, resolvedAppearance, updateAppearance } as const;
 }
+

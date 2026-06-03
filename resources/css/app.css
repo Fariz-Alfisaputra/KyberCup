@@ -267,4 +267,82 @@
     .force-float {
         animation: force-float 5s ease-in-out infinite;
     }
+
+    /* Star Wars Crawl Cinematic Animation */
+    .crawl-perspective {
+        perspective: 350px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .crawl-scroll {
+        transform-origin: 50% 100%;
+        animation: starwars-crawl 55s linear forwards;
+    }
+
+    @keyframes starwars-crawl {
+        0% {
+            transform: rotateX(25deg) translateY(100%) translateZ(0);
+            opacity: 1;
+        }
+        85% {
+            opacity: 1;
+        }
+        100% {
+            transform: rotateX(25deg) translateY(-220%) translateZ(-900px);
+            opacity: 0;
+        }
+    }
+
+    /* Custom Cursor Hiding for desktop hover states */
+    @media (pointer: fine) {
+        .custom-cursor-active, 
+        .custom-cursor-active * {
+            cursor: none !important;
+        }
+    }
 }
+
+/* Custom Theme Overrides (Unlayered for CSS Cascade precedence) */
+.theme-jedi {
+    --primary: oklch(0.55 0.18 245); /* Jedi Blue */
+    --primary-foreground: oklch(0.99 0.01 245);
+    --accent: oklch(0.62 0.18 142); /* Rebel Green */
+    --accent-foreground: oklch(0.99 0.01 142);
+    --gaming-gradient: linear-gradient(135deg, oklch(0.55 0.18 245) 0%, oklch(0.62 0.18 142) 100%);
+    --gaming-glow: 0 0 20px oklch(0.55 0.18 245 / 0.25);
+    --primary-glow-color: oklch(0.55 0.18 245);
+    --ring: oklch(0.55 0.18 245 / 0.5);
+    --chart-1: oklch(0.55 0.18 245);
+    --chart-2: oklch(0.62 0.18 142);
+}
+
+.theme-sith {
+    --primary: oklch(0.58 0.24 29); /* Sith Crimson Red */
+    --primary-foreground: oklch(0.99 0.01 29);
+    --accent: oklch(0.48 0.22 29); /* Deep Sith Crimson */
+    --accent-foreground: oklch(0.99 0.01 29);
+    --gaming-gradient: linear-gradient(135deg, oklch(0.58 0.24 29) 0%, oklch(0.15 0.05 29) 100%); /* Crimson Red to Deep Blackish Red */
+    --gaming-glow: 0 0 20px oklch(0.58 0.24 29 / 0.35);
+    --primary-glow-color: oklch(0.58 0.24 29);
+    --ring: oklch(0.58 0.24 29 / 0.5);
+    --chart-1: oklch(0.58 0.24 29);
+    --chart-2: oklch(0.48 0.22 29);
+}
+
+.theme-neutral {
+    --primary: oklch(0.85 0.18 80); /* Star Wars Yellow/Gold (matches intro!) */
+    --primary-foreground: oklch(0.03 0.01 240); /* Space Black */
+    --accent: oklch(0.7 0.12 55); /* Amber / Bronze */
+    --accent-foreground: oklch(0.03 0.01 240);
+    --gaming-gradient: linear-gradient(135deg, oklch(0.85 0.18 80) 0%, oklch(0.18 0.04 80) 100%); /* Yellow to Dark Gold/Black */
+    --gaming-glow: 0 0 20px oklch(0.85 0.18 80 / 0.35);
+    --primary-glow-color: oklch(0.85 0.18 80);
+    --ring: oklch(0.85 0.18 80 / 0.5);
+    --chart-1: oklch(0.85 0.18 80);
+    --chart-2: oklch(0.7 0.12 55);
+}
+
+
+
+

@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowRight, ChevronRight, Gamepad2, Shield, Trophy, Users, Zap } from 'lucide-react';
+import { ArrowRight, ChevronRight, Gamepad2, Play, Shield, Trophy, Users, Zap } from 'lucide-react';
 import TournamentCard from '@/components/tournament/TournamentCard';
 import type { TournamentListItem } from '@/types';
 import { dashboard, login, register } from '@/routes';
 import ThemeToggle from '@/components/ThemeToggle';
 import StarfieldBackground from '@/components/StarfieldBackground';
 import LightsaberClash from '@/components/LightsaberClash';
+import StarWarsIntro from '@/components/StarWarsIntro';
 
 interface HomeProps {
     openTournaments: TournamentListItem[];
@@ -15,8 +17,22 @@ interface HomeProps {
 export default function Home({ openTournaments, ongoingTournaments }: HomeProps) {
     const { auth } = usePage().props as { auth: { user: { name: string } | null } };
 
+    const [showIntro, setShowIntro] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return sessionStorage.getItem('hasSeenIntro') !== 'true';
+        }
+        return false;
+    });
+
+    const handleCloseIntro = () => {
+        setShowIntro(false);
+        sessionStorage.setItem('hasSeenIntro', 'true');
+    };
+
     return (
         <>
+            {showIntro && <StarWarsIntro onClose={handleCloseIntro} />}
+
             <Head title="KyberCup - Platform Turnamen Esport Galaksi" />
 
             <div className="min-h-screen bg-background text-foreground relative transition-colors duration-500 overflow-x-hidden">
@@ -118,13 +134,21 @@ export default function Home({ openTournaments, ongoingTournaments }: HomeProps)
                             {!auth.user && (
                                 <Link
                                     href={register()}
-                                    className="flex items-center gap-2 rounded-xl border border-border bg-card/60 backdrop-blur-xs px-8 py-3.5 text-base font-bold text-foreground transition-all hover:border-primary/50 hover:bg-card"
+                                    className="flex items-center gap-2 rounded-xl border border-border bg-card/60 backdrop-blur-xs px-8 py-3.5 text-base font-bold text-foreground transition-all hover:border-primary/50 hover:bg-card hover:scale-105"
                                 >
                                     <Users className="h-5 w-5" />
                                     Daftar Gratis
                                 </Link>
                             )}
+                            <button
+                                onClick={() => setShowIntro(true)}
+                                className="flex items-center gap-2 rounded-xl border border-border bg-card/60 backdrop-blur-xs px-8 py-3.5 text-base font-bold text-foreground transition-all hover:border-primary/50 hover:bg-card hover:scale-105 cursor-pointer"
+                            >
+                                <Play className="h-5 w-5 text-primary animate-pulse" />
+                                Putar Ulang Intro
+                            </button>
                         </div>
+
 
                         {/* Interactive Lightsaber clash center widget */}
                         <LightsaberClash />
