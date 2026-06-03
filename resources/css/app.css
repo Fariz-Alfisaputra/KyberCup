@@ -1,0 +1,270 @@
+@import 'tailwindcss';
+
+@import 'tw-animate-css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+    --background: oklch(0.975 0.01 200); /* Temple Clean Off-White */
+    --foreground: oklch(0.18 0.03 240); /* Deep Slate Gray */
+    --card: oklch(1 0 0); /* Pure White */
+    --card-foreground: oklch(0.18 0.03 240);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.18 0.03 240);
+    --primary: oklch(0.55 0.18 245); /* Jedi Blue */
+    --primary-foreground: oklch(0.99 0.01 245);
+    --secondary: oklch(0.93 0.01 200);
+    --secondary-foreground: oklch(0.2 0.03 240);
+    --muted: oklch(0.95 0.01 200);
+    --muted-foreground: oklch(0.5 0.02 200);
+    --accent: oklch(0.62 0.18 142); /* Rebel Green */
+    --accent-foreground: oklch(0.99 0.01 142);
+    --destructive: oklch(0.58 0.24 29); /* Sith Crimson */
+    --destructive-foreground: oklch(0.99 0.01 29);
+    --border: oklch(0.88 0.01 200);
+    --input: oklch(0.88 0.01 200);
+    --ring: oklch(0.55 0.18 245 / 0.5);
+    --chart-1: oklch(0.55 0.18 245); /* Jedi Blue */
+    --chart-2: oklch(0.62 0.18 142); /* Rebel Green */
+    --chart-3: oklch(0.7 0.15 100); /* Luke Yellow */
+    --chart-4: oklch(0.68 0.18 200); /* Cyan */
+    --chart-5: oklch(0.6 0.18 300); /* Mace Windu Purple */
+    --radius: 0.625rem;
+    --sidebar: oklch(0.985 0.01 200);
+    --sidebar-foreground: oklch(0.18 0.03 240);
+    --sidebar-primary: oklch(0.55 0.18 245);
+    --sidebar-primary-foreground: oklch(0.99 0.01 245);
+    --sidebar-accent: oklch(0.93 0.01 200);
+    --sidebar-accent-foreground: oklch(0.2 0.03 240);
+    --sidebar-border: oklch(0.88 0.01 200);
+    --sidebar-ring: oklch(0.55 0.18 245 / 0.5);
+
+    /* Star Wars Custom Custom variables */
+    --gaming-gradient: linear-gradient(135deg, oklch(0.55 0.18 245) 0%, oklch(0.62 0.18 142) 100%);
+    --gaming-glow: 0 0 20px oklch(0.55 0.18 245 / 0.25);
+    --primary-glow-color: oklch(0.55 0.18 245);
+    --lightsaber-jedi: 0 0 15px oklch(0.55 0.18 245), 0 0 5px #fff;
+    --lightsaber-sith: 0 0 15px oklch(0.58 0.24 29), 0 0 5px #fff;
+}
+
+.dark {
+    --background: oklch(0.03 0.01 240); /* Space Black */
+    --foreground: oklch(0.95 0.01 80); /* Space Gold/Stardust White */
+    --card: oklch(0.07 0.01 240); /* Deep space Card */
+    --card-foreground: oklch(0.95 0.01 80);
+    --popover: oklch(0.07 0.01 240);
+    --popover-foreground: oklch(0.95 0.01 80);
+    --primary: oklch(0.85 0.18 80); /* Star Wars Imperial Yellow */
+    --primary-foreground: oklch(0.03 0.01 240);
+    --secondary: oklch(0.12 0.01 240);
+    --secondary-foreground: oklch(0.95 0.01 80);
+    --muted: oklch(0.12 0.01 240);
+    --muted-foreground: oklch(0.6 0.01 240);
+    --accent: oklch(0.58 0.24 29); /* Sith Crimson Red */
+    --accent-foreground: oklch(0.98 0.01 29);
+    --destructive: oklch(0.58 0.24 29);
+    --destructive-foreground: oklch(0.98 0.01 29);
+    --border: oklch(0.18 0.01 240);
+    --input: oklch(0.18 0.01 240);
+    --ring: oklch(0.85 0.18 80 / 0.5);
+    --chart-1: oklch(0.85 0.18 80); /* Yellow */
+    --chart-2: oklch(0.58 0.24 29); /* Red */
+    --chart-3: oklch(0.55 0.18 245); /* Jedi Blue */
+    --chart-4: oklch(0.62 0.18 142); /* Yoda Green */
+    --chart-5: oklch(0.6 0.18 300); /* Purple */
+    --sidebar: oklch(0.04 0.01 240);
+    --sidebar-foreground: oklch(0.95 0.01 80);
+    --sidebar-primary: oklch(0.85 0.18 80);
+    --sidebar-primary-foreground: oklch(0.03 0.01 240);
+    --sidebar-accent: oklch(0.12 0.01 240);
+    --sidebar-accent-foreground: oklch(0.95 0.01 80);
+    --sidebar-border: oklch(0.18 0.01 240);
+    --sidebar-ring: oklch(0.85 0.18 80 / 0.5);
+
+    /* Star Wars Custom Custom variables */
+    --gaming-gradient: linear-gradient(135deg, oklch(0.85 0.18 80) 0%, oklch(0.58 0.24 29) 100%);
+    --gaming-glow: 0 0 20px oklch(0.85 0.18 80 / 0.3);
+    --primary-glow-color: oklch(0.85 0.18 80);
+    --lightsaber-jedi: 0 0 15px oklch(0.55 0.18 245), 0 0 5px #fff;
+    --lightsaber-sith: 0 0 15px oklch(0.58 0.24 29), 0 0 5px #fff;
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground;
+        font-family: 'Inter', 'Instrument Sans', sans-serif;
+    }
+}
+
+@layer utilities {
+    .gaming-gradient {
+        background: var(--gaming-gradient);
+    }
+
+    .gaming-glow {
+        box-shadow: var(--gaming-glow);
+    }
+
+    .gaming-glow-emerald {
+        box-shadow: 0 0 20px oklch(0.55 0.18 245 / 0.4); /* Blue glow in light mode, overrides to custom */
+    }
+
+    .hero-grid {
+        background-image: 
+            radial-gradient(2px 2px at 20px 30px, var(--foreground), rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 40px 70px, var(--foreground), rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 50px 160px, var(--foreground), rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 90px 40px, var(--foreground), rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 130px 80px, var(--foreground), rgba(0,0,0,0)),
+            radial-gradient(2px 2px at 160px 120px, var(--foreground), rgba(0,0,0,0));
+        background-repeat: repeat;
+        background-size: 200px 200px;
+    }
+
+    .bracket-connector::after {
+        content: '';
+        position: absolute;
+        right: -1px;
+        top: 50%;
+        width: 1px;
+        height: 50%;
+        border-right: 2px solid oklch(0.85 0.18 80 / 0.4);
+    }
+
+    .bracket-connector::before {
+        content: '';
+        position: absolute;
+        right: -1px;
+        top: 50%;
+        width: 1px;
+        height: 50%;
+        border-right: 2px solid oklch(0.85 0.18 80 / 0.4);
+        bottom: 0;
+        top: auto;
+    }
+
+    /* Lightsaber Glows */
+    .lightsaber-jedi-glow {
+        box-shadow: var(--lightsaber-jedi);
+        background-color: #fff;
+    }
+
+    .lightsaber-sith-glow {
+        box-shadow: var(--lightsaber-sith);
+        background-color: #fff;
+    }
+
+    /* Interactive 3D Parallax Force Card */
+    .force-card {
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+    
+    .force-card:hover {
+        transform: translateY(-5px) rotateX(2deg) rotateY(2deg);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08), var(--gaming-glow);
+        border-color: var(--primary);
+    }
+    
+    .dark .force-card:hover {
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4), var(--gaming-glow);
+    }
+
+    /* Animations */
+    @keyframes saber-hum {
+        0%, 100% { filter: brightness(0.95) drop-shadow(0 0 2px var(--primary-glow-color)); }
+        50% { filter: brightness(1.2) drop-shadow(0 0 6px var(--primary-glow-color)); }
+    }
+    
+    .saber-humming {
+        animation: saber-hum 0.12s infinite alternate;
+    }
+
+    @keyframes force-pulse {
+        0%, 100% {
+            box-shadow: 0 0 10px var(--primary-glow-color);
+        }
+        50% {
+            box-shadow: 0 0 25px var(--primary-glow-color), 0 0 10px var(--primary-glow-color) inset;
+        }
+    }
+
+    .force-pulse {
+        animation: force-pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes force-float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-8px);
+        }
+    }
+
+    .force-float {
+        animation: force-float 5s ease-in-out infinite;
+    }
+}
