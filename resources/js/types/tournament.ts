@@ -2,7 +2,10 @@ import type { Game } from './game';
 import type { User } from './user';
 
 export type TournamentStatus = 'draft' | 'open' | 'ongoing' | 'selesai';
-export type TournamentFormat = 'single_elimination' | 'double_elimination' | 'round_robin';
+export type TournamentFormat =
+    | 'single_elimination'
+    | 'double_elimination'
+    | 'round_robin';
 
 export interface Tournament {
     id: number;

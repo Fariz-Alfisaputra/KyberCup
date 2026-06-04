@@ -11,7 +11,8 @@ import {
     Users,
     X,
 } from 'lucide-react';
-import { type PropsWithChildren, useState } from 'react';
+import { useState } from 'react';
+import type { PropsWithChildren } from 'react';
 
 const ADMIN_DASHBOARD = '/admin/dashboard';
 
@@ -29,12 +30,17 @@ const navItems = [
 ];
 
 export default function AdminLayout({ children, title }: AdminLayoutProps) {
-    const { auth } = usePage().props as { auth: { user: { name: string; role: string } } };
+    const { auth } = usePage().props as {
+        auth: { user: { name: string; role: string } };
+    };
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const currentPath = window.location.pathname;
 
     return (
-        <div className="flex min-h-screen" style={{ background: '#0a0a0f' }}>
+        <div
+            className="flex min-h-screen"
+            style={{ background: 'var(--bg-page)' }}
+        >
             {/* Sidebar overlay on mobile */}
             {sidebarOpen && (
                 <div
@@ -49,37 +55,53 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
                 style={{
-                    background: 'rgba(10,10,15,0.98)',
-                    borderRight: '1px solid rgba(255,45,45,0.15)',
-                    boxShadow: '4px 0 24px rgba(0,0,0,0.5)',
+                    background: 'var(--bg-navbar)',
+                    borderRight: '1px solid var(--border-default)',
+                    boxShadow: '4px 0 24px rgba(0,0,0,0.3)',
                 }}
             >
                 {/* Logo */}
                 <div
                     className="flex h-16 items-center gap-3 px-6"
-                    style={{ borderBottom: '1px solid rgba(255,45,45,0.12)' }}
+                    style={{ borderBottom: '1px solid var(--border-default)' }}
                 >
                     <Link
                         href="/"
-                        className="flex items-center gap-3 cursor-pointer group"
+                        className="group flex cursor-pointer items-center gap-3"
                         aria-label="Kembali ke halaman utama"
                     >
                         <img
                             src="/logo-kyber.png"
                             alt="KyberCup"
                             className="h-10 w-10 object-contain"
-                            style={{ filter: 'drop-shadow(0 0 8px rgba(255,45,45,0.5))' }}
+                            style={{
+                                filter: 'drop-shadow(0 0 8px var(--accent-primary-glow))',
+                            }}
                         />
                         <div>
                             <p
                                 className="text-sm font-black tracking-widest uppercase"
-                                style={{ fontFamily: 'Orbitron, sans-serif', color: '#f0f4ff', fontSize: '0.7rem' }}
+                                style={{
+                                    fontFamily: 'Orbitron, sans-serif',
+                                    color: 'var(--text-primary)',
+                                    fontSize: '0.7rem',
+                                }}
                             >
-                                Kyber<span style={{ color: 'var(--sw-red-sith)' }}>Cup</span>
+                                Kyber
+                                <span
+                                    style={{ color: 'var(--accent-primary)' }}
+                                >
+                                    Cup
+                                </span>
                             </p>
                             <p
                                 className="text-xs tracking-widest uppercase"
-                                style={{ color: 'rgba(255,45,45,0.6)', fontFamily: 'Rajdhani, sans-serif', fontSize: '0.65rem' }}
+                                style={{
+                                    color: 'var(--accent-primary)',
+                                    opacity: 0.8,
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                    fontSize: '0.65rem',
+                                }}
                             >
                                 ⚡ Admin Panel
                             </p>
@@ -91,7 +113,10 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                 <nav className="p-4">
                     <p
                         className="mb-3 px-3 text-xs font-semibold tracking-widest uppercase"
-                        style={{ color: 'rgba(255,45,45,0.4)', fontFamily: 'Rajdhani, sans-serif' }}
+                        style={{
+                            color: 'var(--text-muted)',
+                            fontFamily: 'Rajdhani, sans-serif',
+                        }}
                     >
                         Kontrol Panel
                     </p>
@@ -100,7 +125,8 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                             const Icon = item.icon;
                             const isActive =
                                 currentPath === item.href ||
-                                (item.href !== ADMIN_DASHBOARD && currentPath.startsWith(item.href));
+                                (item.href !== ADMIN_DASHBOARD &&
+                                    currentPath.startsWith(item.href));
 
                             return (
                                 <li key={item.href}>
@@ -110,36 +136,48 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                                         style={
                                             isActive
                                                 ? {
-                                                      background: 'rgba(255,45,45,0.1)',
-                                                      border: '1px solid rgba(255,45,45,0.3)',
-                                                      color: 'var(--sw-red-sith)',
-                                                      boxShadow: '0 0 10px rgba(255,45,45,0.12)',
-                                                      fontFamily: 'Rajdhani, sans-serif',
+                                                      background:
+                                                          'var(--bg-hover)',
+                                                      border: '1px solid var(--border-accent)',
+                                                      color: 'var(--accent-primary)',
+                                                      boxShadow:
+                                                          '0 0 10px var(--accent-primary-glow)',
+                                                      fontFamily:
+                                                          'Rajdhani, sans-serif',
                                                       letterSpacing: '0.05em',
-                                                      textTransform: 'uppercase',
+                                                      textTransform:
+                                                          'uppercase',
                                                       fontSize: '0.78rem',
                                                   }
                                                 : {
-                                                      color: 'rgba(240,244,255,0.55)',
-                                                      fontFamily: 'Rajdhani, sans-serif',
+                                                      color: 'var(--text-muted)',
+                                                      fontFamily:
+                                                          'Rajdhani, sans-serif',
                                                       letterSpacing: '0.05em',
-                                                      textTransform: 'uppercase',
+                                                      textTransform:
+                                                          'uppercase',
                                                       fontSize: '0.78rem',
                                                       border: '1px solid transparent',
                                                   }
                                         }
                                         onMouseEnter={(e) => {
                                             if (!isActive) {
-                                                e.currentTarget.style.background = 'rgba(255,45,45,0.06)';
-                                                e.currentTarget.style.color = '#f0f4ff';
-                                                e.currentTarget.style.borderColor = 'rgba(255,45,45,0.15)';
+                                                e.currentTarget.style.background =
+                                                    'var(--bg-hover)';
+                                                e.currentTarget.style.color =
+                                                    'var(--text-primary)';
+                                                e.currentTarget.style.borderColor =
+                                                    'var(--border-default)';
                                             }
                                         }}
                                         onMouseLeave={(e) => {
                                             if (!isActive) {
-                                                e.currentTarget.style.background = 'transparent';
-                                                e.currentTarget.style.color = 'rgba(240,244,255,0.55)';
-                                                e.currentTarget.style.borderColor = 'transparent';
+                                                e.currentTarget.style.background =
+                                                    'transparent';
+                                                e.currentTarget.style.color =
+                                                    'var(--text-muted)';
+                                                e.currentTarget.style.borderColor =
+                                                    'transparent';
                                             }
                                         }}
                                     >
@@ -151,14 +189,17 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                         })}
                     </ul>
 
-                    <div className="mt-6 pt-4" style={{ borderTop: '1px solid rgba(255,45,45,0.1)' }}>
+                    <div
+                        className="mt-6 pt-4"
+                        style={{ borderTop: '1px solid var(--border-default)' }}
+                    >
                         <ul className="space-y-1">
                             <li>
                                 <Link
                                     href="/"
                                     className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200"
                                     style={{
-                                        color: 'rgba(240,244,255,0.55)',
+                                        color: 'var(--text-muted)',
                                         fontFamily: 'Rajdhani, sans-serif',
                                         letterSpacing: '0.05em',
                                         textTransform: 'uppercase',
@@ -166,14 +207,20 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                                         border: '1px solid transparent',
                                     }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.background = 'rgba(0,212,255,0.06)';
-                                        e.currentTarget.style.color = 'var(--sw-blue-neon)';
-                                        e.currentTarget.style.borderColor = 'rgba(0,212,255,0.15)';
+                                        e.currentTarget.style.background =
+                                            'var(--bg-hover)';
+                                        e.currentTarget.style.color =
+                                            'var(--accent-primary)';
+                                        e.currentTarget.style.borderColor =
+                                            'var(--border-default)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = 'transparent';
-                                        e.currentTarget.style.color = 'rgba(240,244,255,0.55)';
-                                        e.currentTarget.style.borderColor = 'transparent';
+                                        e.currentTarget.style.background =
+                                            'transparent';
+                                        e.currentTarget.style.color =
+                                            'var(--text-muted)';
+                                        e.currentTarget.style.borderColor =
+                                            'transparent';
                                     }}
                                 >
                                     <Home className="h-4 w-4" />
@@ -187,7 +234,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                                     as="button"
                                     className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200"
                                     style={{
-                                        color: 'var(--sw-red-sith)',
+                                        color: 'var(--status-cancel-text)',
                                         fontFamily: 'Rajdhani, sans-serif',
                                         letterSpacing: '0.05em',
                                         textTransform: 'uppercase',
@@ -195,12 +242,16 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                                         border: '1px solid transparent',
                                     }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.background = 'rgba(255,45,45,0.08)';
-                                        e.currentTarget.style.borderColor = 'rgba(255,45,45,0.2)';
+                                        e.currentTarget.style.background =
+                                            'var(--status-cancel-bg)';
+                                        e.currentTarget.style.borderColor =
+                                            'var(--border-strong)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background = 'transparent';
-                                        e.currentTarget.style.borderColor = 'transparent';
+                                        e.currentTarget.style.background =
+                                            'transparent';
+                                        e.currentTarget.style.borderColor =
+                                            'transparent';
                                     }}
                                 >
                                     <LogOut className="h-4 w-4" />
@@ -213,20 +264,23 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
                 {/* User info at bottom */}
                 <div
-                    className="absolute bottom-0 left-0 right-0 p-4"
-                    style={{ borderTop: '1px solid rgba(255,45,45,0.1)' }}
+                    className="absolute right-0 bottom-0 left-0 p-4"
+                    style={{ borderTop: '1px solid var(--border-default)' }}
                 >
                     <div className="flex items-center gap-3">
                         <div
                             className="flex h-9 w-9 items-center justify-center rounded-full"
                             style={{
-                                background: 'rgba(255,45,45,0.1)',
-                                border: '2px solid rgba(255,45,45,0.3)',
+                                background: 'var(--bg-hover)',
+                                border: '2px solid var(--border-default)',
                             }}
                         >
                             <span
                                 className="text-xs font-bold"
-                                style={{ color: 'var(--sw-red-sith)', fontFamily: 'Orbitron, sans-serif' }}
+                                style={{
+                                    color: 'var(--accent-primary)',
+                                    fontFamily: 'Orbitron, sans-serif',
+                                }}
                             >
                                 {auth.user.name.charAt(0).toUpperCase()}
                             </span>
@@ -234,13 +288,20 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                         <div className="min-w-0 flex-1">
                             <p
                                 className="truncate text-sm font-medium"
-                                style={{ color: '#f0f4ff', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600 }}
+                                style={{
+                                    color: 'var(--text-primary)',
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                    fontWeight: 600,
+                                }}
                             >
                                 {auth.user.name}
                             </p>
                             <p
                                 className="text-xs capitalize"
-                                style={{ color: 'var(--sw-red-sith)', fontFamily: 'Rajdhani, sans-serif' }}
+                                style={{
+                                    color: 'var(--accent-primary)',
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                }}
                             >
                                 ⚡ {auth.user.role}
                             </p>
@@ -255,25 +316,31 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                 <header
                     className="flex h-16 items-center gap-4 px-4 lg:px-6"
                     style={{
-                        background: 'rgba(10,10,15,0.9)',
+                        background: 'var(--bg-navbar)',
                         backdropFilter: 'blur(12px)',
-                        borderBottom: '1px solid rgba(255,45,45,0.12)',
+                        borderBottom: '1px solid var(--border-default)',
                     }}
                 >
                     <button
                         className="rounded-lg p-2 transition-all duration-200 lg:hidden"
-                        style={{ color: 'rgba(240,244,255,0.6)' }}
+                        style={{ color: 'var(--text-muted)' }}
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255,45,45,0.08)';
-                            e.currentTarget.style.color = 'var(--sw-red-sith)';
+                            e.currentTarget.style.background =
+                                'var(--bg-hover)';
+                            e.currentTarget.style.color =
+                                'var(--accent-primary)';
                         }}
                         onMouseLeave={(e) => {
                             e.currentTarget.style.background = 'transparent';
-                            e.currentTarget.style.color = 'rgba(240,244,255,0.6)';
+                            e.currentTarget.style.color = 'var(--text-muted)';
                         }}
                     >
-                        {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        {sidebarOpen ? (
+                            <X className="h-5 w-5" />
+                        ) : (
+                            <Menu className="h-5 w-5" />
+                        )}
                     </button>
                     <div className="flex-1">
                         {title && (
@@ -281,8 +348,9 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                                 className="text-lg font-bold tracking-wider uppercase"
                                 style={{
                                     fontFamily: 'Rajdhani, sans-serif',
-                                    color: '#f0f4ff',
-                                    textShadow: '0 0 8px rgba(255,45,45,0.3)',
+                                    color: 'var(--text-primary)',
+                                    textShadow:
+                                        '0 0 8px var(--accent-primary-glow)',
                                 }}
                             >
                                 {title}
@@ -293,26 +361,21 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                     <div
                         className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold"
                         style={{
-                            background: 'rgba(255,45,45,0.08)',
-                            border: '1px solid rgba(255,45,45,0.25)',
-                            color: 'var(--sw-red-sith)',
+                            background: 'var(--bg-hover)',
+                            border: '1px solid var(--border-default)',
+                            color: 'var(--accent-primary)',
                             fontFamily: 'Rajdhani, sans-serif',
                             letterSpacing: '0.08em',
                             textTransform: 'uppercase',
                         }}
                     >
                         <Shield className="h-3.5 w-3.5" />
-                        Sith Admin
+                        Admin Panel
                     </div>
                 </header>
 
                 {/* Page content */}
-                <main
-                    className="flex-1 overflow-auto p-4 lg:p-6"
-                    style={{
-                        background: 'linear-gradient(180deg, #0a0a0f 0%, #0d1117 100%)',
-                    }}
-                >
+                <main className="flex-1 overflow-auto bg-background p-4 lg:p-6">
                     {children}
                 </main>
             </div>

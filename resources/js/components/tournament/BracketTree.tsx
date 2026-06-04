@@ -27,7 +27,9 @@ function MatchCard({ match, isFinal }: MatchCardProps) {
         >
             {isFinal && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-black">FINAL</span>
+                    <span className="rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-black">
+                        FINAL
+                    </span>
                 </div>
             )}
 
@@ -37,7 +39,12 @@ function MatchCard({ match, isFinal }: MatchCardProps) {
             >
                 <div className="flex min-w-0 items-center gap-2">
                     {match.team1?.logo_url ? (
-                        <img src={match.team1.logo_url} alt="" className="h-5 w-5 rounded object-cover" />
+                        <img
+                            loading="lazy"
+                            src={match.team1.logo_url}
+                            alt=""
+                            className="h-5 w-5 rounded object-cover"
+                        />
                     ) : (
                         <Shield className="h-4 w-4 shrink-0 text-muted-foreground" />
                     )}
@@ -67,7 +74,12 @@ function MatchCard({ match, isFinal }: MatchCardProps) {
             >
                 <div className="flex min-w-0 items-center gap-2">
                     {match.team2?.logo_url ? (
-                        <img src={match.team2.logo_url} alt="" className="h-5 w-5 rounded object-cover" />
+                        <img
+                            loading="lazy"
+                            src={match.team2.logo_url}
+                            alt=""
+                            className="h-5 w-5 rounded object-cover"
+                        />
                     ) : (
                         <Shield className="h-4 w-4 shrink-0 text-muted-foreground" />
                     )}
@@ -106,7 +118,9 @@ export default function BracketTree({ matches }: BracketTreeProps) {
         return (
             <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
                 <Trophy className="mb-3 h-12 w-12 text-muted-foreground/30" />
-                <p className="text-sm text-muted-foreground">Bracket belum di-generate</p>
+                <p className="text-sm text-muted-foreground">
+                    Bracket belum di-generate
+                </p>
             </div>
         );
     }
@@ -119,19 +133,18 @@ export default function BracketTree({ matches }: BracketTreeProps) {
                 {rounds.map((round, roundIndex) => {
                     const roundMatches = matches[round];
                     const isFinalRound = roundIndex === totalRounds - 1;
-                    const roundLabel =
-                        isFinalRound
-                            ? 'Final'
-                            : roundIndex === totalRounds - 2
-                              ? 'Semi Final'
-                              : `Round ${round}`;
+                    const roundLabel = isFinalRound
+                        ? 'Final'
+                        : roundIndex === totalRounds - 2
+                          ? 'Semi Final'
+                          : `Round ${round}`;
 
                     return (
                         <div key={round} className="flex flex-col gap-4">
                             {/* Round header */}
                             <div className="mb-2 text-center">
                                 <span
-                                    className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                                    className={`rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase ${
                                         isFinalRound
                                             ? 'bg-amber-500/20 text-amber-400'
                                             : 'bg-violet-500/10 text-violet-400'
@@ -151,7 +164,11 @@ export default function BracketTree({ matches }: BracketTreeProps) {
                                 }}
                             >
                                 {roundMatches.map((match) => (
-                                    <MatchCard key={match.id} match={match} isFinal={isFinalRound} />
+                                    <MatchCard
+                                        key={match.id}
+                                        match={match}
+                                        isFinal={isFinalRound}
+                                    />
                                 ))}
                             </div>
                         </div>

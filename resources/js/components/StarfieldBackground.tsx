@@ -14,7 +14,7 @@ interface LightParticle {
     vx: number;
     vy: number;
     size: number;
-    color: string;
+    hexColor: string;
     alpha: number;
     angle: number;
     speed: number;
@@ -23,15 +23,20 @@ interface LightParticle {
 export default function StarfieldBackground() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const { resolvedAppearance } = useAppearance();
-    const isDark = resolvedAppearance === 'sith' || resolvedAppearance === 'neutral';
-
+    const isDark = resolvedAppearance === 'dark-side';
 
     useEffect(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+
+        if (!canvas) {
+            return;
+        }
 
         const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+
+        if (!ctx) {
+            return;
+        }
 
         let animationFrameId: number;
         let width = (canvas.width = window.innerWidth);
@@ -41,7 +46,10 @@ export default function StarfieldBackground() {
         const mouse = { x: width / 2, y: height / 2, active: false };
 
         const handleResize = () => {
-            if (!canvas) return;
+            if (!canvas) {
+                return;
+            }
+
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
         };
@@ -60,33 +68,60 @@ export default function StarfieldBackground() {
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseleave', handleMouseLeave);
 
+        // Dynamic theme color fetching
+        const style = getComputedStyle(document.documentElement);
+        const accentColor =
+            style.getPropertyValue('--accent-primary').trim() || '#185fa5';
+        const goldColor =
+            style.getPropertyValue('--accent-gold').trim() || '#ffe81f';
+        const textColor =
+            style.getPropertyValue('--text-primary').trim() || '#ffffff';
+        const mutedColor =
+            style.getPropertyValue('--text-muted').trim() || '#888888';
+
+        // Helper to convert hex to rgba
+        const hexToRgba = (hex: string, alpha: number) => {
+            const cleanHex = hex.replace('#', '').trim();
+            // Handle shorthand hex like #fff
+            let fullHex = cleanHex;
+
+            if (cleanHex.length === 3) {
+                fullHex =
+                    cleanHex[0] +
+                    cleanHex[0] +
+                    cleanHex[1] +
+                    cleanHex[1] +
+                    cleanHex[2] +
+                    cleanHex[2];
+            }
+
+            const r = parseInt(fullHex.substring(0, 2), 16) || 255;
+            const g = parseInt(fullHex.substring(2, 4), 16) || 255;
+            const b = parseInt(fullHex.substring(4, 6), 16) || 255;
+
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        };
+
         // Initialize particles/stars
         const maxStars = 180;
         const stars: Star[] = [];
-        const starColors = [
-            '#ffffff', // white
-            '#FFE81F', // Star Wars Yellow
-            '#FF4444', // Red
-            '#90CDF4', // Light Blue
-        ];
+        const starColors = [textColor, goldColor, accentColor, mutedColor];
 
         for (let i = 0; i < maxStars; i++) {
             stars.push({
                 x: Math.random() * width - width / 2,
                 y: Math.random() * height - height / 2,
                 z: Math.random() * width,
-                color: starColors[Math.floor(Math.random() * starColors.length)],
+                color: starColors[
+                    Math.floor(Math.random() * starColors.length)
+                ],
             });
         }
 
         // Initialize Light Mode particles (Force Dust)
         const maxParticles = 60;
         const particles: LightParticle[] = [];
-        const lightColors = [
-            'rgba(59, 130, 246, 0.4)', // Jedi Blue
-            'rgba(16, 185, 129, 0.4)', // Luke Green
-            'rgba(245, 158, 11, 0.3)',  // Tatooine Gold
-        ];
+        const lightColors = [accentColor, goldColor, textColor];
 
         for (let i = 0; i < maxParticles; i++) {
             particles.push({
@@ -95,7 +130,8 @@ export default function StarfieldBackground() {
                 vx: (Math.random() - 0.5) * 0.8,
                 vy: (Math.random() - 0.5) * 0.8,
                 size: Math.random() * 4 + 2,
-                color: lightColors[Math.floor(Math.random() * lightColors.length)],
+                hexColor:
+                    lightColors[Math.floor(Math.random() * lightColors.length)],
                 alpha: Math.random() * 0.5 + 0.3,
                 angle: Math.random() * Math.PI * 2,
                 speed: Math.random() * 0.5 + 0.2,
@@ -104,11 +140,12 @@ export default function StarfieldBackground() {
 
         // Starfield variables
         let speed = 0.8;
-        const targetSpeed = 1.5;
 
         // Render loop
         const draw = () => {
-            if (!ctx || !canvas) return;
+            if (!ctx || !canvas) {
+                return;
+            }
 
             // Clear screen
             if (isDark) {
@@ -121,7 +158,9 @@ export default function StarfieldBackground() {
                     const dx = mouse.x - width / 2;
                     const dy = mouse.y - height / 2;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    const maxDist = Math.sqrt((width * width) / 4 + (height * height) / 4);
+                    const maxDist = Math.sqrt(
+                        (width * width) / 4 + (height * height) / 4,
+                    );
                     speed = 0.5 + (dist / maxDist) * 8; // dynamic hyperspace warp speed
                 } else {
                     speed = 0.8;
@@ -189,10 +228,21 @@ export default function StarfieldBackground() {
                     p.y += Math.sin(p.angle) * p.speed + p.vy;
 
                     // Boundary checks (wrap around edges)
-                    if (p.x < -10) p.x = width + 10;
-                    if (p.x > width + 10) p.x = -10;
-                    if (p.y < -10) p.y = height + 10;
-                    if (p.y > height + 10) p.y = -10;
+                    if (p.x < -10) {
+                        p.x = width + 10;
+                    }
+
+                    if (p.x > width + 10) {
+                        p.x = -10;
+                    }
+
+                    if (p.y < -10) {
+                        p.y = height + 10;
+                    }
+
+                    if (p.y > height + 10) {
+                        p.y = -10;
+                    }
 
                     // Force push effect: React to mouse position
                     if (mouse.active) {
@@ -213,14 +263,23 @@ export default function StarfieldBackground() {
 
                     // Drawing light floating circles
                     ctx.beginPath();
-                    ctx.fillStyle = p.color;
-                    
+
                     // Create soft glow aura
-                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size * 3);
-                    gradient.addColorStop(0, p.color);
-                    gradient.addColorStop(0.5, p.color.replace('0.4', '0.15').replace('0.3', '0.1'));
-                    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-                    
+                    const gradient = ctx.createRadialGradient(
+                        p.x,
+                        p.y,
+                        0,
+                        p.x,
+                        p.y,
+                        p.size * 3,
+                    );
+                    gradient.addColorStop(0, hexToRgba(p.hexColor, p.alpha));
+                    gradient.addColorStop(
+                        0.5,
+                        hexToRgba(p.hexColor, p.alpha * 0.3),
+                    );
+                    gradient.addColorStop(1, hexToRgba(p.hexColor, 0));
+
                     ctx.fillStyle = gradient;
                     ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
                     ctx.fill();
@@ -243,7 +302,7 @@ export default function StarfieldBackground() {
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full pointer-events-none -z-20 transition-all duration-1000"
+            className="pointer-events-none absolute inset-0 -z-20 h-full w-full transition-all duration-1000"
         />
     );
 }

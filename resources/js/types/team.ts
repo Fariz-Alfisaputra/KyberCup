@@ -2,7 +2,10 @@ import type { User } from './user';
 
 export type TeamMemberRole = 'captain' | 'member';
 
-export interface TeamMember extends Pick<User, 'id' | 'name' | 'username' | 'avatar_url'> {
+export interface TeamMember extends Pick<
+    User,
+    'id' | 'name' | 'username' | 'avatar_url'
+> {
     role: TeamMemberRole;
     joined_at?: string;
 }

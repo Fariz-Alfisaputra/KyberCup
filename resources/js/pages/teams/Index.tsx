@@ -1,6 +1,7 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Search, Shield, Trophy, Users } from 'lucide-react';
 import { useState } from 'react';
+import { decodeHtmlEntities } from '@/lib/formatters';
 import type { TeamListItem } from '@/types';
 
 interface PaginatedTeams {
@@ -32,12 +33,16 @@ export default function TeamsIndex({ teams }: TeamsIndexProps) {
                 <div className="border-b border-border bg-card/50">
                     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
                         <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-xl gaming-gradient">
+                            <div className="gaming-gradient flex h-10 w-10 items-center justify-center rounded-xl">
                                 <Shield className="h-5 w-5 text-white" />
                             </div>
                             <div>
-                                <h1 className="text-2xl font-black text-foreground">Direktori Tim</h1>
-                                <p className="text-sm text-muted-foreground">{teams.total} tim terdaftar</p>
+                                <h1 className="text-2xl font-black text-foreground">
+                                    Direktori Tim
+                                </h1>
+                                <p className="text-sm text-muted-foreground">
+                                    {teams.total} tim terdaftar
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -53,8 +58,10 @@ export default function TeamsIndex({ teams }: TeamsIndexProps) {
                                 placeholder="Cari nama tim..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                                className="w-full rounded-lg border border-border bg-card py-2.5 pr-4 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                onKeyDown={(e) =>
+                                    e.key === 'Enter' && handleSearch()
+                                }
+                                className="w-full rounded-lg border border-border bg-card py-2.5 pr-4 pl-10 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                             />
                         </div>
                         <button
@@ -70,11 +77,16 @@ export default function TeamsIndex({ teams }: TeamsIndexProps) {
                         <>
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 {teams.data.map((team) => (
-                                    <Link key={team.id} href={`/teams/${team.slug}`} className="group block">
+                                    <Link
+                                        key={team.id}
+                                        href={`/teams/${team.slug}`}
+                                        className="group block"
+                                    >
                                         <div className="rounded-xl border border-border bg-card p-5 transition-all hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5">
                                             <div className="mb-4 flex items-center justify-between">
                                                 {team.logo_url ? (
                                                     <img
+                                                        loading="lazy"
                                                         src={team.logo_url}
                                                         alt={team.nama_tim}
                                                         className="h-16 w-16 rounded-xl object-cover"
@@ -100,14 +112,16 @@ export default function TeamsIndex({ teams }: TeamsIndexProps) {
                                                     {team.deskripsi}
                                                 </p>
                                             ) : (
-                                                <p className="text-sm italic text-muted-foreground">
+                                                <p className="text-sm text-muted-foreground italic">
                                                     Tidak ada deskripsi
                                                 </p>
                                             )}
 
                                             <div className="mt-4 flex items-center gap-2 border-t border-border pt-4 text-xs text-muted-foreground">
                                                 <span>Captain:</span>
-                                                <span className="font-medium text-foreground">{team.captain.name}</span>
+                                                <span className="font-medium text-foreground">
+                                                    {team.captain.name}
+                                                </span>
                                             </div>
                                         </div>
                                     </Link>
@@ -121,7 +135,10 @@ export default function TeamsIndex({ teams }: TeamsIndexProps) {
                                         <button
                                             key={i}
                                             disabled={!link.url}
-                                            onClick={() => link.url && router.visit(link.url)}
+                                            onClick={() =>
+                                                link.url &&
+                                                router.visit(link.url)
+                                            }
                                             className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                                                 link.active
                                                     ? 'bg-primary text-primary-foreground'
@@ -129,8 +146,10 @@ export default function TeamsIndex({ teams }: TeamsIndexProps) {
                                                       ? 'border border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
                                                       : 'cursor-not-allowed border border-border/30 text-muted-foreground/30'
                                             }`}
-                                            dangerouslySetInnerHTML={{ __html: link.label }}
-                                        />
+                                            dangerouslySetInnerHTML={undefined}
+                                        >
+                                            {decodeHtmlEntities(link.label)}
+                                        </button>
                                     ))}
                                 </div>
                             )}
@@ -138,8 +157,12 @@ export default function TeamsIndex({ teams }: TeamsIndexProps) {
                     ) : (
                         <div className="flex flex-col items-center justify-center py-20 text-center">
                             <Shield className="mb-4 h-16 w-16 text-muted-foreground/20" />
-                            <h3 className="mb-2 text-lg font-bold text-foreground">Tidak Ada Tim</h3>
-                            <p className="text-sm text-muted-foreground">Pencarian tidak menemukan hasil apapun.</p>
+                            <h3 className="mb-2 text-lg font-bold text-foreground">
+                                Tidak Ada Tim
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                                Pencarian tidak menemukan hasil apapun.
+                            </p>
                         </div>
                     )}
                 </div>

@@ -28,18 +28,25 @@ export default function TeamCreate() {
                             <Shield className="h-6 w-6 text-primary" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-bold text-foreground">Informasi Tim</h2>
-                            <p className="text-sm text-muted-foreground">Isi detail tim esport kamu.</p>
+                            <h2 className="text-xl font-bold text-foreground">
+                                Informasi Tim
+                            </h2>
+                            <p className="text-sm text-muted-foreground">
+                                Isi detail tim esport kamu.
+                            </p>
                         </div>
                     </div>
 
                     <form onSubmit={submit} className="space-y-6">
                         {/* Logo Upload */}
                         <div>
-                            <label className="mb-2 block text-sm font-medium">Logo Tim</label>
+                            <label className="mb-2 block text-sm font-medium">
+                                Logo Tim
+                            </label>
                             <div className="flex items-center gap-6">
                                 {data.logo ? (
                                     <img
+                                        loading="lazy"
                                         src={URL.createObjectURL(data.logo)}
                                         alt="Preview"
                                         className="h-24 w-24 rounded-xl border border-border object-cover"
@@ -53,7 +60,12 @@ export default function TeamCreate() {
                                     <input
                                         type="file"
                                         accept="image/*"
-                                        onChange={(e) => setData('logo', e.target.files?.[0] ?? null)}
+                                        onChange={(e) =>
+                                            setData(
+                                                'logo',
+                                                e.target.files?.[0] ?? null,
+                                            )
+                                        }
                                         className="hidden"
                                         id="logo-upload"
                                     />
@@ -64,37 +76,59 @@ export default function TeamCreate() {
                                         Pilih Foto
                                     </label>
                                     <p className="mt-2 text-xs text-muted-foreground">
-                                        Rekomendasi: JPG, PNG, atau WEBP. Maks 2MB.
+                                        Rekomendasi: JPG, PNG, atau WEBP. Maks
+                                        2MB.
                                     </p>
                                 </div>
                             </div>
-                            {errors.logo && <p className="mt-2 text-xs text-destructive">{errors.logo}</p>}
+                            {errors.logo && (
+                                <p className="mt-2 text-xs text-destructive">
+                                    {errors.logo}
+                                </p>
+                            )}
                         </div>
 
                         {/* Nama Tim */}
                         <div>
-                            <label className="mb-2 block text-sm font-medium">Nama Tim <span className="text-destructive">*</span></label>
+                            <label className="mb-2 block text-sm font-medium">
+                                Nama Tim{' '}
+                                <span className="text-destructive">*</span>
+                            </label>
                             <input
                                 type="text"
                                 value={data.nama_tim}
-                                onChange={(e) => setData('nama_tim', e.target.value)}
-                                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                onChange={(e) =>
+                                    setData('nama_tim', e.target.value)
+                                }
+                                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                                 placeholder="Masukkan nama tim"
                             />
-                            {errors.nama_tim && <p className="mt-2 text-xs text-destructive">{errors.nama_tim}</p>}
+                            {errors.nama_tim && (
+                                <p className="mt-2 text-xs text-destructive">
+                                    {errors.nama_tim}
+                                </p>
+                            )}
                         </div>
 
                         {/* Deskripsi */}
                         <div>
-                            <label className="mb-2 block text-sm font-medium">Deskripsi Tim</label>
+                            <label className="mb-2 block text-sm font-medium">
+                                Deskripsi Tim
+                            </label>
                             <textarea
                                 value={data.deskripsi}
-                                onChange={(e) => setData('deskripsi', e.target.value)}
+                                onChange={(e) =>
+                                    setData('deskripsi', e.target.value)
+                                }
                                 rows={4}
-                                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                                 placeholder="Ceritakan tentang tim kamu, visi, atau pencapaian..."
                             />
-                            {errors.deskripsi && <p className="mt-2 text-xs text-destructive">{errors.deskripsi}</p>}
+                            {errors.deskripsi && (
+                                <p className="mt-2 text-xs text-destructive">
+                                    {errors.deskripsi}
+                                </p>
+                            )}
                         </div>
 
                         <div className="flex items-center justify-end gap-3 border-t border-border pt-6">

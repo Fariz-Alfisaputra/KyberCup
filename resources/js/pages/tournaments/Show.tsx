@@ -13,11 +13,18 @@ import {
     XCircle,
 } from 'lucide-react';
 import { useState } from 'react';
-import AppLayout from '@/layouts/AppLayout';
 import BackButton from '@/components/BackButton';
 import BracketTree from '@/components/tournament/BracketTree';
 import StandingsTable from '@/components/tournament/StandingsTable';
-import type { Standing, Tournament, TournamentMatch, TeamListItem } from '@/types';
+import AppLayout from '@/layouts/AppLayout';
+import { toUrl } from '@/lib/utils';
+import { register as registerForTournament } from '@/routes/tournaments';
+import type {
+    Standing,
+    Tournament,
+    TournamentMatch,
+    TeamListItem,
+} from '@/types';
 
 interface Registration {
     id: number;
@@ -34,7 +41,12 @@ interface UserTeam {
 
 interface TournamentShowProps {
     tournament: Tournament & {
-        game: { id: number; nama_game: string; logo_url: string | null; genre: string };
+        game: {
+            id: number;
+            nama_game: string;
+            logo_url: string | null;
+            genre: string;
+        };
     };
     matches: Record<string, TournamentMatch[]>;
     standings: Standing[];
@@ -47,10 +59,22 @@ interface TournamentShowProps {
 type TabType = 'info' | 'bracket' | 'standings' | 'teams';
 
 const statusConfig = {
-    draft: { label: 'Draft', className: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30' },
-    open: { label: 'Open Registration', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-    ongoing: { label: 'Ongoing', className: 'bg-violet-500/20 text-violet-400 border-violet-500/30' },
-    selesai: { label: 'Selesai', className: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
+    draft: {
+        label: 'Draft',
+        className: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30',
+    },
+    open: {
+        label: 'Open Registration',
+        className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+    },
+    ongoing: {
+        label: 'Ongoing',
+        className: 'bg-violet-500/20 text-violet-400 border-violet-500/30',
+    },
+    selesai: {
+        label: 'Selesai',
+        className: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    },
 };
 
 const formatLabels = {
@@ -79,8 +103,12 @@ function RegistrationCTA({
     if (!auth.user) {
         return (
             <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-5">
-                <h3 className="mb-1 font-bold text-blue-400">Daftar Turnamen</h3>
-                <p className="mb-4 text-xs text-muted-foreground">Login terlebih dahulu untuk mendaftarkan timmu.</p>
+                <h3 className="mb-1 font-bold text-blue-400">
+                    Daftar Turnamen
+                </h3>
+                <p className="mb-4 text-xs text-muted-foreground">
+                    Login terlebih dahulu untuk mendaftarkan timmu.
+                </p>
                 <Link
                     href={`/login?intended=${encodeURIComponent(window.location.pathname)}`}
                     className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white transition-all hover:bg-blue-500"
@@ -96,9 +124,15 @@ function RegistrationCTA({
     if (tournament.status !== 'open') {
         return (
             <div className="rounded-xl border border-zinc-500/30 bg-zinc-500/5 p-5">
-                <h3 className="mb-1 font-bold text-zinc-400">Pendaftaran Ditutup</h3>
+                <h3 className="mb-1 font-bold text-zinc-400">
+                    Pendaftaran Ditutup
+                </h3>
                 <p className="mb-4 text-xs text-muted-foreground">
-                    Turnamen ini {tournament.status === 'ongoing' ? 'sedang berlangsung' : 'sudah selesai'} dan tidak menerima pendaftaran baru.
+                    Turnamen ini{' '}
+                    {tournament.status === 'ongoing'
+                        ? 'sedang berlangsung'
+                        : 'sudah selesai'}{' '}
+                    dan tidak menerima pendaftaran baru.
                 </p>
                 <button
                     disabled
@@ -115,9 +149,12 @@ function RegistrationCTA({
     if (userTeams.length === 0) {
         return (
             <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
-                <h3 className="mb-1 font-bold text-amber-400">Belum Punya Tim</h3>
+                <h3 className="mb-1 font-bold text-amber-400">
+                    Belum Punya Tim
+                </h3>
                 <p className="mb-4 text-xs text-muted-foreground">
-                    Kamu perlu bergabung atau membuat tim sebelum bisa mendaftar turnamen.
+                    Kamu perlu bergabung atau membuat tim sebelum bisa mendaftar
+                    turnamen.
                 </p>
                 <Link
                     href="/teams/create"
@@ -135,7 +172,10 @@ function RegistrationCTA({
         return (
             <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-5">
                 <h3 className="mb-1 font-bold text-red-400">Slot Penuh</h3>
-                <p className="mb-4 text-xs text-muted-foreground">Semua slot peserta sudah terisi. Pantau terus untuk turnamen berikutnya!</p>
+                <p className="mb-4 text-xs text-muted-foreground">
+                    Semua slot peserta sudah terisi. Pantau terus untuk turnamen
+                    berikutnya!
+                </p>
                 <button
                     disabled
                     className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-red-500/50 py-2.5 text-sm font-bold text-red-500"
@@ -151,9 +191,12 @@ function RegistrationCTA({
     if (userRegistrationStatus === 'pending') {
         return (
             <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
-                <h3 className="mb-1 font-bold text-amber-400">Menunggu Persetujuan</h3>
+                <h3 className="mb-1 font-bold text-amber-400">
+                    Menunggu Persetujuan
+                </h3>
                 <p className="mb-4 text-xs text-muted-foreground">
-                    Timmu sudah mendaftar dan sedang menunggu review dari admin. Harap bersabar!
+                    Timmu sudah mendaftar dan sedang menunggu review dari admin.
+                    Harap bersabar!
                 </p>
                 <button
                     disabled
@@ -170,8 +213,12 @@ function RegistrationCTA({
     if (userRegistrationStatus === 'approved') {
         return (
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
-                <h3 className="mb-1 font-bold text-emerald-400">Tim Sudah Terdaftar</h3>
-                <p className="mb-4 text-xs text-muted-foreground">Timmu sudah disetujui. Bersiaplah untuk bertanding!</p>
+                <h3 className="mb-1 font-bold text-emerald-400">
+                    Tim Sudah Terdaftar
+                </h3>
+                <p className="mb-4 text-xs text-muted-foreground">
+                    Timmu sudah disetujui. Bersiaplah untuk bertanding!
+                </p>
                 <button
                     disabled
                     className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-emerald-500/50 py-2.5 text-sm font-bold text-emerald-500"
@@ -187,8 +234,13 @@ function RegistrationCTA({
     if (userRegistrationStatus === 'rejected') {
         return (
             <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-5">
-                <h3 className="mb-1 font-bold text-red-400">Pendaftaran Ditolak</h3>
-                <p className="mb-4 text-xs text-muted-foreground">Sayangnya pendaftaran timmu ditolak. Hubungi admin untuk info lebih lanjut.</p>
+                <h3 className="mb-1 font-bold text-red-400">
+                    Pendaftaran Ditolak
+                </h3>
+                <p className="mb-4 text-xs text-muted-foreground">
+                    Sayangnya pendaftaran timmu ditolak. Hubungi admin untuk
+                    info lebih lanjut.
+                </p>
                 <button
                     disabled
                     className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-red-500/50 py-2.5 text-sm font-bold text-red-500"
@@ -204,7 +256,9 @@ function RegistrationCTA({
     return (
         <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
             <h3 className="mb-1 font-bold text-emerald-400">Daftar Tim</h3>
-            <p className="mb-4 text-xs text-muted-foreground">Daftarkan tim kamu ke turnamen ini!</p>
+            <p className="mb-4 text-xs text-muted-foreground">
+                Daftarkan tim kamu ke turnamen ini!
+            </p>
             <button
                 onClick={onRegisterClick}
                 className="w-full rounded-lg bg-emerald-500 py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-400 active:scale-95"
@@ -225,14 +279,19 @@ export default function TournamentShow({
     user_teams,
     user_registration_status,
 }: TournamentShowProps) {
-    const { auth } = usePage().props as { auth: { user: { id: number; role: string } | null } };
+    const { auth } = usePage().props as {
+        auth: { user: { id: number; role: string } | null };
+    };
     const [activeTab, setActiveTab] = useState<TabType>('info');
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const status = statusConfig[tournament.status as keyof typeof statusConfig];
 
     const registerForm = useForm({ team_id: '' });
     const approvedTeams = registrations.filter((r) => r.status === 'approved');
-    const progress = Math.min((approvedTeams.length / tournament.max_tim) * 100, 100);
+    const progress = Math.min(
+        (approvedTeams.length / tournament.max_tim) * 100,
+        100,
+    );
 
     const tabs: Array<{ id: TabType; label: string; count?: number }> = [
         { id: 'info', label: 'Info' },
@@ -252,11 +311,11 @@ export default function TournamentShow({
 
             {/* Page content — no dark wrapper, AppLayout handles background */}
             <div>
-
                 {/* Hero Banner */}
                 <div className="relative h-72 overflow-hidden lg:h-96">
                     {tournament.banner_url ? (
                         <img
+                            loading="lazy"
                             src={tournament.banner_url}
                             alt={tournament.nama}
                             className="h-full w-full object-cover"
@@ -269,10 +328,12 @@ export default function TournamentShow({
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
 
                     {/* Tournament title overlay */}
-                    <div className="absolute bottom-0 left-0 right-0 px-4 pb-6 sm:px-6">
+                    <div className="absolute right-0 bottom-0 left-0 px-4 pb-6 sm:px-6">
                         <div className="mx-auto max-w-7xl">
                             <div className="mb-2 flex items-center gap-3">
-                                <span className={`rounded-full border px-3 py-1 text-xs font-bold ${status.className}`}>
+                                <span
+                                    className={`rounded-full border px-3 py-1 text-xs font-bold ${status.className}`}
+                                >
                                     {status.label}
                                 </span>
                                 <span className="rounded-full bg-card/80 px-3 py-1 text-xs text-muted-foreground backdrop-blur-sm">
@@ -285,6 +346,7 @@ export default function TournamentShow({
                             <div className="mt-2 flex items-center gap-4 text-sm text-zinc-300">
                                 {tournament.game.logo_url && (
                                     <img
+                                        loading="lazy"
                                         src={tournament.game.logo_url}
                                         alt={tournament.game.nama_game}
                                         className="h-5 w-5 rounded object-cover"
@@ -335,13 +397,15 @@ export default function TournamentShow({
                             {/* Tab content */}
                             {activeTab === 'info' && (
                                 <div className="rounded-xl border border-border bg-card p-6">
-                                    <h2 className="mb-4 text-lg font-bold">Tentang Turnamen</h2>
+                                    <h2 className="mb-4 text-lg font-bold">
+                                        Tentang Turnamen
+                                    </h2>
                                     {tournament.deskripsi ? (
-                                        <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
+                                        <p className="text-sm leading-relaxed whitespace-pre-line text-muted-foreground">
                                             {tournament.deskripsi}
                                         </p>
                                     ) : (
-                                        <p className="text-sm italic text-muted-foreground">
+                                        <p className="text-sm text-muted-foreground italic">
                                             Tidak ada deskripsi tersedia.
                                         </p>
                                     )}
@@ -350,21 +414,27 @@ export default function TournamentShow({
 
                             {activeTab === 'bracket' && (
                                 <div className="rounded-xl border border-border bg-card p-6">
-                                    <h2 className="mb-4 text-lg font-bold">Bracket Turnamen</h2>
+                                    <h2 className="mb-4 text-lg font-bold">
+                                        Bracket Turnamen
+                                    </h2>
                                     <BracketTree matches={matches} />
                                 </div>
                             )}
 
                             {activeTab === 'standings' && (
                                 <div className="rounded-xl border border-border bg-card p-6">
-                                    <h2 className="mb-4 text-lg font-bold">Standings</h2>
+                                    <h2 className="mb-4 text-lg font-bold">
+                                        Standings
+                                    </h2>
                                     <StandingsTable standings={standings} />
                                 </div>
                             )}
 
                             {activeTab === 'teams' && (
                                 <div className="rounded-xl border border-border bg-card p-6">
-                                    <h2 className="mb-4 text-lg font-bold">Tim Terdaftar</h2>
+                                    <h2 className="mb-4 text-lg font-bold">
+                                        Tim Terdaftar
+                                    </h2>
                                     {approvedTeams.length > 0 ? (
                                         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                                             {approvedTeams.map((reg) => (
@@ -375,8 +445,15 @@ export default function TournamentShow({
                                                 >
                                                     {reg.team.logo_url ? (
                                                         <img
-                                                            src={reg.team.logo_url}
-                                                            alt={reg.team.nama_tim}
+                                                            loading="lazy"
+                                                            src={
+                                                                reg.team
+                                                                    .logo_url
+                                                            }
+                                                            alt={
+                                                                reg.team
+                                                                    .nama_tim
+                                                            }
                                                             className="h-8 w-8 rounded-lg object-cover"
                                                         />
                                                     ) : (
@@ -389,7 +466,9 @@ export default function TournamentShow({
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="text-sm text-muted-foreground">Belum ada tim yang disetujui.</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            Belum ada tim yang disetujui.
+                                        </p>
                                     )}
                                 </div>
                             )}
@@ -403,49 +482,79 @@ export default function TournamentShow({
                                 auth={auth}
                                 isFull={is_full}
                                 userTeams={user_teams}
-                                userRegistrationStatus={user_registration_status}
-                                onRegisterClick={() => setShowRegisterModal(true)}
+                                userRegistrationStatus={
+                                    user_registration_status
+                                }
+                                onRegisterClick={() =>
+                                    setShowRegisterModal(true)
+                                }
                             />
 
                             {/* Tournament Info */}
                             <div className="rounded-xl border border-border bg-card p-5">
-                                <h3 className="mb-4 font-bold">Info Turnamen</h3>
+                                <h3 className="mb-4 font-bold">
+                                    Info Turnamen
+                                </h3>
                                 <div className="space-y-3 text-sm">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Format</span>
-                                        <span className="font-medium">{formatLabels[tournament.format]}</span>
+                                        <span className="text-muted-foreground">
+                                            Format
+                                        </span>
+                                        <span className="font-medium">
+                                            {formatLabels[tournament.format]}
+                                        </span>
                                     </div>
                                     <div className="flex items-center justify-between">
-                                        <span className="text-muted-foreground">Maksimal Tim</span>
-                                        <span className="font-medium">{tournament.max_tim} tim</span>
+                                        <span className="text-muted-foreground">
+                                            Maksimal Tim
+                                        </span>
+                                        <span className="font-medium">
+                                            {tournament.max_tim} tim
+                                        </span>
                                     </div>
                                     {tournament.hadiah && (
                                         <div className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">Hadiah</span>
-                                            <span className="font-bold text-amber-400">{tournament.hadiah}</span>
+                                            <span className="text-muted-foreground">
+                                                Hadiah
+                                            </span>
+                                            <span className="font-bold text-amber-400">
+                                                {tournament.hadiah}
+                                            </span>
                                         </div>
                                     )}
                                     {tournament.tanggal_mulai && (
                                         <div className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">Mulai</span>
+                                            <span className="text-muted-foreground">
+                                                Mulai
+                                            </span>
                                             <span className="font-medium">
-                                                {new Date(tournament.tanggal_mulai).toLocaleDateString('id-ID')}
+                                                {new Date(
+                                                    tournament.tanggal_mulai,
+                                                ).toLocaleDateString('id-ID')}
                                             </span>
                                         </div>
                                     )}
                                     {tournament.tanggal_selesai && (
                                         <div className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">Selesai</span>
+                                            <span className="text-muted-foreground">
+                                                Selesai
+                                            </span>
                                             <span className="font-medium">
-                                                {new Date(tournament.tanggal_selesai).toLocaleDateString('id-ID')}
+                                                {new Date(
+                                                    tournament.tanggal_selesai,
+                                                ).toLocaleDateString('id-ID')}
                                             </span>
                                         </div>
                                     )}
                                     {tournament.registration_deadline && (
                                         <div className="flex items-center justify-between">
-                                            <span className="text-muted-foreground">Deadline</span>
+                                            <span className="text-muted-foreground">
+                                                Deadline
+                                            </span>
                                             <span className="font-medium text-amber-400">
-                                                {new Date(tournament.registration_deadline).toLocaleDateString('id-ID')}
+                                                {new Date(
+                                                    tournament.registration_deadline,
+                                                ).toLocaleDateString('id-ID')}
                                             </span>
                                         </div>
                                     )}
@@ -456,9 +565,12 @@ export default function TournamentShow({
                                     <div className="mb-1.5 flex items-center justify-between text-xs">
                                         <span className="flex items-center gap-1 text-muted-foreground">
                                             <Users className="h-3 w-3" />
-                                            {approvedTeams.length}/{tournament.max_tim} Tim
+                                            {approvedTeams.length}/
+                                            {tournament.max_tim} Tim
                                         </span>
-                                        <span className="text-muted-foreground">{Math.round(progress)}%</span>
+                                        <span className="text-muted-foreground">
+                                            {Math.round(progress)}%
+                                        </span>
                                     </div>
                                     <div className="h-2 overflow-hidden rounded-full bg-secondary">
                                         <div
@@ -477,36 +589,64 @@ export default function TournamentShow({
             {showRegisterModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
                     <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-2xl">
-                        <h3 className="mb-1 text-lg font-bold">Daftar ke Turnamen</h3>
-                        <p className="mb-4 text-sm text-muted-foreground">Pilih tim yang ingin kamu daftarkan.</p>
+                        <h3 className="mb-1 text-lg font-bold">
+                            Daftar ke Turnamen
+                        </h3>
+                        <p className="mb-4 text-sm text-muted-foreground">
+                            Pilih tim yang ingin kamu daftarkan.
+                        </p>
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
-                                registerForm.post(`/tournaments/${tournament.slug}/register`, {
-                                    onSuccess: () => setShowRegisterModal(false),
-                                });
+                                registerForm.post(
+                                    toUrl(
+                                        registerForTournament({
+                                            slug: tournament.slug,
+                                        }),
+                                    ),
+                                    {
+                                        onSuccess: () =>
+                                            setShowRegisterModal(false),
+                                    },
+                                );
                             }}
                         >
                             <div className="mb-4">
-                                <label className="mb-1.5 block text-sm font-medium">Tim</label>
+                                <label className="mb-1.5 block text-sm font-medium">
+                                    Tim
+                                </label>
                                 {user_teams.length > 0 ? (
                                     <select
                                         value={registerForm.data.team_id}
-                                        onChange={(e) => registerForm.setData('team_id', e.target.value)}
-                                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                        onChange={(e) =>
+                                            registerForm.setData(
+                                                'team_id',
+                                                e.target.value,
+                                            )
+                                        }
+                                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
                                     >
-                                        <option value="">-- Pilih Tim --</option>
+                                        <option value="">
+                                            -- Pilih Tim --
+                                        </option>
                                         {user_teams.map((team) => (
-                                            <option key={team.id} value={String(team.id)}>
+                                            <option
+                                                key={team.id}
+                                                value={String(team.id)}
+                                            >
                                                 {team.nama_tim}
                                             </option>
                                         ))}
                                     </select>
                                 ) : (
-                                    <p className="text-sm text-muted-foreground italic">Kamu belum memiliki tim.</p>
+                                    <p className="text-sm text-muted-foreground italic">
+                                        Kamu belum memiliki tim.
+                                    </p>
                                 )}
                                 {registerForm.errors.team_id && (
-                                    <p className="mt-1 text-xs text-destructive">{registerForm.errors.team_id}</p>
+                                    <p className="mt-1 text-xs text-destructive">
+                                        {registerForm.errors.team_id}
+                                    </p>
                                 )}
                             </div>
                             <div className="flex gap-3">
@@ -519,10 +659,15 @@ export default function TournamentShow({
                                 </button>
                                 <button
                                     type="submit"
-                                    disabled={registerForm.processing || !registerForm.data.team_id}
+                                    disabled={
+                                        registerForm.processing ||
+                                        !registerForm.data.team_id
+                                    }
                                     className="flex-1 rounded-lg bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
-                                    {registerForm.processing ? 'Mendaftar...' : 'Daftar'}
+                                    {registerForm.processing
+                                        ? 'Mendaftar...'
+                                        : 'Daftar'}
                                 </button>
                             </div>
                         </form>

@@ -16,8 +16,8 @@ interface Particle {
 
 export default function ForceCursor() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const { resolvedAppearance } = useAppearance(); // 'jedi' | 'sith' | 'neutral'
-    const isDark = resolvedAppearance === 'sith' || resolvedAppearance === 'neutral';
+    const { resolvedAppearance } = useAppearance();
+    const isDark = resolvedAppearance === 'dark-side';
 
     // Target coordinates
     const mouseRef = useRef({ x: 0, y: 0 });
@@ -28,31 +28,28 @@ export default function ForceCursor() {
 
     const [isHovering, setIsHovering] = useState(false);
 
-    // Color definitions based on current active theme
-    let glowColor = 'rgba(59, 130, 246, 0.9)'; // Jedi Blue (Default)
-    let particleColors = ['#3b82f6', '#60a5fa', '#2563eb', '#dbeafe']; // Jedi Blue spectrum
-
-    if (resolvedAppearance === 'sith') {
-        glowColor = 'rgba(239, 68, 68, 0.9)'; // Sith Red
-        particleColors = ['#ef4444', '#f87171', '#dc2626', '#ffe4e6']; // Sith Red spectrum
-    } else if (resolvedAppearance === 'neutral') {
-        glowColor = 'rgba(255, 232, 31, 0.95)'; // Smuggler/Intro Yellow
-        particleColors = ['#ffe81f', '#facc15', '#eab308', '#fef08a']; // Yellow/Gold spectrum
-    }
-
     useEffect(() => {
         // Only enable custom cursor for devices with fine pointers (mouse)
         const isFinePointer = window.matchMedia('(pointer: fine)').matches;
-        if (!isFinePointer) return;
+
+        if (!isFinePointer) {
+            return;
+        }
 
         // Add class to hide default cursor
         document.documentElement.classList.add('custom-cursor-active');
 
         const canvas = canvasRef.current;
-        if (!canvas) return;
+
+        if (!canvas) {
+            return;
+        }
 
         const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+
+        if (!ctx) {
+            return;
+        }
 
         let animationFrameId: number;
 
@@ -64,6 +61,7 @@ export default function ForceCursor() {
         const handleMouseMove = (e: MouseEvent) => {
             mouseRef.current.x = e.clientX;
             mouseRef.current.y = e.clientY;
+
             if (!isVisibleRef.current) {
                 isVisibleRef.current = true;
                 // Instantly snap to first position to avoid jumping
@@ -82,11 +80,48 @@ export default function ForceCursor() {
             mouseRef.current.y = e.clientY;
         };
 
+        // Dynamic theme colors
+        const style = getComputedStyle(document.documentElement);
+        const accentColor =
+            style.getPropertyValue('--accent-primary').trim() || '#3b82f6';
+        const goldColor =
+            style.getPropertyValue('--accent-gold').trim() || '#ffe81f';
+
+        const hexToRgba = (hex: string, alpha: number) => {
+            const cleanHex = hex.replace('#', '').trim();
+            let fullHex = cleanHex;
+
+            if (cleanHex.length === 3) {
+                fullHex =
+                    cleanHex[0] +
+                    cleanHex[0] +
+                    cleanHex[1] +
+                    cleanHex[1] +
+                    cleanHex[2] +
+                    cleanHex[2];
+            }
+
+            const r = parseInt(fullHex.substring(0, 2), 16) || 255;
+            const g = parseInt(fullHex.substring(2, 4), 16) || 255;
+            const b = parseInt(fullHex.substring(4, 6), 16) || 255;
+
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        };
+
+        const glowColor = hexToRgba(accentColor, 0.9);
+        const particleColors = [
+            accentColor,
+            hexToRgba(accentColor, 0.7),
+            goldColor,
+            '#ffffff',
+        ];
+
         // Create spark burst on click
         const handleClick = (e: MouseEvent) => {
             playClashSound(0.2); // Play clash sound when clicking (custom cursor sparks)
 
             const burstCount = 18;
+
             for (let i = 0; i < burstCount; i++) {
                 const angle = Math.random() * Math.PI * 2;
                 const speed = Math.random() * 5 + 2;
@@ -96,10 +131,12 @@ export default function ForceCursor() {
                     vx: Math.cos(angle) * speed,
                     vy: Math.sin(angle) * speed,
                     size: Math.random() * 4 + 1.5,
-                    color: particleColors[Math.floor(Math.random() * particleColors.length)],
+                    color: particleColors[
+                        Math.floor(Math.random() * particleColors.length)
+                    ],
                     alpha: 1.0,
                     life: 0,
-                    maxLife: Math.random() * 25 + 15
+                    maxLife: Math.random() * 25 + 15,
                 });
             }
         };
@@ -107,16 +144,18 @@ export default function ForceCursor() {
         // Detect hover on interactive elements
         const handleMouseOver = (e: MouseEvent) => {
             const target = e.target as HTMLElement | null;
-            if (target && (
-                target.tagName === 'A' ||
-                target.tagName === 'BUTTON' ||
-                target.tagName === 'SELECT' ||
-                target.tagName === 'INPUT' ||
-                target.closest('a') ||
-                target.closest('button') ||
-                target.closest('[role="button"]') ||
-                target.classList.contains('cursor-pointer')
-            )) {
+
+            if (
+                target &&
+                (target.tagName === 'A' ||
+                    target.tagName === 'BUTTON' ||
+                    target.tagName === 'SELECT' ||
+                    target.tagName === 'INPUT' ||
+                    target.closest('a') ||
+                    target.closest('button') ||
+                    target.closest('[role="button"]') ||
+                    target.classList.contains('cursor-pointer'))
+            ) {
                 setIsHovering(true);
             } else {
                 setIsHovering(false);
@@ -142,10 +181,12 @@ export default function ForceCursor() {
                 vx: Math.cos(angle) * speed + (Math.random() - 0.5) * 0.2,
                 vy: Math.sin(angle) * speed - 0.3, // slight upward float
                 size: Math.random() * 3 + 1,
-                color: particleColors[Math.floor(Math.random() * particleColors.length)],
+                color: particleColors[
+                    Math.floor(Math.random() * particleColors.length)
+                ],
                 alpha: 0.8,
                 life: 0,
-                maxLife: Math.random() * 20 + 10
+                maxLife: Math.random() * 20 + 10,
             });
         };
 
@@ -155,6 +196,7 @@ export default function ForceCursor() {
 
             // 1. Update and draw particles
             const particles = particlesRef.current;
+
             for (let i = particles.length - 1; i >= 0; i--) {
                 const p = particles[i];
                 p.life++;
@@ -186,13 +228,19 @@ export default function ForceCursor() {
             if (isVisibleRef.current) {
                 // Lerp smoothing (creates floaty feeling of the Force)
                 const lerpFactor = 0.25;
-                cursorRef.current.x += (mouseRef.current.x - cursorRef.current.x) * lerpFactor;
-                cursorRef.current.y += (mouseRef.current.y - cursorRef.current.y) * lerpFactor;
+                cursorRef.current.x +=
+                    (mouseRef.current.x - cursorRef.current.x) * lerpFactor;
+                cursorRef.current.y +=
+                    (mouseRef.current.y - cursorRef.current.y) * lerpFactor;
 
                 const { x, y } = cursorRef.current;
 
                 // Spawn trails when moving
-                const distMoved = Math.hypot(mouseRef.current.x - x, mouseRef.current.y - y);
+                const distMoved = Math.hypot(
+                    mouseRef.current.x - x,
+                    mouseRef.current.y - y,
+                );
+
                 if (distMoved > 2 && Math.random() > 0.3) {
                     spawnTrailParticle(x, y);
                 }
@@ -246,9 +294,7 @@ export default function ForceCursor() {
                 // Small theme-colored activation button on hilt
                 ctx.beginPath();
                 ctx.arc(0.7, 3, 0.6, 0, Math.PI * 2);
-                ctx.fillStyle = resolvedAppearance === 'sith' 
-                    ? '#ef4444' 
-                    : (resolvedAppearance === 'neutral' ? '#ffe81f' : '#3b82f6');
+                ctx.fillStyle = accentColor;
                 ctx.fill();
 
                 ctx.restore();
@@ -269,13 +315,12 @@ export default function ForceCursor() {
             window.removeEventListener('mouseover', handleMouseOver);
             document.documentElement.classList.remove('custom-cursor-active');
         };
-    }, [resolvedAppearance, isHovering, particleColors, glowColor]);
+    }, [resolvedAppearance, isHovering, isDark]);
 
     return (
         <canvas
             ref={canvasRef}
-            className="fixed inset-0 w-full h-full pointer-events-none z-[9999]"
+            className="pointer-events-none fixed inset-0 z-[9999] h-full w-full"
         />
     );
 }
-

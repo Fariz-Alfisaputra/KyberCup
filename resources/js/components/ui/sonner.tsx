@@ -9,7 +9,13 @@ function Toaster({ ...props }: ToasterProps) {
 
     return (
         <Sonner
-            theme={appearance}
+            theme={
+                appearance === 'light-side'
+                    ? 'light'
+                    : appearance === 'dark-side'
+                      ? 'dark'
+                      : 'system'
+            }
             className="toaster group"
             position="bottom-right"
             style={

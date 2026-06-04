@@ -11,33 +11,33 @@ const statusConfig = {
     draft: {
         label: 'Draft',
         style: {
-            background: 'rgba(113,113,122,0.12)',
-            color: '#a1a1aa',
-            border: '1px solid rgba(113,113,122,0.3)',
+            background: 'var(--bg-hover)',
+            color: 'var(--text-muted)',
+            border: '1px solid var(--border-default)',
         },
     },
     open: {
         label: 'Open',
         style: {
-            background: 'rgba(0,212,255,0.12)',
-            color: '#00d4ff',
-            border: '1px solid rgba(0,212,255,0.35)',
+            background: 'var(--status-open-bg)',
+            color: 'var(--status-open-text)',
+            border: '1px solid var(--border-accent)',
         },
     },
     ongoing: {
         label: 'Ongoing',
         style: {
-            background: 'rgba(124,58,237,0.12)',
-            color: '#a78bfa',
-            border: '1px solid rgba(124,58,237,0.35)',
+            background: 'var(--status-ongoing-bg)',
+            color: 'var(--status-ongoing-text)',
+            border: '1px solid var(--border-accent)',
         },
     },
     selesai: {
         label: 'Selesai',
         style: {
-            background: 'rgba(255,232,31,0.12)',
-            color: '#FFE81F',
-            border: '1px solid rgba(255,232,31,0.35)',
+            background: 'var(--accent-gold-bg)',
+            color: 'var(--accent-gold)',
+            border: '1px solid var(--border-accent)',
         },
     },
 };
@@ -54,17 +54,26 @@ function CountdownTimer({ deadline }: { deadline: string }) {
     useEffect(() => {
         const calculate = () => {
             const diff = new Date(deadline).getTime() - Date.now();
+
             if (diff <= 0) {
                 setTimeLeft('Ditutup');
+
                 return;
             }
+
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const hours = Math.floor(
+                (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+            );
             const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-            if (days > 0) setTimeLeft(`${days}h ${hours}j`);
-            else if (hours > 0) setTimeLeft(`${hours}j ${mins}m`);
-            else setTimeLeft(`${mins}m`);
+            if (days > 0) {
+                setTimeLeft(`${days}h ${hours}j`);
+            } else if (hours > 0) {
+                setTimeLeft(`${hours}j ${mins}m`);
+            } else {
+                setTimeLeft(`${mins}m`);
+            }
         };
 
         calculate();
@@ -76,7 +85,10 @@ function CountdownTimer({ deadline }: { deadline: string }) {
     return (
         <span
             className="flex items-center gap-1 text-xs"
-            style={{ color: '#FFE81F', fontFamily: 'Rajdhani, sans-serif' }}
+            style={{
+                color: 'var(--accent-gold)',
+                fontFamily: 'Rajdhani, sans-serif',
+            }}
         >
             <Clock className="h-3 w-3" />
             {timeLeft}
@@ -86,38 +98,48 @@ function CountdownTimer({ deadline }: { deadline: string }) {
 
 export default function TournamentCard({ tournament }: TournamentCardProps) {
     const status = statusConfig[tournament.status];
-    const progress = Math.min((tournament.registrations_count / tournament.max_tim) * 100, 100);
+    const progress = Math.min(
+        (tournament.registrations_count / tournament.max_tim) * 100,
+        100,
+    );
 
     return (
         <Link href={`/tournaments/${tournament.slug}`} className="group block">
             <div
-                className="relative overflow-hidden rounded-xl scanline-card transition-all duration-400"
+                className="scanline-card relative overflow-hidden rounded-xl transition-all duration-400"
                 style={{
-                    background: 'rgba(10,10,15,0.8)',
-                    border: '1px solid rgba(0,212,255,0.15)',
+                    background: 'var(--bg-surface)',
+                    border: '1px solid var(--border-default)',
                     backdropFilter: 'blur(10px)',
                     WebkitBackdropFilter: 'blur(10px)',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
-                    transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease, border-color 0.35s ease',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                    transition:
+                        'transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease, border-color 0.35s ease',
                 }}
                 onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.borderColor = 'rgba(0,212,255,0.4)';
-                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,212,255,0.12)';
+                    e.currentTarget.style.borderColor = 'var(--border-accent)';
+                    e.currentTarget.style.boxShadow =
+                        '0 8px 32px rgba(0,0,0,0.3), 0 0 20px var(--accent-primary-glow)';
                 }}
                 onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(0,212,255,0.15)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)';
+                    e.currentTarget.style.borderColor = 'var(--border-default)';
+                    e.currentTarget.style.boxShadow =
+                        '0 4px 20px rgba(0,0,0,0.2)';
                 }}
             >
                 {/* Banner */}
                 <div
                     className="relative h-40 overflow-hidden"
-                    style={{ background: 'linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(124,58,237,0.12) 100%)' }}
+                    style={{
+                        background:
+                            'linear-gradient(135deg, var(--bg-hover) 0%, var(--bg-surface-2) 100%)',
+                    }}
                 >
                     {tournament.banner_url ? (
                         <img
+                            loading="lazy"
                             src={tournament.banner_url}
                             alt={tournament.nama}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -126,14 +148,17 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                         <div className="flex h-full items-center justify-center">
                             <Trophy
                                 className="h-16 w-16"
-                                style={{ color: 'rgba(0,212,255,0.2)' }}
+                                style={{ color: 'var(--text-muted)' }}
                             />
                         </div>
                     )}
                     {/* gradient overlay */}
                     <div
                         className="absolute inset-0"
-                        style={{ background: 'linear-gradient(to top, rgba(10,10,15,0.95) 0%, transparent 60%)' }}
+                        style={{
+                            background:
+                                'linear-gradient(to top, var(--bg-surface) 0%, transparent 60%)',
+                        }}
                     />
 
                     {/* Status Badge */}
@@ -155,10 +180,13 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                     {tournament.game.logo_url && (
                         <div className="absolute bottom-3 left-3">
                             <img
+                                loading="lazy"
                                 src={tournament.game.logo_url}
                                 alt={tournament.game.nama_game}
                                 className="h-8 w-8 rounded-lg object-cover"
-                                style={{ border: '1px solid rgba(0,212,255,0.3)' }}
+                                style={{
+                                    border: '1px solid var(--border-default)',
+                                }}
                             />
                         </div>
                     )}
@@ -170,7 +198,7 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                         <h3
                             className="line-clamp-1 text-sm font-bold transition-colors duration-200"
                             style={{
-                                color: '#f0f4ff',
+                                color: 'var(--text-primary)',
                                 fontFamily: 'Rajdhani, sans-serif',
                                 fontSize: '0.95rem',
                                 letterSpacing: '0.03em',
@@ -181,9 +209,9 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                         <span
                             className="shrink-0 rounded px-1.5 py-0.5 text-xs"
                             style={{
-                                background: 'rgba(0,212,255,0.06)',
-                                color: 'rgba(0,212,255,0.6)',
-                                border: '1px solid rgba(0,212,255,0.15)',
+                                background: 'var(--bg-hover)',
+                                color: 'var(--accent-primary)',
+                                border: '1px solid var(--border-default)',
                                 fontFamily: 'Rajdhani, sans-serif',
                                 fontSize: '0.7rem',
                             }}
@@ -192,7 +220,13 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                         </span>
                     </div>
 
-                    <p className="mb-3 text-xs" style={{ color: 'rgba(240,244,255,0.45)', fontFamily: 'Rajdhani, sans-serif' }}>
+                    <p
+                        className="mb-3 text-xs"
+                        style={{
+                            color: 'var(--text-muted)',
+                            fontFamily: 'Rajdhani, sans-serif',
+                        }}
+                    >
                         {tournament.game.nama_game}
                     </p>
 
@@ -200,12 +234,15 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                     {tournament.hadiah && (
                         <div
                             className="mb-3 flex items-center gap-1.5"
-                            style={{ color: '#FFE81F' }}
+                            style={{ color: 'var(--accent-gold)' }}
                         >
                             <Trophy className="h-3.5 w-3.5" />
                             <span
                                 className="text-xs font-semibold"
-                                style={{ fontFamily: 'Rajdhani, sans-serif', textShadow: '0 0 6px rgba(255,232,31,0.5)' }}
+                                style={{
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                    textShadow: '0 0 6px var(--accent-gold-bg)',
+                                }}
                             >
                                 {tournament.hadiah}
                             </span>
@@ -217,25 +254,34 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                         <div className="mb-1 flex items-center justify-between text-xs">
                             <span
                                 className="flex items-center gap-1"
-                                style={{ color: 'rgba(240,244,255,0.45)', fontFamily: 'Rajdhani, sans-serif' }}
+                                style={{
+                                    color: 'var(--text-muted)',
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                }}
                             >
                                 <Users className="h-3 w-3" />
-                                {tournament.registrations_count}/{tournament.max_tim} Tim
+                                {tournament.registrations_count}/
+                                {tournament.max_tim} Tim
                             </span>
-                            {tournament.registration_deadline && tournament.status === 'open' && (
-                                <CountdownTimer deadline={tournament.registration_deadline} />
-                            )}
+                            {tournament.registration_deadline &&
+                                tournament.status === 'open' && (
+                                    <CountdownTimer
+                                        deadline={
+                                            tournament.registration_deadline
+                                        }
+                                    />
+                                )}
                         </div>
                         <div
                             className="h-1.5 overflow-hidden rounded-full"
-                            style={{ background: 'rgba(255,255,255,0.06)' }}
+                            style={{ background: 'var(--border-default)' }}
                         >
                             <div
-                                className="h-full rounded-full transition-all duration-500"
+                                className="h-full animate-pulse rounded-full transition-all duration-500"
                                 style={{
                                     width: `${progress}%`,
-                                    background: 'linear-gradient(90deg, #00d4ff, #7c3aed)',
-                                    boxShadow: `0 0 6px rgba(0,212,255,${progress / 200})`,
+                                    background: 'var(--accent-primary)',
+                                    boxShadow: `0 0 6px var(--accent-primary-glow)`,
                                 }}
                             />
                         </div>
@@ -245,10 +291,15 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                     {tournament.tanggal_mulai && (
                         <div
                             className="flex items-center gap-1 text-xs"
-                            style={{ color: 'rgba(240,244,255,0.35)', fontFamily: 'Rajdhani, sans-serif' }}
+                            style={{
+                                color: 'var(--text-muted)',
+                                fontFamily: 'Rajdhani, sans-serif',
+                            }}
                         >
                             <Calendar className="h-3 w-3" />
-                            {new Date(tournament.tanggal_mulai).toLocaleDateString('id-ID', {
+                            {new Date(
+                                tournament.tanggal_mulai,
+                            ).toLocaleDateString('id-ID', {
                                 day: 'numeric',
                                 month: 'short',
                                 year: 'numeric',

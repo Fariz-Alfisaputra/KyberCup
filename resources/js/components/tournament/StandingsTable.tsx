@@ -11,12 +11,21 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
             <div
                 className="flex flex-col items-center justify-center rounded-xl py-12 text-center"
                 style={{
-                    border: '1px dashed rgba(0,212,255,0.2)',
-                    background: 'rgba(0,212,255,0.02)',
+                    border: '1px dashed var(--border-default)',
+                    background: 'var(--bg-surface-2)',
                 }}
             >
-                <Medal className="mb-3 h-10 w-10" style={{ color: 'rgba(0,212,255,0.2)' }} />
-                <p className="text-sm" style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}>
+                <Medal
+                    className="mb-3 h-10 w-10"
+                    style={{ color: 'var(--text-muted)' }}
+                />
+                <p
+                    className="text-sm"
+                    style={{
+                        color: 'var(--text-muted)',
+                        fontFamily: 'Rajdhani, sans-serif',
+                    }}
+                >
                     Standings belum tersedia
                 </p>
             </div>
@@ -27,8 +36,8 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
         <div
             className="overflow-hidden rounded-xl"
             style={{
-                border: '1px solid rgba(0,212,255,0.18)',
-                background: 'rgba(10,10,15,0.7)',
+                border: '1px solid var(--border-default)',
+                background: 'var(--bg-surface)',
                 backdropFilter: 'blur(10px)',
             }}
         >
@@ -36,8 +45,8 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                 <thead>
                     <tr
                         style={{
-                            background: 'rgba(0,212,255,0.06)',
-                            borderBottom: '1px solid rgba(0,212,255,0.2)',
+                            background: 'var(--bg-hover)',
+                            borderBottom: '1px solid var(--border-default)',
                         }}
                     >
                         {['#', 'Tim', 'M', 'K', 'D', 'Poin'].map((col) => (
@@ -45,7 +54,7 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                 key={col}
                                 className={`px-4 py-3 ${col === '#' || col === 'Tim' ? 'text-left' : 'text-center'}`}
                                 style={{
-                                    color: 'var(--sw-blue-neon)',
+                                    color: 'var(--accent-primary)',
                                     fontFamily: 'Rajdhani, sans-serif',
                                     fontWeight: 700,
                                     letterSpacing: '0.1em',
@@ -60,21 +69,29 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                 </thead>
                 <tbody>
                     {standings.map((standing) => {
-                        const isFirst  = standing.posisi === 1;
+                        const isFirst = standing.posisi === 1;
                         const isSecond = standing.posisi === 2;
-                        const isThird  = standing.posisi === 3;
+                        const isThird = standing.posisi === 3;
 
                         const rankColor = isFirst
-                            ? '#FFE81F'
+                            ? 'var(--accent-gold)'
                             : isSecond
                               ? '#d4d4d8'
                               : isThird
                                 ? '#c2773a'
-                                : 'rgba(240,244,255,0.4)';
+                                : 'var(--text-muted)';
 
                         const rowStyle = isFirst
-                            ? { background: 'rgba(255,232,31,0.05)', borderBottom: '1px solid rgba(255,232,31,0.1)' }
-                            : { background: 'transparent', borderBottom: '1px solid rgba(255,255,255,0.04)' };
+                            ? {
+                                  background: 'var(--accent-gold-bg)',
+                                  borderBottom:
+                                      '1px solid var(--border-default)',
+                              }
+                            : {
+                                  background: 'transparent',
+                                  borderBottom:
+                                      '1px solid var(--border-default)',
+                              };
 
                         return (
                             <tr
@@ -82,10 +99,16 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                 style={rowStyle}
                                 className="transition-colors duration-150 last:border-0"
                                 onMouseEnter={(e) => {
-                                    if (!isFirst) e.currentTarget.style.background = 'rgba(0,212,255,0.04)';
+                                    if (!isFirst) {
+                                        e.currentTarget.style.background =
+                                            'var(--bg-hover)';
+                                    }
                                 }}
                                 onMouseLeave={(e) => {
-                                    if (!isFirst) e.currentTarget.style.background = 'transparent';
+                                    if (!isFirst) {
+                                        e.currentTarget.style.background =
+                                            'transparent';
+                                    }
                                 }}
                             >
                                 {/* Rank */}
@@ -93,7 +116,12 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                     {standing.posisi <= 3 ? (
                                         <span
                                             className="flex items-center gap-1 font-bold"
-                                            style={{ color: rankColor, textShadow: `0 0 6px ${rankColor}` }}
+                                            style={{
+                                                color: rankColor,
+                                                textShadow: isFirst
+                                                    ? '0 0 6px var(--accent-gold-bg)'
+                                                    : undefined,
+                                            }}
                                         >
                                             {isFirst ? (
                                                 <Trophy className="h-4 w-4" />
@@ -102,7 +130,13 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                             )}
                                         </span>
                                     ) : (
-                                        <span style={{ color: 'rgba(240,244,255,0.35)', fontFamily: 'Rajdhani, sans-serif' }}>
+                                        <span
+                                            style={{
+                                                color: 'var(--text-muted)',
+                                                fontFamily:
+                                                    'Rajdhani, sans-serif',
+                                            }}
+                                        >
                                             {standing.posisi}
                                         </span>
                                     )}
@@ -113,22 +147,28 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                     <div className="flex items-center gap-2.5">
                                         {standing.team.logo_url ? (
                                             <img
+                                                loading="lazy"
                                                 src={standing.team.logo_url}
                                                 alt={standing.team.nama_tim}
                                                 className="h-6 w-6 rounded object-cover"
-                                                style={{ border: '1px solid rgba(0,212,255,0.25)' }}
+                                                style={{
+                                                    border: '1px solid var(--border-default)',
+                                                }}
                                             />
                                         ) : (
                                             <Shield
                                                 className="h-5 w-5"
-                                                style={{ color: 'rgba(0,212,255,0.3)' }}
+                                                style={{
+                                                    color: 'var(--text-muted)',
+                                                }}
                                             />
                                         )}
                                         <span
                                             className="font-medium"
                                             style={{
-                                                color: '#f0f4ff',
-                                                fontFamily: 'Rajdhani, sans-serif',
+                                                color: 'var(--text-primary)',
+                                                fontFamily:
+                                                    'Rajdhani, sans-serif',
                                                 fontWeight: isFirst ? 700 : 500,
                                                 fontSize: '0.85rem',
                                             }}
@@ -142,7 +182,10 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                 <td className="px-4 py-3 text-center">
                                     <span
                                         className="font-medium"
-                                        style={{ color: '#00d4ff', fontFamily: 'Rajdhani, sans-serif' }}
+                                        style={{
+                                            color: 'var(--accent-primary)',
+                                            fontFamily: 'Rajdhani, sans-serif',
+                                        }}
                                     >
                                         {standing.menang}
                                     </span>
@@ -152,7 +195,10 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                 <td className="px-4 py-3 text-center">
                                     <span
                                         className="font-medium"
-                                        style={{ color: 'var(--sw-red-sith)', fontFamily: 'Rajdhani, sans-serif' }}
+                                        style={{
+                                            color: 'var(--status-cancel-text)',
+                                            fontFamily: 'Rajdhani, sans-serif',
+                                        }}
                                     >
                                         {standing.kalah}
                                     </span>
@@ -162,7 +208,10 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                 <td className="px-4 py-3 text-center">
                                     <span
                                         className="font-medium"
-                                        style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}
+                                        style={{
+                                            color: 'var(--text-muted)',
+                                            fontFamily: 'Rajdhani, sans-serif',
+                                        }}
                                     >
                                         {standing.draw}
                                     </span>
@@ -173,9 +222,10 @@ export default function StandingsTable({ standings }: StandingsTableProps) {
                                     <span
                                         className="rounded-full px-2.5 py-0.5 font-bold"
                                         style={{
-                                            background: 'rgba(0,212,255,0.1)',
-                                            color: 'var(--sw-blue-neon)',
-                                            border: '1px solid rgba(0,212,255,0.25)',
+                                            background:
+                                                'var(--accent-primary-light)',
+                                            color: 'var(--accent-primary)',
+                                            border: '1px solid var(--border-accent)',
                                             fontFamily: 'Rajdhani, sans-serif',
                                             fontSize: '0.8rem',
                                         }}

@@ -7,12 +7,15 @@ let introTimeoutIds: number[] = [];
 
 function getAudioContext(): AudioContext {
     if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        const AudioContextClass =
+            window.AudioContext || (window as any).webkitAudioContext;
         audioCtx = new AudioContextClass();
     }
+
     if (audioCtx.state === 'suspended') {
         audioCtx.resume();
     }
+
     return audioCtx;
 }
 
@@ -42,8 +45,14 @@ export function playSaberIgnite(theme: 'jedi' | 'sith'): void {
 
         const startFreq = 40;
         let endFreq = 160;
-        if (theme === 'jedi') endFreq = 210;
-        if (theme === 'sith') endFreq = 125;
+
+        if (theme === 'jedi') {
+            endFreq = 210;
+        }
+
+        if (theme === 'sith') {
+            endFreq = 125;
+        }
 
         osc1.frequency.setValueAtTime(startFreq, now);
         osc1.frequency.exponentialRampToValueAtTime(endFreq, now + 0.35);
@@ -56,20 +65,26 @@ export function playSaberIgnite(theme: 'jedi' | 'sith'): void {
         const noiseGain = ctx.createGain();
         noiseOsc.type = 'triangle';
         noiseOsc.frequency.setValueAtTime(200, now);
-        noiseOsc.frequency.exponentialRampToValueAtTime(theme === 'jedi' ? 8000 : 5000, now + 0.15);
+        noiseOsc.frequency.exponentialRampToValueAtTime(
+            theme === 'jedi' ? 8000 : 5000,
+            now + 0.15,
+        );
 
         // Lowpass filter settings
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(100, now);
         filter.frequency.exponentialRampToValueAtTime(
             theme === 'jedi' ? 1000 : 450,
-            now + 0.3
+            now + 0.3,
         );
         filter.Q.setValueAtTime(3, now);
 
         // Main Volume Envelope
         mainGain.gain.setValueAtTime(0, now);
-        mainGain.gain.linearRampToValueAtTime(theme === 'jedi' ? 0.25 : 0.35, now + 0.08);
+        mainGain.gain.linearRampToValueAtTime(
+            theme === 'jedi' ? 0.25 : 0.35,
+            now + 0.08,
+        );
         mainGain.gain.exponentialRampToValueAtTime(0.06, now + 0.5); // Decay to a quiet hum
         mainGain.gain.setValueAtTime(0.06, now + 0.8);
         mainGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2); // Fade out
@@ -96,15 +111,20 @@ export function playSaberIgnite(theme: 'jedi' | 'sith'): void {
         osc2.stop(now + 1.25);
         noiseOsc.stop(now + 0.25);
     } catch (e) {
-        console.warn("Failed to play lightsaber ignition sound:", e);
+        console.warn('Failed to play lightsaber ignition sound:', e);
     }
 }
-
 
 /**
  * Synthesizes a brassy trumpet/synth note.
  */
-function playBrassNote(ctx: AudioContext, freq: number, startTime: number, duration: number, volume = 0.25): void {
+function playBrassNote(
+    ctx: AudioContext,
+    freq: number,
+    startTime: number,
+    duration: number,
+    volume = 0.25,
+): void {
     const osc1 = ctx.createOscillator();
     const osc2 = ctx.createOscillator();
     const filter = ctx.createBiquadFilter();
@@ -122,7 +142,10 @@ function playBrassNote(ctx: AudioContext, freq: number, startTime: number, durat
     filter.Q.setValueAtTime(2, startTime);
     filter.frequency.setValueAtTime(freq * 1.5, startTime);
     filter.frequency.exponentialRampToValueAtTime(freq * 6, startTime + 0.08); // Sweep up on attack
-    filter.frequency.exponentialRampToValueAtTime(freq * 2.5, startTime + duration); // Sweep down on sustain
+    filter.frequency.exponentialRampToValueAtTime(
+        freq * 2.5,
+        startTime + duration,
+    ); // Sweep down on sustain
 
     // Amplitude Envelope
     gainNode.gain.setValueAtTime(0, startTime);
@@ -151,7 +174,13 @@ function playBrassNote(ctx: AudioContext, freq: number, startTime: number, durat
 /**
  * Plays a deep backing chord for majestic feel.
  */
-function playBackingChord(ctx: AudioContext, frequencies: number[], startTime: number, duration: number, volume = 0.15): void {
+function playBackingChord(
+    ctx: AudioContext,
+    frequencies: number[],
+    startTime: number,
+    duration: number,
+    volume = 0.15,
+): void {
     frequencies.forEach((freq) => {
         const osc = ctx.createOscillator();
         const gainNode = ctx.createGain();
@@ -190,7 +219,7 @@ export function playIntroTheme(): void {
         const Bb2 = 116.54;
         const F2 = 87.31;
         const Eb2 = 77.78;
-        const G2 = 98.00;
+        const G2 = 98.0;
         const D2 = 73.42;
         const C2 = 65.41;
 
@@ -199,7 +228,7 @@ export function playIntroTheme(): void {
         const Eb4 = 311.13;
         const D4 = 293.66;
         const C4 = 261.63;
-        const G4 = 392.00;
+        const G4 = 392.0;
         const Bb4 = 466.16;
         const F5 = 698.46; // F5
 
@@ -268,12 +297,10 @@ export function playIntroTheme(): void {
         playBrassNote(ctx, C4, now + 16.0, 1.2, 0.28);
         playBrassNote(ctx, F4, now + 17.3, 0.8, 0.28);
         playBrassNote(ctx, F4, now + 18.2, 0.4, 0.25);
-
     } catch (e) {
-        console.warn("Failed to play synthesized space fanfare:", e);
+        console.warn('Failed to play synthesized space fanfare:', e);
     }
 }
-
 
 /**
  * Stops the intro theme and clears all active synth nodes.
@@ -298,6 +325,7 @@ export function stopIntroTheme(): void {
             }
         });
     }
+
     activeIntroNodes = [];
 }
 
@@ -305,17 +333,23 @@ export function stopIntroTheme(): void {
  * Plays the lightsaber clash sound using the public MP3 asset.
  */
 export function playClashSound(volume = 0.4): void {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+        return;
+    }
+
     const consent = sessionStorage.getItem('audioConsent');
-    if (consent !== 'true') return;
+
+    if (consent !== 'true') {
+        return;
+    }
 
     try {
         const audio = new Audio('/lightsaber-clash-03.mp3');
         audio.volume = volume;
         audio.play().catch((e) => {
-            console.warn("Failed to play lightsaber clash sound:", e);
+            console.warn('Failed to play lightsaber clash sound:', e);
         });
     } catch (e) {
-        console.warn("Error playing clash sound:", e);
+        console.warn('Error playing clash sound:', e);
     }
 }

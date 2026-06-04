@@ -83,11 +83,11 @@ function TwoFactorSetupStep({
                                         }}
                                         style={{
                                             filter:
-                                                resolvedAppearance === 'sith' || resolvedAppearance === 'neutral'
+                                                resolvedAppearance ===
+                                                'dark-side'
                                                     ? 'invert(1) brightness(1.5)'
                                                     : undefined,
                                         }}
-
                                     />
                                 ) : (
                                     <Spinner />

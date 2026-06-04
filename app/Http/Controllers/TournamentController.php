@@ -148,7 +148,7 @@ class TournamentController extends Controller
         if ($user) {
             // Collect all teams the user is a member or captain of
             $userTeams = $user->teams()
-                ->get(['teams.id', 'teams.nama_tim', 'teams.logo_url', 'teams.slug'])
+                ->get(['teams.id', 'teams.nama_tim', 'teams.logo', 'teams.slug'])
                 ->map(fn ($t) => [
                     'id' => $t->id,
                     'nama_tim' => $t->nama_tim,

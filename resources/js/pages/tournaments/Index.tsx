@@ -3,6 +3,7 @@ import { Search, Trophy, Gamepad2, X, Filter } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import TournamentCard from '@/components/tournament/TournamentCard';
 import AppLayout from '@/layouts/AppLayout';
+import { decodeHtmlEntities } from '@/lib/formatters';
 import type { TournamentListItem, Game } from '@/types';
 
 interface PaginatedTournaments {
@@ -35,9 +36,9 @@ const STATUS_OPTIONS = [
 ];
 
 const inputStyle: React.CSSProperties = {
-    background: 'rgba(10,10,15,0.8)',
-    border: '1px solid rgba(0,212,255,0.2)',
-    color: '#f0f4ff',
+    background: 'var(--bg-surface-2)',
+    border: '1px solid var(--border-default)',
+    color: 'var(--text-primary)',
     borderRadius: '0.5rem',
     padding: '0.6rem 0.75rem',
     fontFamily: 'Rajdhani, sans-serif',
@@ -48,13 +49,18 @@ const inputStyle: React.CSSProperties = {
     transition: 'border-color 0.2s, box-shadow 0.2s',
 };
 
-export default function TournamentsIndex({ tournaments, games, filters }: TournamentsIndexProps) {
+export default function TournamentsIndex({
+    tournaments,
+    games,
+    filters,
+}: TournamentsIndexProps) {
     const [search, setSearch] = useState(filters?.search || '');
     const [selectedStatus, setSelectedStatus] = useState(filters?.status || '');
     const [selectedGame, setSelectedGame] = useState(filters?.game_id || '');
     const [isFiltering, setIsFiltering] = useState(false);
 
-    const hasActiveFilters = search !== '' || selectedStatus !== '' || selectedGame !== '';
+    const hasActiveFilters =
+        search !== '' || selectedStatus !== '' || selectedGame !== '';
 
     // Core filter dispatch
     const applyFilters = useCallback(
@@ -67,7 +73,7 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
             };
             // Strip empty params to keep URL clean
             const clean = Object.fromEntries(
-                Object.entries(params).filter(([, v]) => v !== '')
+                Object.entries(params).filter(([, v]) => v !== ''),
             );
             setIsFiltering(true);
             router.get('/tournaments', clean, {
@@ -95,8 +101,9 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
         const timer = setTimeout(() => {
             applyFilters({ search });
         }, 400);
+
         return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search]);
 
     const clearFilters = () => {
@@ -115,21 +122,28 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                 <div className="mb-6">
                     <h2
                         className="text-2xl font-black tracking-wider uppercase"
-                        style={{ fontFamily: 'Rajdhani, sans-serif', color: '#f0f4ff' }}
+                        style={{
+                            fontFamily: 'Rajdhani, sans-serif',
+                            color: 'var(--text-primary)',
+                        }}
                     >
                         Semua{' '}
                         <span
                             style={{
-                                color: 'var(--sw-blue-neon)',
-                                textShadow: '0 0 10px rgba(0,212,255,0.5)',
+                                color: 'var(--accent-primary)',
+                                textShadow:
+                                    '0 0 10px var(--accent-primary-glow)',
                             }}
                         >
                             Turnamen
                         </span>
                     </h2>
                     <p
-                        className="text-sm mt-1"
-                        style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}
+                        className="mt-1 text-sm"
+                        style={{
+                            color: 'var(--text-muted)',
+                            fontFamily: 'Rajdhani, sans-serif',
+                        }}
                     >
                         {tournaments.total} turnamen tersedia di galaksi
                     </p>
@@ -142,7 +156,11 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                         <div className="relative flex-1">
                             <Search
                                 className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"
-                                style={{ color: isFiltering ? 'rgba(0,212,255,0.8)' : 'rgba(0,212,255,0.5)' }}
+                                style={{
+                                    color: isFiltering
+                                        ? 'var(--accent-primary)'
+                                        : 'var(--border-strong)',
+                                }}
                             />
                             <input
                                 type="text"
@@ -150,21 +168,34 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                                 placeholder="Cari nama atau deskripsi turnamen..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-                                style={{ ...inputStyle, width: '100%', paddingLeft: '2.5rem', paddingRight: search ? '2.5rem' : undefined }}
+                                onKeyDown={(e) =>
+                                    e.key === 'Enter' && applyFilters()
+                                }
+                                style={{
+                                    ...inputStyle,
+                                    width: '100%',
+                                    paddingLeft: '2.5rem',
+                                    paddingRight: search ? '2.5rem' : undefined,
+                                }}
                                 onFocus={(e) => {
-                                    e.currentTarget.style.borderColor = 'var(--sw-blue-neon)';
-                                    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,212,255,0.1)';
+                                    e.currentTarget.style.borderColor =
+                                        'var(--accent-primary)';
+                                    e.currentTarget.style.boxShadow =
+                                        '0 0 0 3px var(--accent-primary-glow)';
                                 }}
                                 onBlur={(e) => {
-                                    e.currentTarget.style.borderColor = 'rgba(0,212,255,0.2)';
+                                    e.currentTarget.style.borderColor =
+                                        'var(--border-default)';
                                     e.currentTarget.style.boxShadow = 'none';
                                 }}
                             />
                             {search && (
                                 <button
-                                    onClick={() => { setSearch(''); applyFilters({ search: '' }); }}
-                                    className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                                    onClick={() => {
+                                        setSearch('');
+                                        applyFilters({ search: '' });
+                                    }}
+                                    className="absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                                 >
                                     <X className="h-3.5 w-3.5" />
                                 </button>
@@ -179,7 +210,13 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                             style={inputStyle}
                         >
                             {STATUS_OPTIONS.map((opt) => (
-                                <option key={opt.value} value={opt.value} style={{ background: '#0a0a0f' }}>
+                                <option
+                                    key={opt.value}
+                                    value={opt.value}
+                                    style={{
+                                        background: 'var(--bg-surface-2)',
+                                    }}
+                                >
                                     {opt.label}
                                 </option>
                             ))}
@@ -192,9 +229,20 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                             onChange={(e) => handleGameChange(e.target.value)}
                             style={inputStyle}
                         >
-                            <option value="" style={{ background: '#0a0a0f' }}>Semua Game</option>
+                            <option
+                                value=""
+                                style={{ background: 'var(--bg-surface-2)' }}
+                            >
+                                Semua Game
+                            </option>
                             {games.map((game) => (
-                                <option key={game.id} value={game.id} style={{ background: '#0a0a0f' }}>
+                                <option
+                                    key={game.id}
+                                    value={game.id}
+                                    style={{
+                                        background: 'var(--bg-surface-2)',
+                                    }}
+                                >
                                     {game.nama_game}
                                 </option>
                             ))}
@@ -206,9 +254,9 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                                 onClick={clearFilters}
                                 className="flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200"
                                 style={{
-                                    background: 'rgba(255,45,45,0.08)',
-                                    border: '1px solid rgba(255,45,45,0.3)',
-                                    color: 'var(--sw-red-sith)',
+                                    background: 'var(--status-cancel-bg)',
+                                    border: '1px solid var(--border-strong)',
+                                    color: 'var(--status-cancel-text)',
                                     fontFamily: 'Rajdhani, sans-serif',
                                     letterSpacing: '0.06em',
                                 }}
@@ -223,23 +271,47 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                     <div className="mb-5 flex items-center justify-between">
                         <p
                             className="text-sm"
-                            style={{ color: 'rgba(240,244,255,0.45)', fontFamily: 'Rajdhani, sans-serif' }}
+                            style={{
+                                color: 'var(--text-muted)',
+                                fontFamily: 'Rajdhani, sans-serif',
+                            }}
                         >
                             {isFiltering ? (
-                                <span style={{ color: 'rgba(0,212,255,0.6)' }}>Mencari...</span>
+                                <span
+                                    style={{ color: 'var(--accent-primary)' }}
+                                >
+                                    Mencari...
+                                </span>
                             ) : (
                                 <>
                                     Menampilkan{' '}
-                                    <span style={{ color: 'var(--sw-blue-neon)', fontWeight: 700 }}>
+                                    <span
+                                        style={{
+                                            color: 'var(--accent-primary)',
+                                            fontWeight: 700,
+                                        }}
+                                    >
                                         {tournaments.data.length}
-                                    </span>
-                                    {' '}dari{' '}
-                                    <span style={{ fontWeight: 600, color: '#f0f4ff' }}>
+                                    </span>{' '}
+                                    dari{' '}
+                                    <span
+                                        style={{
+                                            fontWeight: 600,
+                                            color: 'var(--text-primary)',
+                                        }}
+                                    >
                                         {tournaments.total}
-                                    </span>
-                                    {' '}turnamen
+                                    </span>{' '}
+                                    turnamen
                                     {hasActiveFilters && (
-                                        <span style={{ color: 'rgba(0,212,255,0.5)' }}> (filter aktif)</span>
+                                        <span
+                                            style={{
+                                                color: 'var(--border-strong)',
+                                            }}
+                                        >
+                                            {' '}
+                                            (filter aktif)
+                                        </span>
                                     )}
                                 </>
                             )}
@@ -247,31 +319,56 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
 
                         {/* Active filter chips */}
                         {hasActiveFilters && (
-                            <div className="flex items-center gap-2 flex-wrap justify-end">
+                            <div className="flex flex-wrap items-center justify-end gap-2">
                                 {search && (
                                     <span
                                         className="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                                        style={{ background: 'rgba(0,212,255,0.1)', color: 'var(--sw-blue-neon)', border: '1px solid rgba(0,212,255,0.2)' }}
+                                        style={{
+                                            background: 'var(--status-open-bg)',
+                                            color: 'var(--accent-primary)',
+                                            border: '1px solid var(--border-accent)',
+                                        }}
                                     >
-                                        <Search className="h-3 w-3" /> "{search}"
+                                        <Search className="h-3 w-3" /> "{search}
+                                        "
                                     </span>
                                 )}
                                 {selectedStatus && (
                                     <span
                                         className="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                                        style={{ background: 'rgba(124,58,237,0.1)', color: '#a78bfa', border: '1px solid rgba(124,58,237,0.2)' }}
+                                        style={{
+                                            background:
+                                                'var(--status-ongoing-bg)',
+                                            color: 'var(--status-ongoing-text)',
+                                            border: '1px solid var(--border-default)',
+                                        }}
                                     >
                                         <Filter className="h-3 w-3" />
-                                        {STATUS_OPTIONS.find(o => o.value === selectedStatus)?.label}
+                                        {
+                                            STATUS_OPTIONS.find(
+                                                (o) =>
+                                                    o.value === selectedStatus,
+                                            )?.label
+                                        }
                                     </span>
                                 )}
                                 {selectedGame && (
                                     <span
                                         className="flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                                        style={{ background: 'rgba(255,232,31,0.08)', color: 'var(--sw-gold)', border: '1px solid rgba(255,232,31,0.2)' }}
+                                        style={{
+                                            background: 'var(--accent-gold-bg)',
+                                            color: 'var(--accent-gold)',
+                                            border: '1px solid var(--border-strong)',
+                                        }}
                                     >
                                         <Gamepad2 className="h-3 w-3" />
-                                        {games.find(g => String(g.id) === selectedGame)?.nama_game}
+                                        {
+                                            games.find(
+                                                (g) =>
+                                                    String(g.id) ===
+                                                    selectedGame,
+                                            )?.nama_game
+                                        }
                                     </span>
                                 )}
                             </div>
@@ -283,7 +380,10 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                         <>
                             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 {tournaments.data.map((tournament) => (
-                                    <TournamentCard key={tournament.id} tournament={tournament} />
+                                    <TournamentCard
+                                        key={tournament.id}
+                                        tournament={tournament}
+                                    />
                                 ))}
                             </div>
 
@@ -294,34 +394,46 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                                         <button
                                             key={i}
                                             disabled={!link.url}
-                                            onClick={() => link.url && router.visit(link.url)}
+                                            onClick={() =>
+                                                link.url &&
+                                                router.visit(link.url)
+                                            }
                                             className="rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200"
                                             style={
                                                 link.active
                                                     ? {
-                                                          background: 'rgba(0,212,255,0.15)',
-                                                          border: '1px solid rgba(0,212,255,0.4)',
-                                                          color: 'var(--sw-blue-neon)',
-                                                          boxShadow: '0 0 10px rgba(0,212,255,0.2)',
-                                                          fontFamily: 'Rajdhani, sans-serif',
+                                                          background:
+                                                              'var(--accent-primary-glow)',
+                                                          border: '1px solid var(--border-accent)',
+                                                          color: 'var(--accent-primary)',
+                                                          boxShadow:
+                                                              '0 0 10px var(--accent-primary-glow)',
+                                                          fontFamily:
+                                                              'Rajdhani, sans-serif',
                                                       }
                                                     : link.url
                                                       ? {
-                                                            background: 'transparent',
-                                                            border: '1px solid rgba(255,255,255,0.1)',
-                                                            color: 'rgba(240,244,255,0.5)',
-                                                            fontFamily: 'Rajdhani, sans-serif',
+                                                            background:
+                                                                'transparent',
+                                                            border: '1px solid var(--border-default)',
+                                                            color: 'var(--text-secondary)',
+                                                            fontFamily:
+                                                                'Rajdhani, sans-serif',
                                                         }
                                                       : {
-                                                            background: 'transparent',
-                                                            border: '1px solid rgba(255,255,255,0.04)',
-                                                            color: 'rgba(240,244,255,0.2)',
+                                                            background:
+                                                                'transparent',
+                                                            border: '1px solid var(--border-default)',
+                                                            color: 'var(--text-muted)',
                                                             cursor: 'not-allowed',
-                                                            fontFamily: 'Rajdhani, sans-serif',
+                                                            fontFamily:
+                                                                'Rajdhani, sans-serif',
                                                         }
                                             }
-                                            dangerouslySetInnerHTML={{ __html: link.label }}
-                                        />
+                                            dangerouslySetInnerHTML={undefined}
+                                        >
+                                            {decodeHtmlEntities(link.label)}
+                                        </button>
                                     ))}
                                 </div>
                             )}
@@ -331,37 +443,52 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                         <div className="flex flex-col items-center justify-center py-24 text-center">
                             {/* Animated icon */}
                             <div
-                                className="mb-6 relative"
+                                className="relative mb-6"
                                 style={{
-                                    width: '80px', height: '80px',
+                                    width: '80px',
+                                    height: '80px',
                                     borderRadius: '50%',
-                                    background: 'rgba(0,212,255,0.05)',
-                                    border: '1px solid rgba(0,212,255,0.1)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                    background: 'var(--accent-primary-light)',
+                                    border: '1px solid var(--border-default)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
                                 }}
                             >
                                 <Trophy
                                     className="h-10 w-10"
-                                    style={{ color: 'rgba(0,212,255,0.2)' }}
+                                    style={{
+                                        color: 'var(--accent-primary-glow)',
+                                    }}
                                 />
                                 {/* Ping ring */}
                                 <div
                                     className="absolute inset-0 rounded-full"
                                     style={{
-                                        border: '1px solid rgba(0,212,255,0.15)',
-                                        animation: 'force-pulse 2.5s ease-in-out infinite',
+                                        border: '1px solid var(--border-accent)',
+                                        animation:
+                                            'force-pulse 2.5s ease-in-out infinite',
                                     }}
                                 />
                             </div>
                             <h3
                                 className="mb-2 text-xl font-black tracking-wider uppercase"
-                                style={{ fontFamily: 'Rajdhani, sans-serif', color: '#f0f4ff' }}
+                                style={{
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                    color: 'var(--text-primary)',
+                                }}
                             >
-                                {hasActiveFilters ? 'Tidak Ada Hasil' : 'Belum Ada Turnamen'}
+                                {hasActiveFilters
+                                    ? 'Tidak Ada Hasil'
+                                    : 'Belum Ada Turnamen'}
                             </h3>
                             <p
-                                className="text-sm mb-6 max-w-xs"
-                                style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif', lineHeight: 1.6 }}
+                                className="mb-6 max-w-xs text-sm"
+                                style={{
+                                    color: 'var(--text-muted)',
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                    lineHeight: 1.6,
+                                }}
                             >
                                 {hasActiveFilters
                                     ? 'Tidak ada turnamen yang sesuai dengan filter yang aktif. Coba ganti atau hapus filter.'
@@ -372,9 +499,10 @@ export default function TournamentsIndex({ tournaments, games, filters }: Tourna
                                     onClick={clearFilters}
                                     className="flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-bold transition-all"
                                     style={{
-                                        background: 'rgba(0,212,255,0.1)',
-                                        border: '1px solid rgba(0,212,255,0.3)',
-                                        color: 'var(--sw-blue-neon)',
+                                        background:
+                                            'var(--accent-primary-light)',
+                                        border: '1px solid var(--border-accent)',
+                                        color: 'var(--accent-primary)',
                                         fontFamily: 'Rajdhani, sans-serif',
                                         letterSpacing: '0.08em',
                                     }}

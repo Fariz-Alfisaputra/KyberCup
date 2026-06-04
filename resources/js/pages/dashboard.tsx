@@ -1,5 +1,13 @@
 import { Head, Link } from '@inertiajs/react';
-import { Calendar, ChevronRight, Clock, Shield, Swords, Trophy, Users } from 'lucide-react';
+import {
+    Calendar,
+    ChevronRight,
+    Clock,
+    Shield,
+    Swords,
+    Trophy,
+    Users,
+} from 'lucide-react';
 import AppLayout from '@/layouts/AppLayout';
 
 interface MyTeam {
@@ -35,20 +43,45 @@ interface DashboardProps {
 }
 
 const statusConfig = {
-    pending:  { label: 'Pending',  style: { background: 'rgba(255,232,31,0.12)',  color: '#FFE81F',              border: '1px solid rgba(255,232,31,0.3)' } },
-    approved: { label: 'Approved', style: { background: 'rgba(0,212,255,0.12)',   color: 'var(--sw-blue-neon)',  border: '1px solid rgba(0,212,255,0.3)' } },
-    rejected: { label: 'Rejected', style: { background: 'rgba(255,45,45,0.12)',   color: 'var(--sw-red-sith)',   border: '1px solid rgba(255,45,45,0.3)' } },
+    pending: {
+        label: 'Pending',
+        style: {
+            background: 'var(--status-ongoing-bg)',
+            color: 'var(--status-ongoing-text)',
+            border: '1px solid var(--border-default)',
+        },
+    },
+    approved: {
+        label: 'Approved',
+        style: {
+            background: 'var(--status-open-bg)',
+            color: 'var(--status-open-text)',
+            border: '1px solid var(--border-accent)',
+        },
+    },
+    rejected: {
+        label: 'Rejected',
+        style: {
+            background: 'var(--status-cancel-bg)',
+            color: 'var(--status-cancel-text)',
+            border: '1px solid var(--border-strong)',
+        },
+    },
 };
 
 const cardStyle: React.CSSProperties = {
-    background: 'rgba(10,10,15,0.7)',
-    border: '1px solid rgba(0,212,255,0.12)',
+    background: 'var(--bg-surface)',
+    border: '1px solid var(--border-default)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
     borderRadius: '0.75rem',
 };
 
-export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations }: DashboardProps) {
+export default function Dashboard({
+    myTeams,
+    upcomingMatches,
+    teamRegistrations,
+}: DashboardProps) {
     return (
         <AppLayout title="Dashboard">
             <Head title="Dashboard - KyberCup" />
@@ -60,11 +93,18 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                         <div className="flex items-center gap-2">
                             <div
                                 className="h-1 w-5 rounded-full"
-                                style={{ background: 'var(--sw-blue-neon)', boxShadow: '0 0 6px var(--sw-blue-neon)' }}
+                                style={{
+                                    background: 'var(--accent-primary)',
+                                    boxShadow:
+                                        '0 0 6px var(--accent-primary-glow)',
+                                }}
                             />
                             <h2
                                 className="text-lg font-bold tracking-wider uppercase"
-                                style={{ fontFamily: 'Rajdhani, sans-serif', color: '#f0f4ff' }}
+                                style={{
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                    color: 'var(--text-primary)',
+                                }}
                             >
                                 Jadwal Pertandingan
                             </h2>
@@ -79,18 +119,24 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                     className="relative overflow-hidden rounded-xl p-5 transition-all duration-300"
                                     style={cardStyle}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.borderColor = 'rgba(0,212,255,0.3)';
-                                        e.currentTarget.style.boxShadow = '0 0 20px rgba(0,212,255,0.08)';
+                                        e.currentTarget.style.borderColor =
+                                            'var(--border-accent)';
+                                        e.currentTarget.style.boxShadow =
+                                            '0 0 20px var(--accent-primary-glow)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.borderColor = 'rgba(0,212,255,0.12)';
-                                        e.currentTarget.style.boxShadow = 'none';
+                                        e.currentTarget.style.borderColor =
+                                            'var(--border-default)';
+                                        e.currentTarget.style.boxShadow =
+                                            'none';
                                     }}
                                 >
                                     {/* Decorative icon */}
                                     <div
-                                        className="absolute -right-6 -top-6"
-                                        style={{ color: 'rgba(0,212,255,0.04)' }}
+                                        className="absolute -top-6 -right-6"
+                                        style={{
+                                            color: 'var(--accent-primary-glow)',
+                                        }}
                                     >
                                         <Swords className="h-24 w-24" />
                                     </div>
@@ -99,17 +145,24 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                         <div className="mb-4 flex items-center justify-between text-xs">
                                             <span
                                                 className="font-semibold"
-                                                style={{ color: 'var(--sw-blue-neon)', fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.04em' }}
+                                                style={{
+                                                    color: 'var(--accent-primary)',
+                                                    fontFamily:
+                                                        'Rajdhani, sans-serif',
+                                                    letterSpacing: '0.04em',
+                                                }}
                                             >
                                                 {match.tournament.nama}
                                             </span>
                                             <span
                                                 className="rounded px-2 py-0.5"
                                                 style={{
-                                                    background: 'rgba(0,212,255,0.06)',
-                                                    color: 'rgba(0,212,255,0.6)',
-                                                    border: '1px solid rgba(0,212,255,0.15)',
-                                                    fontFamily: 'Rajdhani, sans-serif',
+                                                    background:
+                                                        'var(--accent-primary-light)',
+                                                    color: 'var(--accent-primary)',
+                                                    border: '1px solid var(--border-accent)',
+                                                    fontFamily:
+                                                        'Rajdhani, sans-serif',
                                                 }}
                                             >
                                                 Round {match.round}
@@ -119,19 +172,35 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                         <div className="flex items-center justify-between">
                                             <div
                                                 className="flex-1 truncate font-bold"
-                                                style={{ color: '#f0f4ff', fontFamily: 'Rajdhani, sans-serif', fontSize: '0.95rem' }}
+                                                style={{
+                                                    color: 'var(--text-primary)',
+                                                    fontFamily:
+                                                        'Rajdhani, sans-serif',
+                                                    fontSize: '0.95rem',
+                                                }}
                                             >
                                                 {match.team1.nama_tim}
                                             </div>
                                             <div
                                                 className="px-4 text-xs font-black"
-                                                style={{ color: 'var(--sw-red-sith)', fontFamily: 'Orbitron, sans-serif', textShadow: '0 0 6px rgba(255,45,45,0.4)' }}
+                                                style={{
+                                                    color: 'var(--status-cancel-text)',
+                                                    fontFamily:
+                                                        'Orbitron, sans-serif',
+                                                    textShadow:
+                                                        '0 0 6px var(--accent-primary-glow)',
+                                                }}
                                             >
                                                 VS
                                             </div>
                                             <div
                                                 className="flex-1 truncate text-right font-bold"
-                                                style={{ color: '#f0f4ff', fontFamily: 'Rajdhani, sans-serif', fontSize: '0.95rem' }}
+                                                style={{
+                                                    color: 'var(--text-primary)',
+                                                    fontFamily:
+                                                        'Rajdhani, sans-serif',
+                                                    fontSize: '0.95rem',
+                                                }}
                                             >
                                                 {match.team2.nama_tim}
                                             </div>
@@ -139,11 +208,22 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
 
                                         <div
                                             className="mt-5 flex items-center gap-2 text-xs"
-                                            style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}
+                                            style={{
+                                                color: 'var(--text-muted)',
+                                                fontFamily:
+                                                    'Rajdhani, sans-serif',
+                                            }}
                                         >
-                                            <Clock className="h-3.5 w-3.5" style={{ color: 'var(--sw-blue-neon)' }} />
+                                            <Clock
+                                                className="h-3.5 w-3.5"
+                                                style={{
+                                                    color: 'var(--accent-primary)',
+                                                }}
+                                            />
                                             {match.jadwal
-                                                ? new Date(match.jadwal).toLocaleString('id-ID')
+                                                ? new Date(
+                                                      match.jadwal,
+                                                  ).toLocaleString('id-ID')
                                                 : 'Jadwal belum ditentukan'}
                                         </div>
                                     </div>
@@ -153,10 +233,22 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                     ) : (
                         <div
                             className="flex flex-col items-center justify-center rounded-xl py-12 text-center"
-                            style={{ border: '1px dashed rgba(0,212,255,0.15)', background: 'rgba(0,212,255,0.02)' }}
+                            style={{
+                                border: '1px dashed var(--border-default)',
+                                background: 'var(--bg-surface-2)',
+                            }}
                         >
-                            <Calendar className="mb-3 h-10 w-10" style={{ color: 'rgba(0,212,255,0.2)' }} />
-                            <p className="text-sm" style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}>
+                            <Calendar
+                                className="mb-3 h-10 w-10"
+                                style={{ color: 'var(--border-strong)' }}
+                            />
+                            <p
+                                className="text-sm"
+                                style={{
+                                    color: 'var(--text-muted)',
+                                    fontFamily: 'Rajdhani, sans-serif',
+                                }}
+                            >
                                 Tidak ada jadwal pertandingan dalam waktu dekat.
                             </p>
                         </div>
@@ -170,19 +262,26 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                             <div className="flex items-center gap-2">
                                 <div
                                     className="h-1 w-5 rounded-full"
-                                    style={{ background: 'var(--sw-blue-neon)', boxShadow: '0 0 6px var(--sw-blue-neon)' }}
+                                    style={{
+                                        background: 'var(--accent-primary)',
+                                        boxShadow:
+                                            '0 0 6px var(--accent-primary-glow)',
+                                    }}
                                 />
                                 <h2
                                     className="text-lg font-bold tracking-wider uppercase"
-                                    style={{ fontFamily: 'Rajdhani, sans-serif', color: '#f0f4ff' }}
+                                    style={{
+                                        fontFamily: 'Rajdhani, sans-serif',
+                                        color: 'var(--text-primary)',
+                                    }}
                                 >
                                     Tim Saya
                                 </h2>
                             </div>
                             <Link
                                 href="/teams/create"
-                                className="text-sm font-medium transition-colors duration-200 nav-link-sw"
-                                style={{ color: 'var(--sw-blue-neon)' }}
+                                className="nav-link-sw text-sm font-medium transition-colors duration-200"
+                                style={{ color: 'var(--accent-primary)' }}
                             >
                                 + Buat Tim Baru
                             </Link>
@@ -197,35 +296,47 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                         className="group flex items-center justify-between rounded-xl p-4 transition-all duration-300"
                                         style={cardStyle}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.borderColor = 'rgba(0,212,255,0.3)';
-                                            e.currentTarget.style.boxShadow = '0 0 16px rgba(0,212,255,0.08)';
-                                            e.currentTarget.style.transform = 'translateX(2px)';
+                                            e.currentTarget.style.borderColor =
+                                                'var(--border-accent)';
+                                            e.currentTarget.style.boxShadow =
+                                                '0 0 16px var(--accent-primary-glow)';
+                                            e.currentTarget.style.transform =
+                                                'translateX(2px)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.borderColor = 'rgba(0,212,255,0.12)';
-                                            e.currentTarget.style.boxShadow = 'none';
-                                            e.currentTarget.style.transform = 'translateX(0)';
+                                            e.currentTarget.style.borderColor =
+                                                'var(--border-default)';
+                                            e.currentTarget.style.boxShadow =
+                                                'none';
+                                            e.currentTarget.style.transform =
+                                                'translateX(0)';
                                         }}
                                     >
                                         <div className="flex items-center gap-4">
                                             {team.logo_url ? (
                                                 <img
+                                                    loading="lazy"
                                                     src={team.logo_url}
                                                     alt={team.nama_tim}
                                                     className="h-12 w-12 rounded-lg object-cover"
-                                                    style={{ border: '1px solid rgba(0,212,255,0.25)' }}
+                                                    style={{
+                                                        border: '1px solid var(--border-accent)',
+                                                    }}
                                                 />
                                             ) : (
                                                 <div
                                                     className="flex h-12 w-12 items-center justify-center rounded-lg"
                                                     style={{
-                                                        background: 'rgba(0,212,255,0.08)',
-                                                        border: '1px solid rgba(0,212,255,0.2)',
+                                                        background:
+                                                            'var(--accent-primary-light)',
+                                                        border: '1px solid var(--border-default)',
                                                     }}
                                                 >
                                                     <Shield
                                                         className="h-6 w-6"
-                                                        style={{ color: 'var(--sw-blue-neon)' }}
+                                                        style={{
+                                                            color: 'var(--accent-primary)',
+                                                        }}
                                                     />
                                                 </div>
                                             )}
@@ -233,8 +344,9 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                                 <h3
                                                     className="font-bold"
                                                     style={{
-                                                        color: '#f0f4ff',
-                                                        fontFamily: 'Rajdhani, sans-serif',
+                                                        color: 'var(--text-primary)',
+                                                        fontFamily:
+                                                            'Rajdhani, sans-serif',
                                                         fontSize: '0.95rem',
                                                         letterSpacing: '0.03em',
                                                     }}
@@ -243,18 +355,31 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                                 </h3>
                                                 <div
                                                     className="mt-1 flex items-center gap-3 text-xs"
-                                                    style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}
+                                                    style={{
+                                                        color: 'var(--text-muted)',
+                                                        fontFamily:
+                                                            'Rajdhani, sans-serif',
+                                                    }}
                                                 >
                                                     <span className="flex items-center gap-1">
                                                         <Users className="h-3.5 w-3.5" />
-                                                        {team.members_count} Anggota
+                                                        {team.members_count}{' '}
+                                                        Anggota
                                                     </span>
                                                     <span className="flex items-center gap-1 capitalize">
                                                         <div
                                                             className="h-1.5 w-1.5 rounded-full"
                                                             style={{
-                                                                background: team.role === 'captain' ? '#FFE81F' : 'var(--sw-blue-neon)',
-                                                                boxShadow: team.role === 'captain' ? '0 0 4px #FFE81F' : '0 0 4px var(--sw-blue-neon)',
+                                                                background:
+                                                                    team.role ===
+                                                                    'captain'
+                                                                        ? 'var(--accent-gold)'
+                                                                        : 'var(--accent-primary)',
+                                                                boxShadow:
+                                                                    team.role ===
+                                                                    'captain'
+                                                                        ? '0 0 4px var(--accent-gold)'
+                                                                        : '0 0 4px var(--accent-primary-glow)',
                                                             }}
                                                         />
                                                         {team.role}
@@ -264,17 +389,33 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                         </div>
                                         <ChevronRight
                                             className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                                            style={{ color: 'rgba(0,212,255,0.4)' }}
+                                            style={{
+                                                color: 'var(--border-strong)',
+                                            }}
                                         />
                                     </Link>
                                 ))
                             ) : (
                                 <div
                                     className="flex flex-col items-center justify-center rounded-xl py-10 text-center"
-                                    style={{ border: '1px dashed rgba(0,212,255,0.15)', background: 'rgba(0,212,255,0.02)' }}
+                                    style={{
+                                        border: '1px dashed var(--border-default)',
+                                        background: 'var(--bg-surface-2)',
+                                    }}
                                 >
-                                    <Shield className="mb-3 h-8 w-8" style={{ color: 'rgba(0,212,255,0.2)' }} />
-                                    <p className="text-sm" style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}>
+                                    <Shield
+                                        className="mb-3 h-8 w-8"
+                                        style={{
+                                            color: 'var(--border-strong)',
+                                        }}
+                                    />
+                                    <p
+                                        className="text-sm"
+                                        style={{
+                                            color: 'var(--text-muted)',
+                                            fontFamily: 'Rajdhani, sans-serif',
+                                        }}
+                                    >
                                         Kamu belum bergabung dengan tim manapun.
                                     </p>
                                 </div>
@@ -288,11 +429,18 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                             <div className="flex items-center gap-2">
                                 <div
                                     className="h-1 w-5 rounded-full"
-                                    style={{ background: '#FFE81F', boxShadow: '0 0 6px #FFE81F' }}
+                                    style={{
+                                        background: 'var(--accent-gold)',
+                                        boxShadow:
+                                            '0 0 6px var(--accent-gold-bg)',
+                                    }}
                                 />
                                 <h2
                                     className="text-lg font-bold tracking-wider uppercase"
-                                    style={{ fontFamily: 'Rajdhani, sans-serif', color: '#f0f4ff' }}
+                                    style={{
+                                        fontFamily: 'Rajdhani, sans-serif',
+                                        color: 'var(--text-primary)',
+                                    }}
                                 >
                                     Status Pendaftaran
                                 </h2>
@@ -302,7 +450,10 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                         <div className="space-y-3">
                             {teamRegistrations.length > 0 ? (
                                 teamRegistrations.map((reg) => {
-                                    const statusInfo = statusConfig[reg.status as keyof typeof statusConfig];
+                                    const statusInfo =
+                                        statusConfig[
+                                            reg.status as keyof typeof statusConfig
+                                        ];
 
                                     return (
                                         <div
@@ -315,18 +466,29 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                                     href={`/tournaments/${reg.tournament.slug}`}
                                                     className="font-bold transition-colors duration-200"
                                                     style={{
-                                                        color: '#f0f4ff',
-                                                        fontFamily: 'Rajdhani, sans-serif',
+                                                        color: 'var(--text-primary)',
+                                                        fontFamily:
+                                                            'Rajdhani, sans-serif',
                                                         fontSize: '0.95rem',
                                                     }}
-                                                    onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--sw-blue-neon)'; }}
-                                                    onMouseLeave={(e) => { e.currentTarget.style.color = '#f0f4ff'; }}
+                                                    onMouseEnter={(e) => {
+                                                        e.currentTarget.style.color =
+                                                            'var(--accent-primary)';
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.currentTarget.style.color =
+                                                            'var(--text-primary)';
+                                                    }}
                                                 >
                                                     {reg.tournament.nama}
                                                 </Link>
                                                 <p
                                                     className="mt-1 text-xs"
-                                                    style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}
+                                                    style={{
+                                                        color: 'var(--text-muted)',
+                                                        fontFamily:
+                                                            'Rajdhani, sans-serif',
+                                                    }}
                                                 >
                                                     Tim: {reg.team.nama_tim}
                                                 </p>
@@ -336,9 +498,11 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                                                     className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
                                                     style={{
                                                         ...statusInfo.style,
-                                                        fontFamily: 'Rajdhani, sans-serif',
+                                                        fontFamily:
+                                                            'Rajdhani, sans-serif',
                                                         letterSpacing: '0.05em',
-                                                        textTransform: 'uppercase',
+                                                        textTransform:
+                                                            'uppercase',
                                                         fontSize: '0.7rem',
                                                     }}
                                                 >
@@ -351,10 +515,22 @@ export default function Dashboard({ myTeams, upcomingMatches, teamRegistrations 
                             ) : (
                                 <div
                                     className="flex flex-col items-center justify-center rounded-xl py-10 text-center"
-                                    style={{ border: '1px dashed rgba(255,232,31,0.15)', background: 'rgba(255,232,31,0.02)' }}
+                                    style={{
+                                        border: '1px dashed var(--border-default)',
+                                        background: 'var(--bg-surface-2)',
+                                    }}
                                 >
-                                    <Trophy className="mb-3 h-8 w-8" style={{ color: 'rgba(255,232,31,0.2)' }} />
-                                    <p className="text-sm" style={{ color: 'rgba(240,244,255,0.4)', fontFamily: 'Rajdhani, sans-serif' }}>
+                                    <Trophy
+                                        className="mb-3 h-8 w-8"
+                                        style={{ color: 'var(--accent-gold)' }}
+                                    />
+                                    <p
+                                        className="text-sm"
+                                        style={{
+                                            color: 'var(--text-muted)',
+                                            fontFamily: 'Rajdhani, sans-serif',
+                                        }}
+                                    >
                                         Belum ada pendaftaran turnamen aktif.
                                     </p>
                                 </div>

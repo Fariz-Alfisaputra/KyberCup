@@ -35,12 +35,24 @@ const getStoredAppearance = (): Appearance => {
     }
 
     const stored = localStorage.getItem('appearance');
+
     // Legacy mapping from old theme names
-    if (stored === 'light' || stored === 'jedi') return 'light-side';
-    if (stored === 'dark' || stored === 'sith' || stored === 'neutral') return 'dark-side';
-    if (stored === 'light-side' || stored === 'dark-side' || stored === 'system') {
+    if (stored === 'light' || stored === 'jedi') {
+        return 'light-side';
+    }
+
+    if (stored === 'dark' || stored === 'sith' || stored === 'neutral') {
+        return 'dark-side';
+    }
+
+    if (
+        stored === 'light-side' ||
+        stored === 'dark-side' ||
+        stored === 'system'
+    ) {
         return stored as Appearance;
     }
+
     return 'system';
 };
 
@@ -48,6 +60,7 @@ const getResolvedAppearance = (appearance: Appearance): ResolvedAppearance => {
     if (appearance === 'system') {
         return prefersDark() ? 'dark-side' : 'light-side';
     }
+
     return appearance as ResolvedAppearance;
 };
 
@@ -63,7 +76,11 @@ const applyTheme = (appearance: Appearance): void => {
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
 
     // Remove old theme classes for clean state
-    document.documentElement.classList.remove('theme-jedi', 'theme-sith', 'theme-neutral');
+    document.documentElement.classList.remove(
+        'theme-jedi',
+        'theme-sith',
+        'theme-neutral',
+    );
 
     // Set data attribute for CSS targeting
     document.documentElement.setAttribute('data-theme', resolved);
@@ -112,7 +129,8 @@ export function useAppearance(): UseAppearanceReturn {
         () => 'system',
     );
 
-    const resolvedAppearance: ResolvedAppearance = getResolvedAppearance(appearance);
+    const resolvedAppearance: ResolvedAppearance =
+        getResolvedAppearance(appearance);
 
     const updateAppearance = (mode: Appearance): void => {
         currentAppearance = mode;

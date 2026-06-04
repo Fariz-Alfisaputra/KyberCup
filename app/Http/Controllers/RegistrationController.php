@@ -9,8 +9,10 @@ use Illuminate\Http\RedirectResponse;
 
 class RegistrationController extends Controller
 {
-    public function store(RegisterTournamentRequest $request, Tournament $tournament): RedirectResponse
+    public function store(RegisterTournamentRequest $request, string $slug): RedirectResponse
     {
+        $tournament = Tournament::where('slug', $slug)->firstOrFail();
+
         if (! $tournament->isRegistrationOpen()) {
             return back()->with('error', 'Pendaftaran untuk turnamen ini sudah ditutup.');
         }
