@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
+import BackButton from '@/components/BackButton';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -33,6 +34,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
     return (
         <div className="px-4 py-6">
+            <BackButton fallbackUrl="/dashboard" className="mb-6" />
             <Heading
                 title="Settings"
                 description="Manage your profile and account settings"

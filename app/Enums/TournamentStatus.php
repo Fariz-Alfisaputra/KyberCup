@@ -8,6 +8,7 @@ enum TournamentStatus: string
     case Open = 'open';
     case Ongoing = 'ongoing';
     case Selesai = 'selesai';
+    case Dibatalkan = 'dibatalkan';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum TournamentStatus: string
             TournamentStatus::Open => 'Open Registration',
             TournamentStatus::Ongoing => 'Ongoing',
             TournamentStatus::Selesai => 'Selesai',
+            TournamentStatus::Dibatalkan => 'Dibatalkan',
         };
     }
 
@@ -26,6 +28,7 @@ enum TournamentStatus: string
             TournamentStatus::Open => 'emerald',
             TournamentStatus::Ongoing => 'violet',
             TournamentStatus::Selesai => 'blue',
+            TournamentStatus::Dibatalkan => 'red',
         };
     }
 }

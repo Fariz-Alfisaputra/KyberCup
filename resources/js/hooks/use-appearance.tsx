@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-export type ResolvedAppearance = 'jedi' | 'sith' | 'neutral';
+export type ResolvedAppearance = 'light-side' | 'dark-side';
 export type Appearance = ResolvedAppearance | 'system';
 
 export type UseAppearanceReturn = {
@@ -35,27 +35,20 @@ const getStoredAppearance = (): Appearance => {
     }
 
     const stored = localStorage.getItem('appearance');
-    if (stored === 'light') return 'jedi';
-    if (stored === 'dark') return 'sith';
-    return (stored as Appearance) || 'system';
+    // Legacy mapping from old theme names
+    if (stored === 'light' || stored === 'jedi') return 'light-side';
+    if (stored === 'dark' || stored === 'sith' || stored === 'neutral') return 'dark-side';
+    if (stored === 'light-side' || stored === 'dark-side' || stored === 'system') {
+        return stored as Appearance;
+    }
+    return 'system';
 };
 
 const getResolvedAppearance = (appearance: Appearance): ResolvedAppearance => {
     if (appearance === 'system') {
-        return prefersDark() ? 'sith' : 'jedi';
-    }
-    if (appearance === 'dark') {
-        return 'sith';
-    }
-    if (appearance === 'light') {
-        return 'jedi';
+        return prefersDark() ? 'dark-side' : 'light-side';
     }
     return appearance as ResolvedAppearance;
-};
-
-const isDarkMode = (appearance: Appearance): boolean => {
-    const resolved = getResolvedAppearance(appearance);
-    return resolved === 'sith' || resolved === 'neutral';
 };
 
 const applyTheme = (appearance: Appearance): void => {
@@ -64,15 +57,16 @@ const applyTheme = (appearance: Appearance): void => {
     }
 
     const resolved = getResolvedAppearance(appearance);
-    const isDark = resolved === 'sith' || resolved === 'neutral';
+    const isDark = resolved === 'dark-side';
 
     document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
 
-    // Set theme classes on document Element
-    document.documentElement.classList.toggle('theme-jedi', resolved === 'jedi');
-    document.documentElement.classList.toggle('theme-sith', resolved === 'sith');
-    document.documentElement.classList.toggle('theme-neutral', resolved === 'neutral');
+    // Remove old theme classes for clean state
+    document.documentElement.classList.remove('theme-jedi', 'theme-sith', 'theme-neutral');
+
+    // Set data attribute for CSS targeting
+    document.documentElement.setAttribute('data-theme', resolved);
 };
 
 const subscribe = (callback: () => void) => {
@@ -98,9 +92,10 @@ export function initializeTheme(): void {
         return;
     }
 
+    // Set dark-side as default if nothing stored yet
     if (!localStorage.getItem('appearance')) {
-        localStorage.setItem('appearance', 'system');
-        setCookie('appearance', 'system');
+        localStorage.setItem('appearance', 'dark-side');
+        setCookie('appearance', 'dark-side');
     }
 
     currentAppearance = getStoredAppearance();
@@ -122,10 +117,10 @@ export function useAppearance(): UseAppearanceReturn {
     const updateAppearance = (mode: Appearance): void => {
         currentAppearance = mode;
 
-        // Store in localStorage for client-side persistence...
+        // Store in localStorage for client-side persistence
         localStorage.setItem('appearance', mode);
 
-        // Store in cookie for SSR...
+        // Store in cookie for SSR
         setCookie('appearance', mode);
 
         applyTheme(mode);
@@ -134,4 +129,3 @@ export function useAppearance(): UseAppearanceReturn {
 
     return { appearance, resolvedAppearance, updateAppearance } as const;
 }
-

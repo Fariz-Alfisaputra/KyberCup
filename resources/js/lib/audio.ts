@@ -18,9 +18,9 @@ function getAudioContext(): AudioContext {
 
 /**
  * Synthesizes a lightsaber ignition sound.
- * @param theme - 'jedi', 'sith', or 'neutral'
+ * @param theme - 'jedi' (Light Side) or 'sith' (Dark Side)
  */
-export function playSaberIgnite(theme: 'jedi' | 'sith' | 'neutral'): void {
+export function playSaberIgnite(theme: 'jedi' | 'sith'): void {
     try {
         const ctx = getAudioContext();
         const now = ctx.currentTime;
@@ -35,19 +35,15 @@ export function playSaberIgnite(theme: 'jedi' | 'sith' | 'neutral'): void {
         if (theme === 'jedi') {
             osc1.type = 'triangle';
             osc2.type = 'sine'; // cleaner, purer tone
-        } else if (theme === 'sith') {
+        } else {
             osc1.type = 'sawtooth';
             osc2.type = 'sawtooth'; // highly aggressive buzz
-        } else { // neutral
-            osc1.type = 'sawtooth';
-            osc2.type = 'triangle'; // warm, metallic hybrid
         }
 
         const startFreq = 40;
         let endFreq = 160;
         if (theme === 'jedi') endFreq = 210;
         if (theme === 'sith') endFreq = 125;
-        if (theme === 'neutral') endFreq = 155;
 
         osc1.frequency.setValueAtTime(startFreq, now);
         osc1.frequency.exponentialRampToValueAtTime(endFreq, now + 0.35);
@@ -66,14 +62,14 @@ export function playSaberIgnite(theme: 'jedi' | 'sith' | 'neutral'): void {
         filter.type = 'lowpass';
         filter.frequency.setValueAtTime(100, now);
         filter.frequency.exponentialRampToValueAtTime(
-            theme === 'jedi' ? 1000 : (theme === 'neutral' ? 750 : 450), 
+            theme === 'jedi' ? 1000 : 450,
             now + 0.3
         );
         filter.Q.setValueAtTime(3, now);
 
         // Main Volume Envelope
         mainGain.gain.setValueAtTime(0, now);
-        mainGain.gain.linearRampToValueAtTime(theme === 'jedi' ? 0.25 : 0.35, now + 0.08); // Quick ignition swell
+        mainGain.gain.linearRampToValueAtTime(theme === 'jedi' ? 0.25 : 0.35, now + 0.08);
         mainGain.gain.exponentialRampToValueAtTime(0.06, now + 0.5); // Decay to a quiet hum
         mainGain.gain.setValueAtTime(0.06, now + 0.8);
         mainGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2); // Fade out

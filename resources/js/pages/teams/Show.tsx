@@ -1,6 +1,7 @@
 import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
 import { Copy, Edit2, LogOut, Shield, ShieldAlert, UserMinus, Users } from 'lucide-react';
 import { useState } from 'react';
+import BackButton from '@/components/BackButton';
 import AppLayout from '@/layouts/AppLayout';
 import type { Team, TeamMember } from '@/types';
 
@@ -44,6 +45,8 @@ export default function TeamShow({ team }: TeamShowProps) {
     return (
         <AppLayout title="Detail Tim">
             <Head title={`${team.nama_tim} - EsportHub`} />
+
+            <BackButton fallbackUrl="/teams" className="mb-6" />
 
             <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
                 {/* Left col: Team Profile */}

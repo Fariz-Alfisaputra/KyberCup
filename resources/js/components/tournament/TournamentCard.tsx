@@ -8,10 +8,38 @@ interface TournamentCardProps {
 }
 
 const statusConfig = {
-    draft: { label: 'Draft', className: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30' },
-    open: { label: 'Open Registration', className: 'bg-emerald-500/20 text-emerald-500/60 border-emerald-500/30 dark:text-emerald-400' },
-    ongoing: { label: 'Ongoing', className: 'bg-primary/20 text-primary border-primary/30' },
-    selesai: { label: 'Selesai', className: 'bg-blue-500/20 text-blue-500/60 border-blue-500/30 dark:text-blue-400' },
+    draft: {
+        label: 'Draft',
+        style: {
+            background: 'rgba(113,113,122,0.12)',
+            color: '#a1a1aa',
+            border: '1px solid rgba(113,113,122,0.3)',
+        },
+    },
+    open: {
+        label: 'Open',
+        style: {
+            background: 'rgba(0,212,255,0.12)',
+            color: '#00d4ff',
+            border: '1px solid rgba(0,212,255,0.35)',
+        },
+    },
+    ongoing: {
+        label: 'Ongoing',
+        style: {
+            background: 'rgba(124,58,237,0.12)',
+            color: '#a78bfa',
+            border: '1px solid rgba(124,58,237,0.35)',
+        },
+    },
+    selesai: {
+        label: 'Selesai',
+        style: {
+            background: 'rgba(255,232,31,0.12)',
+            color: '#FFE81F',
+            border: '1px solid rgba(255,232,31,0.35)',
+        },
+    },
 };
 
 const formatConfig = {
@@ -46,7 +74,10 @@ function CountdownTimer({ deadline }: { deadline: string }) {
     }, [deadline]);
 
     return (
-        <span className="flex items-center gap-1 text-xs text-amber-500 dark:text-amber-400">
+        <span
+            className="flex items-center gap-1 text-xs"
+            style={{ color: '#FFE81F', fontFamily: 'Rajdhani, sans-serif' }}
+        >
             <Clock className="h-3 w-3" />
             {timeLeft}
         </span>
@@ -59,9 +90,32 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
 
     return (
         <Link href={`/tournaments/${tournament.slug}`} className="group block">
-            <div className="relative overflow-hidden rounded-xl border border-border bg-card force-card">
+            <div
+                className="relative overflow-hidden rounded-xl scanline-card transition-all duration-400"
+                style={{
+                    background: 'rgba(10,10,15,0.8)',
+                    border: '1px solid rgba(0,212,255,0.15)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+                    transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s ease, border-color 0.35s ease',
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.borderColor = 'rgba(0,212,255,0.4)';
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,212,255,0.12)';
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.borderColor = 'rgba(0,212,255,0.15)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)';
+                }}
+            >
                 {/* Banner */}
-                <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary/20 to-secondary/30">
+                <div
+                    className="relative h-40 overflow-hidden"
+                    style={{ background: 'linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(124,58,237,0.12) 100%)' }}
+                >
                     {tournament.banner_url ? (
                         <img
                             src={tournament.banner_url}
@@ -70,15 +124,28 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                         />
                     ) : (
                         <div className="flex h-full items-center justify-center">
-                            <Trophy className="h-16 w-16 text-primary/30" />
+                            <Trophy
+                                className="h-16 w-16"
+                                style={{ color: 'rgba(0,212,255,0.2)' }}
+                            />
                         </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+                    {/* gradient overlay */}
+                    <div
+                        className="absolute inset-0"
+                        style={{ background: 'linear-gradient(to top, rgba(10,10,15,0.95) 0%, transparent 60%)' }}
+                    />
 
                     {/* Status Badge */}
                     <div className="absolute top-3 right-3">
                         <span
-                            className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold backdrop-blur-sm ${status.className}`}
+                            className="rounded-full px-2.5 py-0.5 text-xs font-semibold backdrop-blur-sm"
+                            style={{
+                                ...status.style,
+                                fontFamily: 'Rajdhani, sans-serif',
+                                letterSpacing: '0.05em',
+                                textTransform: 'uppercase',
+                            }}
                         >
                             {status.label}
                         </span>
@@ -91,6 +158,7 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                                 src={tournament.game.logo_url}
                                 alt={tournament.game.nama_game}
                                 className="h-8 w-8 rounded-lg object-cover"
+                                style={{ border: '1px solid rgba(0,212,255,0.3)' }}
                             />
                         </div>
                     )}
@@ -99,28 +167,58 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                 {/* Content */}
                 <div className="p-4">
                     <div className="mb-1 flex items-start justify-between gap-2">
-                        <h3 className="line-clamp-1 text-sm font-bold text-foreground group-hover:text-primary">
+                        <h3
+                            className="line-clamp-1 text-sm font-bold transition-colors duration-200"
+                            style={{
+                                color: '#f0f4ff',
+                                fontFamily: 'Rajdhani, sans-serif',
+                                fontSize: '0.95rem',
+                                letterSpacing: '0.03em',
+                            }}
+                        >
                             {tournament.nama}
                         </h3>
-                        <span className="shrink-0 rounded bg-secondary px-1.5 py-0.5 text-xs text-muted-foreground">
+                        <span
+                            className="shrink-0 rounded px-1.5 py-0.5 text-xs"
+                            style={{
+                                background: 'rgba(0,212,255,0.06)',
+                                color: 'rgba(0,212,255,0.6)',
+                                border: '1px solid rgba(0,212,255,0.15)',
+                                fontFamily: 'Rajdhani, sans-serif',
+                                fontSize: '0.7rem',
+                            }}
+                        >
                             {formatConfig[tournament.format]}
                         </span>
                     </div>
 
-                    <p className="mb-3 text-xs text-muted-foreground">{tournament.game.nama_game}</p>
+                    <p className="mb-3 text-xs" style={{ color: 'rgba(240,244,255,0.45)', fontFamily: 'Rajdhani, sans-serif' }}>
+                        {tournament.game.nama_game}
+                    </p>
 
                     {/* Prize */}
                     {tournament.hadiah && (
-                        <div className="mb-3 flex items-center gap-1.5 text-amber-500 dark:text-amber-400">
+                        <div
+                            className="mb-3 flex items-center gap-1.5"
+                            style={{ color: '#FFE81F' }}
+                        >
                             <Trophy className="h-3.5 w-3.5" />
-                            <span className="text-xs font-semibold">{tournament.hadiah}</span>
+                            <span
+                                className="text-xs font-semibold"
+                                style={{ fontFamily: 'Rajdhani, sans-serif', textShadow: '0 0 6px rgba(255,232,31,0.5)' }}
+                            >
+                                {tournament.hadiah}
+                            </span>
                         </div>
                     )}
 
                     {/* Teams progress */}
                     <div className="mb-2">
                         <div className="mb-1 flex items-center justify-between text-xs">
-                            <span className="flex items-center gap-1 text-muted-foreground">
+                            <span
+                                className="flex items-center gap-1"
+                                style={{ color: 'rgba(240,244,255,0.45)', fontFamily: 'Rajdhani, sans-serif' }}
+                            >
                                 <Users className="h-3 w-3" />
                                 {tournament.registrations_count}/{tournament.max_tim} Tim
                             </span>
@@ -128,17 +226,27 @@ export default function TournamentCard({ tournament }: TournamentCardProps) {
                                 <CountdownTimer deadline={tournament.registration_deadline} />
                             )}
                         </div>
-                        <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
+                        <div
+                            className="h-1.5 overflow-hidden rounded-full"
+                            style={{ background: 'rgba(255,255,255,0.06)' }}
+                        >
                             <div
-                                className="h-full rounded-full gaming-gradient transition-all duration-500"
-                                style={{ width: `${progress}%` }}
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{
+                                    width: `${progress}%`,
+                                    background: 'linear-gradient(90deg, #00d4ff, #7c3aed)',
+                                    boxShadow: `0 0 6px rgba(0,212,255,${progress / 200})`,
+                                }}
                             />
                         </div>
                     </div>
 
                     {/* Date */}
                     {tournament.tanggal_mulai && (
-                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <div
+                            className="flex items-center gap-1 text-xs"
+                            style={{ color: 'rgba(240,244,255,0.35)', fontFamily: 'Rajdhani, sans-serif' }}
+                        >
                             <Calendar className="h-3 w-3" />
                             {new Date(tournament.tanggal_mulai).toLocaleDateString('id-ID', {
                                 day: 'numeric',

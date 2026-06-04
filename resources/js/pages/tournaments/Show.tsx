@@ -1,6 +1,20 @@
-import { Head, router, useForm, usePage } from '@inertiajs/react';
-import { Calendar, ChevronLeft, Gamepad2, Shield, Trophy, Users } from 'lucide-react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import {
+    AlertCircle,
+    CheckCircle2,
+    Clock,
+    Gamepad2,
+    Lock,
+    LogIn,
+    Shield,
+    Trophy,
+    Users,
+    UserPlus,
+    XCircle,
+} from 'lucide-react';
 import { useState } from 'react';
+import AppLayout from '@/layouts/AppLayout';
+import BackButton from '@/components/BackButton';
 import BracketTree from '@/components/tournament/BracketTree';
 import StandingsTable from '@/components/tournament/StandingsTable';
 import type { Standing, Tournament, TournamentMatch, TeamListItem } from '@/types';
@@ -11,6 +25,13 @@ interface Registration {
     team: Pick<TeamListItem, 'id' | 'nama_tim' | 'logo_url' | 'slug'>;
 }
 
+interface UserTeam {
+    id: number;
+    nama_tim: string;
+    logo_url: string | null;
+    slug: string;
+}
+
 interface TournamentShowProps {
     tournament: Tournament & {
         game: { id: number; nama_game: string; logo_url: string | null; genre: string };
@@ -18,6 +39,9 @@ interface TournamentShowProps {
     matches: Record<string, TournamentMatch[]>;
     standings: Standing[];
     registrations: Registration[];
+    is_full: boolean;
+    user_teams: UserTeam[];
+    user_registration_status: string | null;
 }
 
 type TabType = 'info' | 'bracket' | 'standings' | 'teams';
@@ -35,7 +59,172 @@ const formatLabels = {
     round_robin: 'Round Robin',
 };
 
-export default function TournamentShow({ tournament, matches, standings, registrations }: TournamentShowProps) {
+/** Renders the registration CTA in the sidebar based on 6 possible states */
+function RegistrationCTA({
+    tournament,
+    auth,
+    isFull,
+    userTeams,
+    userRegistrationStatus,
+    onRegisterClick,
+}: {
+    tournament: TournamentShowProps['tournament'];
+    auth: { user: { id: number; role: string } | null };
+    isFull: boolean;
+    userTeams: UserTeam[];
+    userRegistrationStatus: string | null;
+    onRegisterClick: () => void;
+}) {
+    // 1. Not logged in
+    if (!auth.user) {
+        return (
+            <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-5">
+                <h3 className="mb-1 font-bold text-blue-400">Daftar Turnamen</h3>
+                <p className="mb-4 text-xs text-muted-foreground">Login terlebih dahulu untuk mendaftarkan timmu.</p>
+                <Link
+                    href={`/login?intended=${encodeURIComponent(window.location.pathname)}`}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-bold text-white transition-all hover:bg-blue-500"
+                >
+                    <LogIn className="h-4 w-4" />
+                    Login untuk Daftar
+                </Link>
+            </div>
+        );
+    }
+
+    // 2. Logged in but tournament is not open
+    if (tournament.status !== 'open') {
+        return (
+            <div className="rounded-xl border border-zinc-500/30 bg-zinc-500/5 p-5">
+                <h3 className="mb-1 font-bold text-zinc-400">Pendaftaran Ditutup</h3>
+                <p className="mb-4 text-xs text-muted-foreground">
+                    Turnamen ini {tournament.status === 'ongoing' ? 'sedang berlangsung' : 'sudah selesai'} dan tidak menerima pendaftaran baru.
+                </p>
+                <button
+                    disabled
+                    className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-zinc-600 py-2.5 text-sm font-bold text-zinc-500"
+                >
+                    <Lock className="h-4 w-4" />
+                    Pendaftaran Ditutup
+                </button>
+            </div>
+        );
+    }
+
+    // 3. Logged in, open, but user has no team
+    if (userTeams.length === 0) {
+        return (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
+                <h3 className="mb-1 font-bold text-amber-400">Belum Punya Tim</h3>
+                <p className="mb-4 text-xs text-muted-foreground">
+                    Kamu perlu bergabung atau membuat tim sebelum bisa mendaftar turnamen.
+                </p>
+                <Link
+                    href="/teams/create"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-amber-500 py-2.5 text-sm font-bold text-white transition-all hover:bg-amber-400"
+                >
+                    <UserPlus className="h-4 w-4" />
+                    Buat Tim Sekarang
+                </Link>
+            </div>
+        );
+    }
+
+    // 4. Slot penuh
+    if (isFull) {
+        return (
+            <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-5">
+                <h3 className="mb-1 font-bold text-red-400">Slot Penuh</h3>
+                <p className="mb-4 text-xs text-muted-foreground">Semua slot peserta sudah terisi. Pantau terus untuk turnamen berikutnya!</p>
+                <button
+                    disabled
+                    className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-red-500/50 py-2.5 text-sm font-bold text-red-500"
+                >
+                    <XCircle className="h-4 w-4" />
+                    Slot Penuh
+                </button>
+            </div>
+        );
+    }
+
+    // 5. Already registered (pending)
+    if (userRegistrationStatus === 'pending') {
+        return (
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
+                <h3 className="mb-1 font-bold text-amber-400">Menunggu Persetujuan</h3>
+                <p className="mb-4 text-xs text-muted-foreground">
+                    Timmu sudah mendaftar dan sedang menunggu review dari admin. Harap bersabar!
+                </p>
+                <button
+                    disabled
+                    className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-amber-500/50 py-2.5 text-sm font-bold text-amber-500"
+                >
+                    <Clock className="h-4 w-4" />
+                    Menunggu Persetujuan
+                </button>
+            </div>
+        );
+    }
+
+    // 6. Already registered (approved)
+    if (userRegistrationStatus === 'approved') {
+        return (
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
+                <h3 className="mb-1 font-bold text-emerald-400">Tim Sudah Terdaftar</h3>
+                <p className="mb-4 text-xs text-muted-foreground">Timmu sudah disetujui. Bersiaplah untuk bertanding!</p>
+                <button
+                    disabled
+                    className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-emerald-500/50 py-2.5 text-sm font-bold text-emerald-500"
+                >
+                    <CheckCircle2 className="h-4 w-4" />
+                    Tim Sudah Terdaftar ✓
+                </button>
+            </div>
+        );
+    }
+
+    // 7. Already registered (rejected)
+    if (userRegistrationStatus === 'rejected') {
+        return (
+            <div className="rounded-xl border border-red-500/30 bg-red-500/5 p-5">
+                <h3 className="mb-1 font-bold text-red-400">Pendaftaran Ditolak</h3>
+                <p className="mb-4 text-xs text-muted-foreground">Sayangnya pendaftaran timmu ditolak. Hubungi admin untuk info lebih lanjut.</p>
+                <button
+                    disabled
+                    className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-red-500/50 py-2.5 text-sm font-bold text-red-500"
+                >
+                    <AlertCircle className="h-4 w-4" />
+                    Pendaftaran Ditolak
+                </button>
+            </div>
+        );
+    }
+
+    // 8. Can register — show CTA button
+    return (
+        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
+            <h3 className="mb-1 font-bold text-emerald-400">Daftar Tim</h3>
+            <p className="mb-4 text-xs text-muted-foreground">Daftarkan tim kamu ke turnamen ini!</p>
+            <button
+                onClick={onRegisterClick}
+                className="w-full rounded-lg bg-emerald-500 py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-400 active:scale-95"
+                style={{ boxShadow: '0 0 20px rgba(16,185,129,0.25)' }}
+            >
+                Daftar Sekarang
+            </button>
+        </div>
+    );
+}
+
+export default function TournamentShow({
+    tournament,
+    matches,
+    standings,
+    registrations,
+    is_full,
+    user_teams,
+    user_registration_status,
+}: TournamentShowProps) {
     const { auth } = usePage().props as { auth: { user: { id: number; role: string } | null } };
     const [activeTab, setActiveTab] = useState<TabType>('info');
     const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -53,22 +242,16 @@ export default function TournamentShow({ tournament, matches, standings, registr
     ];
 
     return (
-        <>
-            <Head title={`${tournament.nama} - EsportHub`} />
+        <AppLayout title={tournament.nama}>
+            <Head title={`${tournament.nama} - KyberCup`} />
 
-            <div className="dark min-h-screen bg-background text-foreground">
-                {/* Back button */}
-                <div className="border-b border-border bg-card/50">
-                    <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6">
-                        <button
-                            onClick={() => router.visit('/tournaments')}
-                            className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                        >
-                            <ChevronLeft className="h-4 w-4" />
-                            Kembali ke Turnamen
-                        </button>
-                    </div>
-                </div>
+            {/* Back button */}
+            <div className="mb-4">
+                <BackButton fallbackUrl="/tournaments" />
+            </div>
+
+            {/* Page content — no dark wrapper, AppLayout handles background */}
+            <div>
 
                 {/* Hero Banner */}
                 <div className="relative h-72 overflow-hidden lg:h-96">
@@ -89,9 +272,7 @@ export default function TournamentShow({ tournament, matches, standings, registr
                     <div className="absolute bottom-0 left-0 right-0 px-4 pb-6 sm:px-6">
                         <div className="mx-auto max-w-7xl">
                             <div className="mb-2 flex items-center gap-3">
-                                <span
-                                    className={`rounded-full border px-3 py-1 text-xs font-bold ${status.className}`}
-                                >
+                                <span className={`rounded-full border px-3 py-1 text-xs font-bold ${status.className}`}>
                                     {status.label}
                                 </span>
                                 <span className="rounded-full bg-card/80 px-3 py-1 text-xs text-muted-foreground backdrop-blur-sm">
@@ -217,20 +398,14 @@ export default function TournamentShow({ tournament, matches, standings, registr
                         {/* Right: Info sidebar */}
                         <div className="space-y-4">
                             {/* Registration CTA */}
-                            {tournament.status === 'open' && auth.user && (
-                                <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
-                                    <h3 className="mb-1 font-bold text-emerald-400">Daftar Tim</h3>
-                                    <p className="mb-4 text-xs text-muted-foreground">
-                                        Daftarkan tim kamu ke turnamen ini!
-                                    </p>
-                                    <button
-                                        onClick={() => setShowRegisterModal(true)}
-                                        className="w-full rounded-lg bg-emerald-500 py-2.5 text-sm font-bold text-white transition-all hover:bg-emerald-500/90 gaming-glow-emerald"
-                                    >
-                                        Daftar Sekarang
-                                    </button>
-                                </div>
-                            )}
+                            <RegistrationCTA
+                                tournament={tournament}
+                                auth={auth}
+                                isFull={is_full}
+                                userTeams={user_teams}
+                                userRegistrationStatus={user_registration_status}
+                                onRegisterClick={() => setShowRegisterModal(true)}
+                            />
 
                             {/* Tournament Info */}
                             <div className="rounded-xl border border-border bg-card p-5">
@@ -287,7 +462,7 @@ export default function TournamentShow({ tournament, matches, standings, registr
                                     </div>
                                     <div className="h-2 overflow-hidden rounded-full bg-secondary">
                                         <div
-                                            className="h-full rounded-full bg-gradient-to-r from-violet-500 to-violet-400"
+                                            className="h-full rounded-full bg-gradient-to-r from-violet-500 to-violet-400 transition-all duration-500"
                                             style={{ width: `${progress}%` }}
                                         />
                                     </div>
@@ -314,13 +489,22 @@ export default function TournamentShow({ tournament, matches, standings, registr
                         >
                             <div className="mb-4">
                                 <label className="mb-1.5 block text-sm font-medium">Tim</label>
-                                <input
-                                    type="number"
-                                    placeholder="Masukkan Team ID"
-                                    value={registerForm.data.team_id}
-                                    onChange={(e) => registerForm.setData('team_id', e.target.value)}
-                                    className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                                />
+                                {user_teams.length > 0 ? (
+                                    <select
+                                        value={registerForm.data.team_id}
+                                        onChange={(e) => registerForm.setData('team_id', e.target.value)}
+                                        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                    >
+                                        <option value="">-- Pilih Tim --</option>
+                                        {user_teams.map((team) => (
+                                            <option key={team.id} value={String(team.id)}>
+                                                {team.nama_tim}
+                                            </option>
+                                        ))}
+                                    </select>
+                                ) : (
+                                    <p className="text-sm text-muted-foreground italic">Kamu belum memiliki tim.</p>
+                                )}
                                 {registerForm.errors.team_id && (
                                     <p className="mt-1 text-xs text-destructive">{registerForm.errors.team_id}</p>
                                 )}
@@ -335,8 +519,8 @@ export default function TournamentShow({ tournament, matches, standings, registr
                                 </button>
                                 <button
                                     type="submit"
-                                    disabled={registerForm.processing}
-                                    className="flex-1 rounded-lg bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                                    disabled={registerForm.processing || !registerForm.data.team_id}
+                                    className="flex-1 rounded-lg bg-primary py-2.5 text-sm font-bold text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
                                 >
                                     {registerForm.processing ? 'Mendaftar...' : 'Daftar'}
                                 </button>
@@ -345,6 +529,6 @@ export default function TournamentShow({ tournament, matches, standings, registr
                     </div>
                 </div>
             )}
-        </>
+        </AppLayout>
     );
 }

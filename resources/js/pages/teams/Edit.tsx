@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft, Upload, Shield } from 'lucide-react';
+import { Shield, Upload } from 'lucide-react';
+import BackButton from '@/components/BackButton';
 import AppLayout from '@/layouts/AppLayout';
 
 interface TeamEditProps {
@@ -30,15 +31,7 @@ export default function TeamEdit({ team }: TeamEditProps) {
             <Head title={`Edit ${team.nama_tim} - EsportHub`} />
 
             <div className="mx-auto max-w-3xl">
-                <div className="mb-6 flex items-center justify-between">
-                    <Link
-                        href={`/teams/${team.slug}`}
-                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-                    >
-                        <ArrowLeft className="h-4 w-4" />
-                        Kembali ke Detail Tim
-                    </Link>
-                </div>
+                <BackButton fallbackUrl={`/teams/${team.slug}`} className="mb-6" />
 
                 <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
                     <div className="mb-6 flex items-center gap-3 border-b border-border pb-6">
