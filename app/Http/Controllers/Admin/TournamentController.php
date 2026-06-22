@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\TournamentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTournamentRequest;
 use App\Http\Requests\UpdateTournamentRequest;
@@ -18,7 +19,10 @@ class TournamentController extends Controller
     public function index(): Response
     {
         $tournaments = Tournament::with(['game', 'creator'])
-            ->withCount(['registrations as registrations_count'])
+            ->withCount([
+                'registrations as registrations_count',
+                'matches as matches_count',
+            ])
             ->latest()
             ->paginate(15)
             ->through(fn ($t) => [
@@ -33,6 +37,7 @@ class TournamentController extends Controller
                 'registration_deadline' => $t->registration_deadline?->format('Y-m-d H:i'),
                 'tanggal_mulai' => $t->tanggal_mulai?->format('Y-m-d'),
                 'registrations_count' => $t->registrations_count,
+                'matches_count' => $t->matches_count,
                 'banner_url' => $t->banner_url,
                 'game' => ['id' => $t->game->id, 'nama_game' => $t->game->nama_game],
                 'creator' => ['id' => $t->creator->id, 'name' => $t->creator->name],
@@ -45,7 +50,7 @@ class TournamentController extends Controller
     {
         $games = Game::active()->get(['id', 'nama_game']);
 
-        return Inertia::render('admin/TournamentCreate', ['games' => $games]);
+        return Inertia::render('admin/tournaments/Create', ['games' => $games]);
     }
 
     public function store(StoreTournamentRequest $request): RedirectResponse
@@ -72,7 +77,7 @@ class TournamentController extends Controller
     {
         $games = Game::active()->get(['id', 'nama_game']);
 
-        return Inertia::render('admin/TournamentEdit', [
+        return Inertia::render('admin/tournaments/Edit', [
             'tournament' => [
                 'id' => $tournament->id,
                 'nama' => $tournament->nama,
@@ -90,6 +95,8 @@ class TournamentController extends Controller
                 'tanggal_selesai' => $tournament->tanggal_selesai?->format('Y-m-d'),
             ],
             'games' => $games,
+            'locked_fields' => $this->lockedFields($tournament),
+            'edit_hint' => $this->editHint($tournament),
         ]);
     }
 
@@ -104,10 +111,89 @@ class TournamentController extends Controller
             $validated['banner'] = $request->file('banner')->store('tournaments/banners', 'public');
         }
 
-        $tournament->update($validated);
+        $allowed = $this->editableFields($tournament);
+        $tournament->update(collect($validated)->only($allowed)->all());
 
         return redirect()->route('admin.tournaments.index')
             ->with('success', 'Turnamen berhasil diperbarui!');
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function editableFields(Tournament $tournament): array
+    {
+        if ($tournament->status === TournamentStatus::Selesai) {
+            return ['nama', 'hadiah', 'prize_pool', 'deskripsi', 'banner'];
+        }
+
+        if ($this->hasBracket($tournament)) {
+            return [
+                'nama',
+                'hadiah',
+                'prize_pool',
+                'deskripsi',
+                'banner',
+                'status',
+                'tanggal_mulai',
+                'tanggal_selesai',
+            ];
+        }
+
+        return [
+            'nama',
+            'game_id',
+            'format',
+            'max_tim',
+            'hadiah',
+            'prize_pool',
+            'deskripsi',
+            'banner',
+            'status',
+            'tanggal_mulai',
+            'tanggal_selesai',
+            'registration_deadline',
+        ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function lockedFields(Tournament $tournament): array
+    {
+        $all = [
+            'game_id',
+            'format',
+            'max_tim',
+            'status',
+            'registration_deadline',
+            'tanggal_mulai',
+            'tanggal_selesai',
+        ];
+
+        return array_values(array_diff($all, $this->editableFields($tournament)));
+    }
+
+    private function editHint(Tournament $tournament): ?string
+    {
+        if ($tournament->status === TournamentStatus::Selesai) {
+            return 'Turnamen selesai: hanya informasi tampilan (nama, hadiah, deskripsi, banner) yang dapat diubah.';
+        }
+
+        if ($this->hasBracket($tournament)) {
+            return 'Bracket sudah di-generate: game, format, kapasitas tim, dan deadline pendaftaran dikunci agar data pertandingan tetap konsisten. Ubah skor di menu Matches.';
+        }
+
+        if ($tournament->status === TournamentStatus::Open) {
+            return 'Pendaftaran masih dibuka: semua pengaturan turnamen dapat diubah selama bracket belum di-generate.';
+        }
+
+        return null;
+    }
+
+    private function hasBracket(Tournament $tournament): bool
+    {
+        return $tournament->matches()->exists();
     }
 
     public function destroy(Tournament $tournament): RedirectResponse

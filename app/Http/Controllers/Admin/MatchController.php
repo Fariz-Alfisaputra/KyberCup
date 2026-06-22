@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\MatchStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateMatchResultRequest;
+use App\Models\Tournament;
 use App\Models\TournamentMatch;
 use App\Services\TournamentService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,11 +17,17 @@ class MatchController extends Controller
 {
     public function __construct(private readonly TournamentService $tournamentService) {}
 
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $tournamentId = $request->integer('tournament');
+
         $matches = TournamentMatch::with(['tournament', 'team1', 'team2', 'winner'])
-            ->latest()
+            ->when($tournamentId > 0, fn ($query) => $query->where('tournament_id', $tournamentId))
+            ->orderBy('tournament_id')
+            ->orderBy('round')
+            ->orderBy('bracket_position')
             ->paginate(20)
+            ->withQueryString()
             ->through(fn ($m) => [
                 'id' => $m->id,
                 'round' => $m->round,
@@ -35,7 +43,17 @@ class MatchController extends Controller
                 'winner' => $m->winner ? ['id' => $m->winner->id, 'nama_tim' => $m->winner->nama_tim] : null,
             ]);
 
-        return Inertia::render('admin/Matches', ['matches' => $matches]);
+        $tournaments = Tournament::query()
+            ->orderBy('nama')
+            ->get(['id', 'nama']);
+
+        return Inertia::render('admin/Matches', [
+            'matches' => $matches,
+            'tournaments' => $tournaments,
+            'filters' => [
+                'tournament' => $tournamentId > 0 ? $tournamentId : null,
+            ],
+        ]);
     }
 
     public function result(UpdateMatchResultRequest $request, TournamentMatch $match): RedirectResponse

@@ -16,8 +16,17 @@ interface PaginatedMatches {
     links: Array<{ url: string | null; label: string; active: boolean }>;
 }
 
+interface TournamentOption {
+    id: number;
+    nama: string;
+}
+
 interface MatchesProps {
     matches: PaginatedMatches;
+    tournaments: TournamentOption[];
+    filters: {
+        tournament: number | null;
+    };
 }
 
 const statusColors = {
@@ -27,7 +36,11 @@ const statusColors = {
     walkover: 'bg-zinc-500/20 text-zinc-400',
 };
 
-export default function AdminMatches({ matches }: MatchesProps) {
+export default function AdminMatches({
+    matches,
+    tournaments,
+    filters,
+}: MatchesProps) {
     const [editingMatch, setEditingMatch] = useState<AdminMatch | null>(null);
 
     const form = useForm({
@@ -64,9 +77,42 @@ export default function AdminMatches({ matches }: MatchesProps) {
             <Head title="Matches - Admin EsportHub" />
 
             <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                    {matches.total} match terdaftar
-                </p>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-sm text-muted-foreground">
+                        {matches.total} match terdaftar
+                        {filters.tournament
+                            ? ` · filter turnamen aktif`
+                            : ''}
+                    </p>
+                    <div className="flex items-center gap-2">
+                        <label
+                            htmlFor="tournament-filter"
+                            className="text-xs font-medium text-muted-foreground"
+                        >
+                            Turnamen:
+                        </label>
+                        <select
+                            id="tournament-filter"
+                            value={filters.tournament ?? ''}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                router.get(
+                                    '/admin/matches',
+                                    value ? { tournament: value } : {},
+                                    { preserveState: true },
+                                );
+                            }}
+                            className="rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                        >
+                            <option value="">Semua turnamen</option>
+                            {tournaments.map((t) => (
+                                <option key={t.id} value={t.id}>
+                                    {t.nama}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
 
                 <div className="overflow-x-auto rounded-xl border border-border bg-card">
                     <table className="w-full text-sm">

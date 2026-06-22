@@ -6,12 +6,17 @@ import type { Game, Tournament } from '@/types';
 interface TournamentEditProps {
     tournament: Tournament;
     games: Pick<Game, 'id' | 'nama_game'>[];
+    locked_fields: string[];
+    edit_hint: string | null;
 }
 
 export default function TournamentEdit({
     tournament,
     games,
+    locked_fields,
+    edit_hint,
 }: TournamentEditProps) {
+    const isLocked = (field: string) => locked_fields.includes(field);
     const { data, setData, post, processing, errors } = useForm({
         _method: 'PUT',
         nama: tournament.nama,
@@ -60,9 +65,21 @@ export default function TournamentEdit({
                             </h2>
                             <p className="text-sm text-muted-foreground">
                                 Perbarui informasi turnamen di bawah ini.
+                                <span className="mt-1 block capitalize text-violet-400">
+                                    Status saat ini: {tournament.status}
+                                </span>
                             </p>
                         </div>
                     </div>
+
+                    {edit_hint && (
+                        <div
+                            className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200"
+                            role="status"
+                        >
+                            {edit_hint}
+                        </div>
+                    )}
 
                     <form onSubmit={submit} className="space-y-6">
                         {/* Banner Upload */}
@@ -155,13 +172,14 @@ export default function TournamentEdit({
                                 </label>
                                 <select
                                     value={data.game_id}
+                                    disabled={isLocked('game_id')}
                                     onChange={(e) =>
                                         setData(
                                             'game_id',
                                             parseInt(e.target.value),
                                         )
                                     }
-                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     <option value="">Pilih Game</option>
                                     {games.map((game) => (
@@ -184,10 +202,11 @@ export default function TournamentEdit({
                                 </label>
                                 <select
                                     value={data.status}
+                                    disabled={isLocked('status')}
                                     onChange={(e) =>
                                         setData('status', e.target.value)
                                     }
-                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     <option value="draft">Draft</option>
                                     <option value="open">
@@ -210,10 +229,11 @@ export default function TournamentEdit({
                                 </label>
                                 <select
                                     value={data.format}
+                                    disabled={isLocked('format')}
                                     onChange={(e) =>
                                         setData('format', e.target.value)
                                     }
-                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     <option value="single_elimination">
                                         Single Elimination
@@ -242,13 +262,14 @@ export default function TournamentEdit({
                                     type="number"
                                     min={2}
                                     value={data.max_tim}
+                                    disabled={isLocked('max_tim')}
                                     onChange={(e) =>
                                         setData(
                                             'max_tim',
                                             parseInt(e.target.value),
                                         )
                                     }
-                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                                 />
                                 {errors.max_tim && (
                                     <p className="mt-2 text-xs text-destructive">
@@ -281,10 +302,11 @@ export default function TournamentEdit({
                                 <input
                                     type="date"
                                     value={data.tanggal_mulai}
+                                    disabled={isLocked('tanggal_mulai')}
                                     onChange={(e) =>
                                         setData('tanggal_mulai', e.target.value)
                                     }
-                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                                 />
                                 {errors.tanggal_mulai && (
                                     <p className="mt-2 text-xs text-destructive">
@@ -301,13 +323,14 @@ export default function TournamentEdit({
                                 <input
                                     type="date"
                                     value={data.tanggal_selesai}
+                                    disabled={isLocked('tanggal_selesai')}
                                     onChange={(e) =>
                                         setData(
                                             'tanggal_selesai',
                                             e.target.value,
                                         )
                                     }
-                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                                 />
                                 {errors.tanggal_selesai && (
                                     <p className="mt-2 text-xs text-destructive">
@@ -324,13 +347,14 @@ export default function TournamentEdit({
                                 <input
                                     type="date"
                                     value={data.registration_deadline}
+                                    disabled={isLocked('registration_deadline')}
                                     onChange={(e) =>
                                         setData(
                                             'registration_deadline',
                                             e.target.value,
                                         )
                                     }
-                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none md:w-1/2"
+                                    className="w-full rounded-lg border border-border bg-background px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:w-1/2"
                                 />
                                 {errors.registration_deadline && (
                                     <p className="mt-2 text-xs text-destructive">

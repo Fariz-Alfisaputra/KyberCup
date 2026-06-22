@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
-import { Plus, Trash2, Trophy, Zap } from 'lucide-react';
+import { Plus, Swords, Trash2, Trophy, Zap } from 'lucide-react';
 import AdminLayout from '@/layouts/AdminLayout';
 import { decodeHtmlEntities } from '@/lib/formatters';
 import type { TournamentListItem, Game } from '@/types';
@@ -7,6 +7,7 @@ import type { TournamentListItem, Game } from '@/types';
 interface AdminTournament extends TournamentListItem {
     creator: { id: number; name: string };
     registrations_count: number;
+    matches_count: number;
     registration_deadline: string | null;
     game: Pick<Game, 'id' | 'nama_game' | 'logo_url'>;
 }
@@ -88,6 +89,9 @@ export default function AdminTournaments({ tournaments }: TournamentsProps) {
                                 <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">
                                     Tim
                                 </th>
+                                <th className="px-4 py-3 text-center text-xs font-semibold text-muted-foreground">
+                                    Match
+                                </th>
                                 <th className="px-4 py-3 text-left text-xs font-semibold text-muted-foreground">
                                     Mulai
                                 </th>
@@ -149,6 +153,22 @@ export default function AdminTournaments({ tournaments }: TournamentsProps) {
                                         <td className="px-4 py-3 text-center text-muted-foreground">
                                             {tournament.registrations_count}/
                                             {tournament.max_tim}
+                                        </td>
+                                        <td className="px-4 py-3 text-center">
+                                            {tournament.matches_count > 0 ? (
+                                                <Link
+                                                    href={`/admin/matches?tournament=${tournament.id}`}
+                                                    className="inline-flex items-center gap-1 rounded-full bg-violet-500/10 px-2.5 py-0.5 text-xs font-medium text-violet-400 hover:bg-violet-500/20"
+                                                    title="Lihat pertandingan bracket"
+                                                >
+                                                    <Swords className="h-3 w-3" />
+                                                    {tournament.matches_count}
+                                                </Link>
+                                            ) : (
+                                                <span className="text-xs text-muted-foreground">
+                                                    —
+                                                </span>
+                                            )}
                                         </td>
                                         <td className="px-4 py-3 text-xs text-muted-foreground">
                                             {tournament.tanggal_mulai

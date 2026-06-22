@@ -21,6 +21,11 @@ class BracketController extends Controller
 
         $this->tournamentService->generateBracket($tournament);
 
-        return back()->with('success', "Bracket untuk turnamen {$tournament->nama} berhasil di-generate!");
+        $matchCount = $tournament->matches()->count();
+
+        return redirect()
+            ->route('admin.matches.index', ['tournament' => $tournament->id])
+            ->with('success', "Bracket {$tournament->nama} berhasil di-generate ({$matchCount} pertandingan).")
+            ->with('info', 'Input skor tiap match di bawah, lalu sistem akan memajukan pemenang ke babak berikutnya.');
     }
 }
