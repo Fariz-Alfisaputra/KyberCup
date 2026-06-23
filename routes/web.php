@@ -10,6 +10,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TournamentController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 // Temporary route to import database
 Route::get('/import-db', function () {
@@ -19,6 +20,10 @@ Route::get('/import-db', function () {
             return 'File SQL tidak ditemukan di '.$sqlPath;
         }
         $sql = file_get_contents($sqlPath);
+
+        // Hapus semua tabel yang terbuat otomatis saat deploy agar tidak bentrok
+        Schema::dropAllTables();
+
         DB::unprepared($sql);
 
         return 'Database berhasil diimpor!';
