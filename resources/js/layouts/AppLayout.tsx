@@ -63,7 +63,7 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
             {/* Sidebar overlay on mobile */}
             {sidebarOpen && (
                 <div
-                    className="fixed inset-0 z-20 bg-black/70 backdrop-blur-sm lg:hidden"
+                    className="fixed inset-0 z-20 bg-black/40 lg:hidden"
                     onClick={() => setSidebarOpen(false)}
                 />
             )}
@@ -75,44 +75,31 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                 }`}
                 style={{
                     background: 'var(--bg-navbar)',
-                    backdropFilter: 'blur(20px)',
                     borderRight: '1px solid var(--border-default)',
-                    boxShadow: '4px 0 24px rgba(0,0,0,0.3)',
+                    boxShadow: '1px 0 0 var(--border-default)',
                 }}
             >
                 {/* Logo */}
                 <div
-                    className="flex h-16 items-center gap-3 px-6"
+                    className="flex h-16 items-center gap-3 px-5"
                     style={{ borderBottom: '1px solid var(--border-default)' }}
                 >
                     <Link
                         href="/"
-                        className="group flex cursor-pointer items-center gap-2.5"
+                        className="flex cursor-pointer items-center gap-2.5"
                         aria-label="Kembali ke halaman utama"
                     >
                         <img
                             src="/logo-kyber.png"
                             alt="KyberCup"
-                            className="h-10 w-10 object-contain"
-                            style={{
-                                filter: 'drop-shadow(0 0 8px var(--accent-primary-glow))',
-                            }}
+                            className="h-8 w-8 object-contain"
                         />
                         <span
-                            className="text-xl font-black tracking-widest uppercase"
-                            style={{
-                                fontFamily: 'Orbitron, sans-serif',
-                                color: 'var(--text-primary)',
-                            }}
+                            className="logo-kybercup text-base"
+                            style={{ color: 'var(--text-primary)' }}
                         >
                             Kyber
-                            <span
-                                style={{
-                                    color: 'var(--accent-primary)',
-                                    textShadow:
-                                        '0 0 8px var(--accent-primary-glow)',
-                                }}
-                            >
+                            <span style={{ color: 'var(--accent-primary)' }}>
                                 Cup
                             </span>
                         </span>
@@ -120,17 +107,14 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                 </div>
 
                 {/* Navigation */}
-                <nav className="p-4">
+                <nav className="p-3">
                     <p
-                        className="mb-3 px-3 text-xs font-semibold tracking-widest uppercase"
-                        style={{
-                            color: 'var(--text-muted)',
-                            fontFamily: 'Rajdhani, sans-serif',
-                        }}
+                        className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: 'var(--text-muted)' }}
                     >
                         Menu Utama
                     </p>
-                    <ul className="space-y-1">
+                    <ul className="space-y-0.5">
                         {navItems
                             .filter(
                                 (item) => {
@@ -150,60 +134,33 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                                     <li key={item.href}>
                                         <Link
                                             href={item.href}
-                                            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200 ${
-                                                isActive ? 'text-white' : ''
-                                            }`}
+                                            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150"
                                             style={
                                                 isActive
                                                     ? {
-                                                          background:
-                                                              'var(--bg-hover)',
-                                                          border: '1px solid var(--border-accent)',
+                                                          background: 'var(--accent-primary-light)',
                                                           color: 'var(--accent-primary)',
-                                                          boxShadow:
-                                                              '0 0 12px var(--accent-primary-glow)',
-                                                          fontFamily:
-                                                              'Rajdhani, sans-serif',
-                                                          letterSpacing:
-                                                              '0.05em',
-                                                          textTransform:
-                                                              'uppercase',
-                                                          fontSize: '0.78rem',
+                                                          border: '1px solid var(--border-accent)',
                                                       }
                                                     : {
-                                                          color: 'var(--text-muted)',
-                                                          fontFamily:
-                                                              'Rajdhani, sans-serif',
-                                                          letterSpacing:
-                                                              '0.05em',
-                                                          textTransform:
-                                                              'uppercase',
-                                                          fontSize: '0.78rem',
+                                                          color: 'var(--text-secondary)',
                                                           border: '1px solid transparent',
                                                       }
                                             }
                                             onMouseEnter={(e) => {
                                                 if (!isActive) {
-                                                    e.currentTarget.style.background =
-                                                        'var(--bg-hover)';
-                                                    e.currentTarget.style.color =
-                                                        'var(--text-primary)';
-                                                    e.currentTarget.style.borderColor =
-                                                        'var(--border-default)';
+                                                    e.currentTarget.style.background = 'var(--bg-hover)';
+                                                    e.currentTarget.style.color = 'var(--text-primary)';
                                                 }
                                             }}
                                             onMouseLeave={(e) => {
                                                 if (!isActive) {
-                                                    e.currentTarget.style.background =
-                                                        'transparent';
-                                                    e.currentTarget.style.color =
-                                                        'var(--text-muted)';
-                                                    e.currentTarget.style.borderColor =
-                                                        'transparent';
+                                                    e.currentTarget.style.background = 'transparent';
+                                                    e.currentTarget.style.color = 'var(--text-secondary)';
                                                 }
                                             }}
                                         >
-                                            <Icon className="h-4 w-4" />
+                                            <Icon className="h-4 w-4 shrink-0" />
                                             {item.label}
                                         </Link>
                                     </li>
@@ -213,41 +170,28 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
 
                     {auth.user && (
                         <div
-                            className="mt-6 pt-4"
-                            style={{
-                                borderTop: '1px solid var(--border-default)',
-                            }}
+                            className="mt-5 pt-4"
+                            style={{ borderTop: '1px solid var(--border-default)' }}
                         >
                             <p
-                                className="mb-3 px-3 text-xs font-semibold tracking-widest uppercase"
-                                style={{
-                                    color: 'var(--text-muted)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                }}
+                                className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider"
+                                style={{ color: 'var(--text-muted)' }}
                             >
                                 Pengaturan
                             </p>
-                            <ul className="space-y-1">
+                            <ul className="space-y-0.5">
                                 <li>
                                     <Link
                                         href="/settings/profile"
-                                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200"
+                                        className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150"
                                         style={{
-                                            color: currentPath.startsWith(
-                                                '/settings',
-                                            )
+                                            color: currentPath.startsWith('/settings')
                                                 ? 'var(--accent-primary)'
-                                                : 'var(--text-muted)',
-                                            background: currentPath.startsWith(
-                                                '/settings',
-                                            )
-                                                ? 'var(--bg-hover)'
+                                                : 'var(--text-secondary)',
+                                            background: currentPath.startsWith('/settings')
+                                                ? 'var(--accent-primary-light)'
                                                 : 'transparent',
                                             border: '1px solid transparent',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                            letterSpacing: '0.05em',
-                                            textTransform: 'uppercase',
-                                            fontSize: '0.78rem',
                                         }}
                                     >
                                         <Settings className="h-4 w-4" />
@@ -259,26 +203,18 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                                         href="/logout"
                                         method="post"
                                         as="button"
-                                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200"
+                                        className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150"
                                         style={{
                                             color: 'var(--status-cancel-text)',
                                             border: '1px solid transparent',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                            letterSpacing: '0.05em',
-                                            textTransform: 'uppercase',
-                                            fontSize: '0.78rem',
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.background =
-                                                'var(--status-cancel-bg)';
-                                            e.currentTarget.style.borderColor =
-                                                'var(--border-strong)';
+                                            e.currentTarget.style.background = 'var(--status-cancel-bg)';
+                                            e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.25)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.background =
-                                                'transparent';
-                                            e.currentTarget.style.borderColor =
-                                                'transparent';
+                                            e.currentTarget.style.background = 'transparent';
+                                            e.currentTarget.style.borderColor = 'transparent';
                                         }}
                                     >
                                         <LogOut className="h-4 w-4" />
@@ -302,28 +238,19 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                                     src={auth.user.avatar_url}
                                     alt={auth.user.name}
                                     className="h-9 w-9 rounded-full object-cover"
-                                    style={{
-                                        border: '2px solid var(--border-accent)',
-                                        boxShadow:
-                                            '0 0 8px var(--accent-primary-glow)',
-                                    }}
+                                    style={{ border: '2px solid var(--border-default)' }}
                                 />
                             ) : (
                                 <div
                                     className="flex h-9 w-9 items-center justify-center rounded-full"
                                     style={{
-                                        background: 'var(--bg-hover)',
+                                        background: 'var(--accent-primary-light)',
                                         border: '2px solid var(--border-default)',
-                                        boxShadow:
-                                            '0 0 8px var(--accent-primary-glow)',
                                     }}
                                 >
                                     <span
                                         className="text-xs font-bold"
-                                        style={{
-                                            color: 'var(--accent-primary)',
-                                            fontFamily: 'Orbitron, sans-serif',
-                                        }}
+                                        style={{ color: 'var(--accent-primary)' }}
                                     >
                                         {auth.user.name.charAt(0).toUpperCase()}
                                     </span>
@@ -331,21 +258,14 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                             )}
                             <div className="min-w-0 flex-1">
                                 <p
-                                    className="truncate text-sm font-medium"
-                                    style={{
-                                        color: 'var(--text-primary)',
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                        fontWeight: 600,
-                                    }}
+                                    className="truncate text-sm font-semibold"
+                                    style={{ color: 'var(--text-primary)' }}
                                 >
                                     {auth.user.name}
                                 </p>
                                 <p
                                     className="text-xs capitalize"
-                                    style={{
-                                        color: 'var(--accent-primary)',
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                    }}
+                                    style={{ color: 'var(--text-muted)' }}
                                 >
                                     {auth.user.role}
                                 </p>
@@ -355,28 +275,35 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                         <div className="flex flex-col gap-2">
                             <Link
                                 href="/login"
-                                className="flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-bold transition-all"
+                                className="flex items-center justify-center rounded-lg py-2 text-sm font-semibold transition-all"
                                 style={{
-                                    background: 'var(--bg-hover)',
                                     border: '1px solid var(--border-default)',
-                                    color: 'var(--accent-primary)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    letterSpacing: '0.06em',
-                                    textTransform: 'uppercase',
+                                    color: 'var(--text-secondary)',
+                                    background: 'var(--bg-hover)',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderColor = 'var(--border-strong)';
+                                    e.currentTarget.style.color = 'var(--text-primary)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderColor = 'var(--border-default)';
+                                    e.currentTarget.style.color = 'var(--text-secondary)';
                                 }}
                             >
-                                Login
+                                Masuk
                             </Link>
                             <Link
                                 href="/register"
-                                className="flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-bold transition-all"
+                                className="flex items-center justify-center rounded-lg py-2 text-sm font-semibold transition-all"
                                 style={{
-                                    background: 'var(--bg-hover)',
-                                    border: '1px solid var(--border-default)',
-                                    color: 'var(--accent-gold)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    letterSpacing: '0.06em',
-                                    textTransform: 'uppercase',
+                                    background: 'var(--accent-primary)',
+                                    color: '#ffffff',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.background = 'var(--accent-primary-hover)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.background = 'var(--accent-primary)';
                                 }}
                             >
                                 Daftar
@@ -390,22 +317,19 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
             <div className="flex flex-1 flex-col lg:min-w-0">
                 {/* Top header */}
                 <header
-                    className="flex h-16 items-center gap-4 px-4 lg:px-6"
+                    className="flex h-14 items-center gap-4 px-4 lg:px-6"
                     style={{
                         background: 'var(--bg-navbar)',
-                        backdropFilter: 'blur(12px)',
                         borderBottom: '1px solid var(--border-default)',
                     }}
                 >
                     <button
-                        className="rounded-lg p-2 transition-all duration-200 lg:hidden"
+                        className="rounded-lg p-2 transition-all duration-150 lg:hidden"
                         style={{ color: 'var(--text-muted)' }}
                         onClick={() => setSidebarOpen(!sidebarOpen)}
                         onMouseEnter={(e) => {
-                            e.currentTarget.style.background =
-                                'var(--bg-hover)';
-                            e.currentTarget.style.color =
-                                'var(--accent-primary)';
+                            e.currentTarget.style.background = 'var(--bg-hover)';
+                            e.currentTarget.style.color = 'var(--text-primary)';
                         }}
                         onMouseLeave={(e) => {
                             e.currentTarget.style.background = 'transparent';
@@ -421,13 +345,8 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                     <div className="flex-1">
                         {title && (
                             <h1
-                                className="text-lg font-bold tracking-wider uppercase"
-                                style={{
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    color: 'var(--text-primary)',
-                                    textShadow:
-                                        '0 0 8px var(--accent-primary-glow)',
-                                }}
+                                className="text-base font-semibold"
+                                style={{ color: 'var(--text-primary)' }}
                             >
                                 {title}
                             </h1>
@@ -436,29 +355,22 @@ export default function AppLayout({ children, title }: AppLayoutProps) {
                     {auth.user?.role === 'admin' && (
                         <Link
                             href="/admin/dashboard"
-                            className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium transition-all duration-200"
+                            className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all duration-150"
                             style={{
                                 border: '1px solid var(--border-default)',
-                                color: 'var(--accent-gold)',
+                                color: 'var(--text-secondary)',
                                 background: 'var(--bg-hover)',
-                                fontFamily: 'Rajdhani, sans-serif',
-                                letterSpacing: '0.05em',
-                                textTransform: 'uppercase',
-                                fontSize: '0.78rem',
                             }}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.background =
-                                    'var(--bg-hover)';
-                                e.currentTarget.style.boxShadow =
-                                    '0 0 12px var(--accent-gold-bg)';
+                                e.currentTarget.style.borderColor = 'var(--border-strong)';
+                                e.currentTarget.style.color = 'var(--text-primary)';
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.background =
-                                    'var(--bg-hover)';
-                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.borderColor = 'var(--border-default)';
+                                e.currentTarget.style.color = 'var(--text-secondary)';
                             }}
                         >
-                            <Shield className="h-4 w-4" />
+                            <Shield className="h-3.5 w-3.5" />
                             Admin Panel
                         </Link>
                     )}

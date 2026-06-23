@@ -48,7 +48,7 @@ const statusConfig = {
         style: {
             background: 'var(--status-ongoing-bg)',
             color: 'var(--status-ongoing-text)',
-            border: '1px solid var(--border-default)',
+            border: '1px solid rgba(245, 158, 11, 0.25)',
         },
     },
     approved: {
@@ -64,7 +64,7 @@ const statusConfig = {
         style: {
             background: 'var(--status-cancel-bg)',
             color: 'var(--status-cancel-text)',
-            border: '1px solid var(--border-strong)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
         },
     },
 };
@@ -72,9 +72,8 @@ const statusConfig = {
 const cardStyle: React.CSSProperties = {
     background: 'var(--bg-surface)',
     border: '1px solid var(--border-default)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
     borderRadius: '0.75rem',
+    boxShadow: 'var(--shadow-card)',
 };
 
 export default function Dashboard({
@@ -90,21 +89,13 @@ export default function Dashboard({
                 {/* ── Upcoming Matches ── */}
                 <section>
                     <div className="mb-4 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5">
                             <div
-                                className="h-1 w-5 rounded-full"
-                                style={{
-                                    background: 'var(--accent-primary)',
-                                    boxShadow:
-                                        '0 0 6px var(--accent-primary-glow)',
-                                }}
+                                className="accent-bar h-5 w-1"
                             />
                             <h2
-                                className="text-lg font-bold tracking-wider uppercase"
-                                style={{
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    color: 'var(--text-primary)',
-                                }}
+                                className="text-base font-semibold"
+                                style={{ color: 'var(--text-primary)' }}
                             >
                                 Jadwal Pertandingan
                             </h2>
@@ -116,53 +107,39 @@ export default function Dashboard({
                             {upcomingMatches.map((match) => (
                                 <div
                                     key={match.id}
-                                    className="relative overflow-hidden rounded-xl p-5 transition-all duration-300"
+                                    className="relative overflow-hidden rounded-xl p-5 transition-all duration-200"
                                     style={cardStyle}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.borderColor =
-                                            'var(--border-accent)';
-                                        e.currentTarget.style.boxShadow =
-                                            '0 0 20px var(--accent-primary-glow)';
+                                        e.currentTarget.style.borderColor = 'var(--border-accent)';
+                                        e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.borderColor =
-                                            'var(--border-default)';
-                                        e.currentTarget.style.boxShadow =
-                                            'none';
+                                        e.currentTarget.style.borderColor = 'var(--border-default)';
+                                        e.currentTarget.style.boxShadow = 'var(--shadow-card)';
                                     }}
                                 >
                                     {/* Decorative icon */}
                                     <div
-                                        className="absolute -top-6 -right-6"
-                                        style={{
-                                            color: 'var(--accent-primary-glow)',
-                                        }}
+                                        className="absolute -top-5 -right-5 opacity-5"
+                                        style={{ color: 'var(--accent-primary)' }}
                                     >
-                                        <Swords className="h-24 w-24" />
+                                        <Swords className="h-20 w-20" />
                                     </div>
 
                                     <div className="relative">
                                         <div className="mb-4 flex items-center justify-between text-xs">
                                             <span
                                                 className="font-semibold"
-                                                style={{
-                                                    color: 'var(--accent-primary)',
-                                                    fontFamily:
-                                                        'Rajdhani, sans-serif',
-                                                    letterSpacing: '0.04em',
-                                                }}
+                                                style={{ color: 'var(--accent-primary)' }}
                                             >
                                                 {match.tournament.nama}
                                             </span>
                                             <span
                                                 className="rounded px-2 py-0.5"
                                                 style={{
-                                                    background:
-                                                        'var(--accent-primary-light)',
+                                                    background: 'var(--accent-primary-light)',
                                                     color: 'var(--accent-primary)',
                                                     border: '1px solid var(--border-accent)',
-                                                    fontFamily:
-                                                        'Rajdhani, sans-serif',
                                                 }}
                                             >
                                                 Round {match.round}
@@ -171,35 +148,25 @@ export default function Dashboard({
 
                                         <div className="flex items-center justify-between">
                                             <div
-                                                className="flex-1 truncate font-bold"
+                                                className="flex-1 truncate font-semibold"
                                                 style={{
                                                     color: 'var(--text-primary)',
-                                                    fontFamily:
-                                                        'Rajdhani, sans-serif',
-                                                    fontSize: '0.95rem',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
                                                 {match.team1.nama_tim}
                                             </div>
                                             <div
-                                                className="px-4 text-xs font-black"
-                                                style={{
-                                                    color: 'var(--status-cancel-text)',
-                                                    fontFamily:
-                                                        'Orbitron, sans-serif',
-                                                    textShadow:
-                                                        '0 0 6px var(--accent-primary-glow)',
-                                                }}
+                                                className="px-3 text-xs font-extrabold"
+                                                style={{ color: 'var(--text-muted)' }}
                                             >
                                                 VS
                                             </div>
                                             <div
-                                                className="flex-1 truncate text-right font-bold"
+                                                className="flex-1 truncate text-right font-semibold"
                                                 style={{
                                                     color: 'var(--text-primary)',
-                                                    fontFamily:
-                                                        'Rajdhani, sans-serif',
-                                                    fontSize: '0.95rem',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
                                                 {match.team2.nama_tim}
@@ -207,23 +174,15 @@ export default function Dashboard({
                                         </div>
 
                                         <div
-                                            className="mt-5 flex items-center gap-2 text-xs"
-                                            style={{
-                                                color: 'var(--text-muted)',
-                                                fontFamily:
-                                                    'Rajdhani, sans-serif',
-                                            }}
+                                            className="mt-4 flex items-center gap-2 text-xs"
+                                            style={{ color: 'var(--text-muted)' }}
                                         >
                                             <Clock
                                                 className="h-3.5 w-3.5"
-                                                style={{
-                                                    color: 'var(--accent-primary)',
-                                                }}
+                                                style={{ color: 'var(--accent-primary)' }}
                                             />
                                             {match.jadwal
-                                                ? new Date(
-                                                      match.jadwal,
-                                                  ).toLocaleString('id-ID')
+                                                ? new Date(match.jadwal).toLocaleString('id-ID')
                                                 : 'Jadwal belum ditentukan'}
                                         </div>
                                     </div>
@@ -235,19 +194,16 @@ export default function Dashboard({
                             className="flex flex-col items-center justify-center rounded-xl py-12 text-center"
                             style={{
                                 border: '1px dashed var(--border-default)',
-                                background: 'var(--bg-surface-2)',
+                                background: 'var(--bg-surface)',
                             }}
                         >
                             <Calendar
-                                className="mb-3 h-10 w-10"
-                                style={{ color: 'var(--border-strong)' }}
+                                className="mb-3 h-9 w-9"
+                                style={{ color: 'var(--text-muted)' }}
                             />
                             <p
                                 className="text-sm"
-                                style={{
-                                    color: 'var(--text-muted)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                }}
+                                style={{ color: 'var(--text-muted)' }}
                             >
                                 Tidak ada jadwal pertandingan dalam waktu dekat.
                             </p>
@@ -259,127 +215,98 @@ export default function Dashboard({
                     {/* ── My Teams ── */}
                     <section>
                         <div className="mb-4 flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                <div
-                                    className="h-1 w-5 rounded-full"
-                                    style={{
-                                        background: 'var(--accent-primary)',
-                                        boxShadow:
-                                            '0 0 6px var(--accent-primary-glow)',
-                                    }}
-                                />
+                            <div className="flex items-center gap-2.5">
+                                <div className="accent-bar h-5 w-1" />
                                 <h2
-                                    className="text-lg font-bold tracking-wider uppercase"
-                                    style={{
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                        color: 'var(--text-primary)',
-                                    }}
+                                    className="text-base font-semibold"
+                                    style={{ color: 'var(--text-primary)' }}
                                 >
                                     Tim Saya
                                 </h2>
                             </div>
                             <Link
                                 href="/teams/create"
-                                className="nav-link-sw text-sm font-medium transition-colors duration-200"
+                                className="text-sm font-medium transition-colors duration-200"
                                 style={{ color: 'var(--accent-primary)' }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = 'var(--accent-primary-hover)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = 'var(--accent-primary)';
+                                }}
                             >
                                 + Buat Tim Baru
                             </Link>
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             {myTeams.length > 0 ? (
                                 myTeams.map((team) => (
                                     <Link
                                         key={team.id}
                                         href={`/teams/${team.slug}`}
-                                        className="group flex items-center justify-between rounded-xl p-4 transition-all duration-300"
+                                        className="group flex items-center justify-between rounded-xl p-4 transition-all duration-200"
                                         style={cardStyle}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.borderColor =
-                                                'var(--border-accent)';
-                                            e.currentTarget.style.boxShadow =
-                                                '0 0 16px var(--accent-primary-glow)';
-                                            e.currentTarget.style.transform =
-                                                'translateX(2px)';
+                                            e.currentTarget.style.borderColor = 'var(--border-accent)';
+                                            e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.borderColor =
-                                                'var(--border-default)';
-                                            e.currentTarget.style.boxShadow =
-                                                'none';
-                                            e.currentTarget.style.transform =
-                                                'translateX(0)';
+                                            e.currentTarget.style.borderColor = 'var(--border-default)';
+                                            e.currentTarget.style.boxShadow = 'var(--shadow-card)';
                                         }}
                                     >
-                                        <div className="flex items-center gap-4">
+                                        <div className="flex items-center gap-3">
                                             {team.logo_url ? (
                                                 <img
                                                     loading="lazy"
                                                     src={team.logo_url}
                                                     alt={team.nama_tim}
-                                                    className="h-12 w-12 rounded-lg object-cover"
+                                                    className="h-11 w-11 rounded-lg object-cover"
                                                     style={{
-                                                        border: '1px solid var(--border-accent)',
+                                                        border: '1px solid var(--border-default)',
                                                     }}
                                                 />
                                             ) : (
                                                 <div
-                                                    className="flex h-12 w-12 items-center justify-center rounded-lg"
+                                                    className="flex h-11 w-11 items-center justify-center rounded-lg"
                                                     style={{
-                                                        background:
-                                                            'var(--accent-primary-light)',
+                                                        background: 'var(--accent-primary-light)',
                                                         border: '1px solid var(--border-default)',
                                                     }}
                                                 >
                                                     <Shield
-                                                        className="h-6 w-6"
-                                                        style={{
-                                                            color: 'var(--accent-primary)',
-                                                        }}
+                                                        className="h-5 w-5"
+                                                        style={{ color: 'var(--accent-primary)' }}
                                                     />
                                                 </div>
                                             )}
                                             <div>
                                                 <h3
-                                                    className="font-bold"
+                                                    className="font-semibold"
                                                     style={{
                                                         color: 'var(--text-primary)',
-                                                        fontFamily:
-                                                            'Rajdhani, sans-serif',
-                                                        fontSize: '0.95rem',
-                                                        letterSpacing: '0.03em',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {team.nama_tim}
                                                 </h3>
                                                 <div
-                                                    className="mt-1 flex items-center gap-3 text-xs"
-                                                    style={{
-                                                        color: 'var(--text-muted)',
-                                                        fontFamily:
-                                                            'Rajdhani, sans-serif',
-                                                    }}
+                                                    className="mt-0.5 flex items-center gap-3 text-xs"
+                                                    style={{ color: 'var(--text-muted)' }}
                                                 >
                                                     <span className="flex items-center gap-1">
-                                                        <Users className="h-3.5 w-3.5" />
-                                                        {team.members_count}{' '}
-                                                        Anggota
+                                                        <Users className="h-3 w-3" />
+                                                        {team.members_count} Anggota
                                                     </span>
                                                     <span className="flex items-center gap-1 capitalize">
                                                         <div
                                                             className="h-1.5 w-1.5 rounded-full"
                                                             style={{
                                                                 background:
-                                                                    team.role ===
-                                                                    'captain'
+                                                                    team.role === 'captain'
                                                                         ? 'var(--accent-gold)'
                                                                         : 'var(--accent-primary)',
-                                                                boxShadow:
-                                                                    team.role ===
-                                                                    'captain'
-                                                                        ? '0 0 4px var(--accent-gold)'
-                                                                        : '0 0 4px var(--accent-primary-glow)',
                                                             }}
                                                         />
                                                         {team.role}
@@ -388,10 +315,8 @@ export default function Dashboard({
                                             </div>
                                         </div>
                                         <ChevronRight
-                                            className="h-5 w-5 transition-transform group-hover:translate-x-1"
-                                            style={{
-                                                color: 'var(--border-strong)',
-                                            }}
+                                            className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                                            style={{ color: 'var(--text-muted)' }}
                                         />
                                     </Link>
                                 ))
@@ -400,21 +325,16 @@ export default function Dashboard({
                                     className="flex flex-col items-center justify-center rounded-xl py-10 text-center"
                                     style={{
                                         border: '1px dashed var(--border-default)',
-                                        background: 'var(--bg-surface-2)',
+                                        background: 'var(--bg-surface)',
                                     }}
                                 >
                                     <Shield
                                         className="mb-3 h-8 w-8"
-                                        style={{
-                                            color: 'var(--border-strong)',
-                                        }}
+                                        style={{ color: 'var(--text-muted)' }}
                                     />
                                     <p
                                         className="text-sm"
-                                        style={{
-                                            color: 'var(--text-muted)',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                        }}
+                                        style={{ color: 'var(--text-muted)' }}
                                     >
                                         Kamu belum bergabung dengan tim manapun.
                                     </p>
@@ -426,28 +346,21 @@ export default function Dashboard({
                     {/* ── Tournament Registrations ── */}
                     <section>
                         <div className="mb-4 flex items-center">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2.5">
                                 <div
-                                    className="h-1 w-5 rounded-full"
-                                    style={{
-                                        background: 'var(--accent-gold)',
-                                        boxShadow:
-                                            '0 0 6px var(--accent-gold-bg)',
-                                    }}
+                                    className="h-5 w-1 rounded-sm"
+                                    style={{ background: 'var(--accent-gold)' }}
                                 />
                                 <h2
-                                    className="text-lg font-bold tracking-wider uppercase"
-                                    style={{
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                        color: 'var(--text-primary)',
-                                    }}
+                                    className="text-base font-semibold"
+                                    style={{ color: 'var(--text-primary)' }}
                                 >
                                     Status Pendaftaran
                                 </h2>
                             </div>
                         </div>
 
-                        <div className="space-y-3">
+                        <div className="space-y-2">
                             {teamRegistrations.length > 0 ? (
                                 teamRegistrations.map((reg) => {
                                     const statusInfo =
@@ -464,45 +377,33 @@ export default function Dashboard({
                                             <div>
                                                 <Link
                                                     href={`/tournaments/${reg.tournament.slug}`}
-                                                    className="font-bold transition-colors duration-200"
+                                                    className="font-semibold transition-colors duration-200"
                                                     style={{
                                                         color: 'var(--text-primary)',
-                                                        fontFamily:
-                                                            'Rajdhani, sans-serif',
-                                                        fontSize: '0.95rem',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                     onMouseEnter={(e) => {
-                                                        e.currentTarget.style.color =
-                                                            'var(--accent-primary)';
+                                                        e.currentTarget.style.color = 'var(--accent-primary)';
                                                     }}
                                                     onMouseLeave={(e) => {
-                                                        e.currentTarget.style.color =
-                                                            'var(--text-primary)';
+                                                        e.currentTarget.style.color = 'var(--text-primary)';
                                                     }}
                                                 >
                                                     {reg.tournament.nama}
                                                 </Link>
                                                 <p
-                                                    className="mt-1 text-xs"
-                                                    style={{
-                                                        color: 'var(--text-muted)',
-                                                        fontFamily:
-                                                            'Rajdhani, sans-serif',
-                                                    }}
+                                                    className="mt-0.5 text-xs"
+                                                    style={{ color: 'var(--text-muted)' }}
                                                 >
                                                     Tim: {reg.team.nama_tim}
                                                 </p>
                                             </div>
                                             {statusInfo && (
                                                 <span
-                                                    className="rounded-full px-2.5 py-0.5 text-xs font-semibold"
+                                                    className="rounded-full px-2.5 py-0.5 text-xs font-semibold uppercase"
                                                     style={{
                                                         ...statusInfo.style,
-                                                        fontFamily:
-                                                            'Rajdhani, sans-serif',
-                                                        letterSpacing: '0.05em',
-                                                        textTransform:
-                                                            'uppercase',
+                                                        letterSpacing: '0.04em',
                                                         fontSize: '0.7rem',
                                                     }}
                                                 >
@@ -517,7 +418,7 @@ export default function Dashboard({
                                     className="flex flex-col items-center justify-center rounded-xl py-10 text-center"
                                     style={{
                                         border: '1px dashed var(--border-default)',
-                                        background: 'var(--bg-surface-2)',
+                                        background: 'var(--bg-surface)',
                                     }}
                                 >
                                     <Trophy
@@ -526,10 +427,7 @@ export default function Dashboard({
                                     />
                                     <p
                                         className="text-sm"
-                                        style={{
-                                            color: 'var(--text-muted)',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                        }}
+                                        style={{ color: 'var(--text-muted)' }}
                                     >
                                         Belum ada pendaftaran turnamen aktif.
                                     </p>

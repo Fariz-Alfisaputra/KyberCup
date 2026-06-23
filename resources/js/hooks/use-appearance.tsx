@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
-export type ResolvedAppearance = 'light-side' | 'dark-side';
+export type ResolvedAppearance = 'light' | 'dark';
 export type Appearance = ResolvedAppearance | 'system';
 
 export type UseAppearanceReturn = {
@@ -36,21 +36,17 @@ const getStoredAppearance = (): Appearance => {
 
     const stored = localStorage.getItem('appearance');
 
-    // Legacy mapping from old theme names
-    if (stored === 'light' || stored === 'jedi') {
-        return 'light-side';
+    // Legacy mapping from old Star Wars theme names
+    if (stored === 'light' || stored === 'light-side' || stored === 'jedi') {
+        return 'light';
     }
 
-    if (stored === 'dark' || stored === 'sith' || stored === 'neutral') {
-        return 'dark-side';
+    if (stored === 'dark' || stored === 'dark-side' || stored === 'sith' || stored === 'neutral') {
+        return 'dark';
     }
 
-    if (
-        stored === 'light-side' ||
-        stored === 'dark-side' ||
-        stored === 'system'
-    ) {
-        return stored as Appearance;
+    if (stored === 'system') {
+        return 'system';
     }
 
     return 'system';
@@ -58,7 +54,7 @@ const getStoredAppearance = (): Appearance => {
 
 const getResolvedAppearance = (appearance: Appearance): ResolvedAppearance => {
     if (appearance === 'system') {
-        return prefersDark() ? 'dark-side' : 'light-side';
+        return prefersDark() ? 'dark' : 'light';
     }
 
     return appearance as ResolvedAppearance;
@@ -70,12 +66,12 @@ const applyTheme = (appearance: Appearance): void => {
     }
 
     const resolved = getResolvedAppearance(appearance);
-    const isDark = resolved === 'dark-side';
+    const isDark = resolved === 'dark';
 
     document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
 
-    // Remove old theme classes for clean state
+    // Remove any legacy theme classes
     document.documentElement.classList.remove(
         'theme-jedi',
         'theme-sith',
@@ -109,10 +105,10 @@ export function initializeTheme(): void {
         return;
     }
 
-    // Set dark-side as default if nothing stored yet
+    // Set dark as default if nothing stored yet
     if (!localStorage.getItem('appearance')) {
-        localStorage.setItem('appearance', 'dark-side');
-        setCookie('appearance', 'dark-side');
+        localStorage.setItem('appearance', 'dark');
+        setCookie('appearance', 'dark');
     }
 
     currentAppearance = getStoredAppearance();

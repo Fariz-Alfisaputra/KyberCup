@@ -3,16 +3,11 @@ import {
     ArrowRight,
     ChevronRight,
     Gamepad2,
-    Play,
     Shield,
     Trophy,
     Users,
     Zap,
 } from 'lucide-react';
-import { useState } from 'react';
-import LightsaberClash from '@/components/LightsaberClash';
-import StarfieldBackground from '@/components/StarfieldBackground';
-import StarWarsIntro from '@/components/StarWarsIntro';
 import ThemeToggle from '@/components/ThemeToggle';
 import TournamentCard from '@/components/tournament/TournamentCard';
 import { dashboard, login, register } from '@/routes';
@@ -31,80 +26,49 @@ export default function Home({
         auth: { user: { name: string } | null };
     };
 
-    const [showIntro, setShowIntro] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return sessionStorage.getItem('hasSeenIntro') !== 'true';
-        }
-
-        return false;
-    });
-
-    const handleCloseIntro = () => {
-        setShowIntro(false);
-        sessionStorage.setItem('hasSeenIntro', 'true');
-    };
-
     return (
         <>
-            {showIntro && <StarWarsIntro onClose={handleCloseIntro} />}
-
-            <Head title="KyberCup - Platform Turnamen Esport Galaksi" />
+            <Head title="KyberCup — Platform Turnamen Esport" />
 
             <div
-                className="relative min-h-screen overflow-x-hidden text-foreground transition-colors duration-500"
-                style={{ background: 'var(--background)' }}
+                className="relative min-h-screen overflow-x-hidden text-foreground"
+                style={{ background: 'var(--bg-page)' }}
             >
-                {/* Dynamic Starfield Particle Background */}
-                <StarfieldBackground />
-
                 {/* ── NAVIGATION ── */}
                 <nav
-                    className="sticky top-0 z-50 transition-colors duration-500"
+                    className="sticky top-0 z-50"
                     style={{
-                        background: 'rgba(10,10,15,0.75)',
-                        backdropFilter: 'blur(20px)',
-                        WebkitBackdropFilter: 'blur(20px)',
-                        borderBottom: '1px solid rgba(0,212,255,0.12)',
+                        background: 'var(--bg-navbar)',
+                        borderBottom: '1px solid var(--border-default)',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
                     }}
                 >
-                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
                         {/* Logo */}
                         <Link
                             href="/"
-                            className="group flex cursor-pointer items-center gap-2.5"
-                            aria-label="Kembali ke halaman utama"
+                            className="flex cursor-pointer items-center gap-2.5"
+                            aria-label="KyberCup — Halaman Utama"
                         >
                             <img
                                 loading="lazy"
                                 src="/logo-kyber.png"
                                 alt="KyberCup"
-                                className="h-11 w-11 object-contain transition-all duration-300 group-hover:scale-105"
-                                style={{
-                                    filter: 'drop-shadow(0 0 8px var(--accent-primary-glow))',
-                                }}
+                                className="h-9 w-9 object-contain"
                             />
                             <span
-                                className="text-xl font-black tracking-widest uppercase"
-                                style={{
-                                    fontFamily: 'Orbitron, sans-serif',
-                                    color: 'var(--text-primary)',
-                                }}
+                                className="logo-kybercup text-lg"
+                                style={{ color: 'var(--text-primary)' }}
                             >
                                 Kyber
-                                <span
-                                    style={{
-                                        color: 'var(--accent-primary)',
-                                        textShadow:
-                                            '0 0 8px var(--accent-primary-glow)',
-                                    }}
-                                >
+                                <span style={{ color: 'var(--accent-primary)' }}>
                                     Cup
                                 </span>
                             </span>
                         </Link>
 
                         {/* Nav links */}
-                        <div className="hidden items-center gap-8 md:flex">
+                        <div className="hidden items-center gap-6 md:flex">
                             {[
                                 { href: '/tournaments', label: 'Turnamen' },
                                 { href: '/teams', label: 'Tim' },
@@ -112,15 +76,13 @@ export default function Home({
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className="nav-link-sw"
+                                    className="nav-link-sw text-sm font-medium"
                                     style={{ color: 'var(--text-secondary)' }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.color =
-                                            'var(--text-primary)';
+                                        e.currentTarget.style.color = 'var(--text-primary)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.color =
-                                            'var(--text-secondary)';
+                                        e.currentTarget.style.color = 'var(--text-secondary)';
                                     }}
                                 >
                                     {item.label}
@@ -129,35 +91,22 @@ export default function Home({
                         </div>
 
                         {/* CTA buttons */}
-                        <div className="flex items-center gap-3">
-                            {/* Theme toggle */}
+                        <div className="flex items-center gap-2.5">
                             <ThemeToggle />
 
                             {auth.user ? (
                                 <Link
                                     href={dashboard()}
-                                    className="flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300"
+                                    className="flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200"
                                     style={{
-                                        background:
-                                            'var(--accent-primary-light)',
-                                        border: '1px solid var(--border-accent)',
-                                        color: 'var(--accent-primary)',
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                        letterSpacing: '0.08em',
-                                        textTransform: 'uppercase',
-                                        fontSize: '0.8rem',
+                                        background: 'var(--accent-primary)',
+                                        color: '#ffffff',
                                     }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.background =
-                                            'var(--accent-primary-glow)';
-                                        e.currentTarget.style.boxShadow =
-                                            '0 0 16px var(--accent-primary-glow)';
+                                        e.currentTarget.style.background = 'var(--accent-primary-hover)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background =
-                                            'var(--accent-primary-light)';
-                                        e.currentTarget.style.boxShadow =
-                                            'none';
+                                        e.currentTarget.style.background = 'var(--accent-primary)';
                                     }}
                                 >
                                     Dashboard
@@ -167,52 +116,32 @@ export default function Home({
                                 <>
                                     <Link
                                         href={login()}
-                                        className="nav-link-sw hidden text-sm font-semibold transition-colors md:block"
-                                        style={{
-                                            color: 'var(--text-secondary)',
-                                        }}
+                                        className="hidden text-sm font-medium transition-colors md:block"
+                                        style={{ color: 'var(--text-secondary)' }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.color =
-                                                'var(--text-primary)';
+                                            e.currentTarget.style.color = 'var(--text-primary)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.color =
-                                                'var(--text-secondary)';
+                                            e.currentTarget.style.color = 'var(--text-secondary)';
                                         }}
                                     >
-                                        Login
+                                        Masuk
                                     </Link>
                                     <Link
                                         href={register()}
-                                        className="rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-300"
+                                        className="rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200"
                                         style={{
-                                            background:
-                                                'var(--accent-primary-light)',
-                                            border: '1px solid var(--border-accent)',
-                                            color: 'var(--accent-primary)',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                            letterSpacing: '0.08em',
-                                            textTransform: 'uppercase',
-                                            fontSize: '0.8rem',
+                                            background: 'var(--accent-primary)',
+                                            color: '#ffffff',
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.background =
-                                                'var(--accent-primary)';
-                                            e.currentTarget.style.color =
-                                                'var(--bg-page)';
-                                            e.currentTarget.style.boxShadow =
-                                                '0 0 20px var(--accent-primary-glow)';
+                                            e.currentTarget.style.background = 'var(--accent-primary-hover)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.background =
-                                                'var(--accent-primary-light)';
-                                            e.currentTarget.style.color =
-                                                'var(--accent-primary)';
-                                            e.currentTarget.style.boxShadow =
-                                                'none';
+                                            e.currentTarget.style.background = 'var(--accent-primary)';
                                         }}
                                     >
-                                        Daftar
+                                        Daftar Gratis
                                     </Link>
                                 </>
                             )}
@@ -221,216 +150,114 @@ export default function Home({
                 </nav>
 
                 {/* ── HERO SECTION ── */}
-                <section className="relative overflow-hidden">
-                    {/* Starfield dots */}
-                    <div className="hero-grid absolute inset-0 opacity-20 transition-opacity duration-500 dark:opacity-40" />
+                <section className="hero-mesh relative overflow-hidden">
+                    {/* Subtle dot grid */}
+                    <div className="dot-grid absolute inset-0 opacity-40" />
 
-                    {/* Gradient overlay */}
+                    {/* Gradient bottom fade */}
                     <div
-                        className="absolute inset-0"
+                        className="absolute inset-x-0 bottom-0 h-32"
                         style={{
-                            background:
-                                'linear-gradient(180deg, rgba(0,212,255,0.05) 0%, transparent 50%, rgba(10,10,15,0.8) 100%)',
+                            background: 'linear-gradient(to top, var(--bg-page), transparent)',
                         }}
                     />
 
-                    {/* Ambient glow orbs */}
-                    <div
-                        className="pointer-events-none absolute"
-                        style={{
-                            top: '-10%',
-                            left: '-5%',
-                            width: '500px',
-                            height: '500px',
-                            background:
-                                'radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%)',
-                            filter: 'blur(60px)',
-                        }}
-                    />
-                    <div
-                        className="pointer-events-none absolute"
-                        style={{
-                            top: '20%',
-                            right: '-5%',
-                            width: '400px',
-                            height: '400px',
-                            background:
-                                'radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%)',
-                            filter: 'blur(60px)',
-                        }}
-                    />
-
-                    <div className="relative mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:py-32">
+                    <div className="relative mx-auto max-w-7xl px-4 py-20 text-center sm:px-6 lg:py-28">
                         {/* Badge */}
                         <div
-                            className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm"
+                            className="mb-5 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold"
                             style={{
                                 background: 'var(--status-open-bg)',
                                 border: '1px solid var(--border-accent)',
                                 color: 'var(--status-open-text)',
-                                fontFamily: 'Rajdhani, sans-serif',
-                                letterSpacing: '0.1em',
-                                textTransform: 'uppercase',
-                                fontSize: '0.75rem',
+                                letterSpacing: '0.05em',
                             }}
                         >
-                            <Zap className="h-3.5 w-3.5 animate-pulse" />
-                            Galactic Esport Tournament Platform
+                            <span
+                                className="h-1.5 w-1.5 rounded-full animate-pulse"
+                                style={{ background: 'var(--accent-primary)' }}
+                            />
+                            Platform Turnamen Esport
                         </div>
 
                         {/* Headline */}
                         <h1
-                            className="mb-6 text-5xl leading-tight font-black tracking-tight lg:text-7xl"
-                            style={{
-                                fontFamily: 'Rajdhani, sans-serif',
-                                color: 'var(--text-primary)',
-                                textShadow: '0 0 40px rgba(0,0,0,0.5)',
-                            }}
+                            className="mb-5 text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl"
+                            style={{ color: 'var(--text-primary)' }}
                         >
-                            Buktikan{' '}
+                            Kompetisi Esport{' '}
                             <span
                                 className="bg-clip-text text-transparent"
                                 style={{
-                                    backgroundImage: 'var(--gaming-gradient)',
-                                    filter: 'drop-shadow(0 0 20px var(--accent-primary-glow))',
+                                    backgroundImage:
+                                        'linear-gradient(135deg, var(--accent-primary) 0%, #6366F1 100%)',
                                 }}
                             >
-                                The Force
-                            </span>
-                            <br />
-                            <span style={{ color: 'var(--text-primary)' }}>
-                                di Arena Digital
+                                Tanpa Batas
                             </span>
                         </h1>
 
                         {/* Subtitle */}
                         <p
-                            className="mx-auto mb-10 max-w-2xl text-lg"
+                            className="mx-auto mb-8 max-w-xl text-base leading-relaxed sm:text-lg"
                             style={{
                                 color: 'var(--text-secondary)',
-                                fontFamily: 'Inter, sans-serif',
-                                lineHeight: '1.7',
+                                lineHeight: '1.75',
                             }}
                         >
-                            Ikuti turnamen esport paling epik di galaksi.
-                            Jadilah Jedi Master atau Sith Lord di arena gaming
-                            dan menangkan hadiah kredit galaksi yang berlimpah.
+                            Daftarkan tim, ikuti turnamen, dan buktikan kemampuan
+                            terbaik kamu di arena kompetisi resmi KyberCup.
                         </p>
 
                         {/* CTA Buttons */}
-                        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-                            {/* Primary — Jedi Blue */}
+                        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
                             <Link
                                 href="/tournaments"
-                                className="flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-bold transition-all duration-300 hover:scale-105"
+                                className="flex items-center gap-2 rounded-xl px-7 py-3 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
                                 style={{
-                                    background: 'var(--status-open-bg)',
-                                    border: '1px solid var(--border-accent)',
-                                    color: 'var(--accent-primary)',
-                                    boxShadow:
-                                        '0 0 20px var(--accent-primary-glow)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    letterSpacing: '0.08em',
-                                    textTransform: 'uppercase',
+                                    background: 'var(--accent-primary)',
+                                    color: '#ffffff',
+                                    boxShadow: '0 4px 14px rgba(59, 130, 246, 0.3)',
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.currentTarget.style.background =
-                                        'var(--accent-primary)';
-                                    e.currentTarget.style.color =
-                                        'var(--bg-page)';
-                                    e.currentTarget.style.boxShadow =
-                                        '0 0 40px var(--accent-primary-glow)';
+                                    e.currentTarget.style.background = 'var(--accent-primary-hover)';
+                                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.currentTarget.style.background =
-                                        'var(--status-open-bg)';
-                                    e.currentTarget.style.color =
-                                        'var(--accent-primary)';
-                                    e.currentTarget.style.boxShadow =
-                                        '0 0 20px var(--accent-primary-glow)';
+                                    e.currentTarget.style.background = 'var(--accent-primary)';
+                                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(59, 130, 246, 0.3)';
                                 }}
                             >
-                                <Trophy className="h-5 w-5" />
+                                <Trophy className="h-4 w-4" />
                                 Lihat Turnamen
                             </Link>
 
-                            {/* Secondary — Sith Red (register) */}
                             {!auth.user && (
                                 <Link
                                     href={register()}
-                                    className="flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-bold transition-all duration-300 hover:scale-105"
+                                    className="flex items-center gap-2 rounded-xl px-7 py-3 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
                                     style={{
-                                        background: 'var(--status-cancel-bg)',
-                                        border: '1px solid var(--border-strong)',
-                                        color: 'var(--status-cancel-text)',
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                        letterSpacing: '0.08em',
-                                        textTransform: 'uppercase',
+                                        background: 'var(--bg-surface)',
+                                        border: '1px solid var(--border-default)',
+                                        color: 'var(--text-primary)',
                                     }}
                                     onMouseEnter={(e) => {
-                                        e.currentTarget.style.background =
-                                            'var(--status-cancel-text)';
-                                        e.currentTarget.style.color =
-                                            'var(--bg-page)';
-                                        e.currentTarget.style.boxShadow =
-                                            '0 0 40px var(--accent-primary-glow)';
+                                        e.currentTarget.style.borderColor = 'var(--border-strong)';
+                                        e.currentTarget.style.boxShadow = 'var(--shadow-card-md)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        e.currentTarget.style.background =
-                                            'var(--status-cancel-bg)';
-                                        e.currentTarget.style.color =
-                                            'var(--status-cancel-text)';
-                                        e.currentTarget.style.boxShadow =
-                                            'none';
+                                        e.currentTarget.style.borderColor = 'var(--border-default)';
+                                        e.currentTarget.style.boxShadow = 'none';
                                     }}
                                 >
-                                    <Users className="h-5 w-5" />
+                                    <Users className="h-4 w-4" />
                                     Daftar Gratis
                                 </Link>
                             )}
-
-                            {/* Replay intro */}
-                            <button
-                                onClick={() => setShowIntro(true)}
-                                className="flex cursor-pointer items-center gap-2 rounded-xl px-8 py-3.5 text-base font-bold transition-all duration-300 hover:scale-105"
-                                style={{
-                                    background: 'rgba(255,255,255,0.04)',
-                                    border: '1px solid var(--border-default)',
-                                    color: 'var(--text-secondary)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    letterSpacing: '0.08em',
-                                    textTransform: 'uppercase',
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.background =
-                                        'var(--bg-hover)';
-                                    e.currentTarget.style.color =
-                                        'var(--text-primary)';
-                                    e.currentTarget.style.borderColor =
-                                        'var(--border-strong)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.background =
-                                        'rgba(255,255,255,0.04)';
-                                    e.currentTarget.style.color =
-                                        'var(--text-secondary)';
-                                    e.currentTarget.style.borderColor =
-                                        'var(--border-default)';
-                                }}
-                            >
-                                <Play
-                                    className="h-5 w-5 animate-pulse"
-                                    style={{ color: 'var(--accent-primary)' }}
-                                />
-                                Putar Ulang Intro
-                            </button>
                         </div>
 
-                        {/* Interactive Lightsaber clash */}
-                        <LightsaberClash />
-
                         {/* Stats grid */}
-                        <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                        <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4">
                             {[
                                 {
                                     label: 'Turnamen Aktif',
@@ -458,59 +285,36 @@ export default function Home({
                                 return (
                                     <div
                                         key={stat.label}
-                                        className="rounded-xl p-5 transition-all duration-300"
+                                        className="rounded-xl p-5 transition-all duration-200"
                                         style={{
-                                            background:
-                                                'rgba(255,255,255,0.03)',
+                                            background: 'var(--bg-surface)',
                                             border: '1px solid var(--border-default)',
-                                            backdropFilter: 'blur(10px)',
+                                            boxShadow: 'var(--shadow-card)',
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.background =
-                                                'var(--bg-hover)';
-                                            e.currentTarget.style.borderColor =
-                                                'var(--border-accent)';
-                                            e.currentTarget.style.boxShadow =
-                                                '0 0 16px var(--accent-primary-glow)';
-                                            e.currentTarget.style.transform =
-                                                'translateY(-2px)';
+                                            e.currentTarget.style.borderColor = 'var(--border-accent)';
+                                            e.currentTarget.style.transform = 'translateY(-2px)';
+                                            e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.background =
-                                                'rgba(255,255,255,0.03)';
-                                            e.currentTarget.style.borderColor =
-                                                'var(--border-default)';
-                                            e.currentTarget.style.boxShadow =
-                                                'none';
-                                            e.currentTarget.style.transform =
-                                                'translateY(0)';
+                                            e.currentTarget.style.borderColor = 'var(--border-default)';
+                                            e.currentTarget.style.transform = 'translateY(0)';
+                                            e.currentTarget.style.boxShadow = 'var(--shadow-card)';
                                         }}
                                     >
                                         <Icon
                                             className="mb-2 h-5 w-5"
-                                            style={{
-                                                color: 'var(--accent-primary)',
-                                            }}
+                                            style={{ color: 'var(--accent-primary)' }}
                                         />
                                         <p
-                                            className="text-2xl font-black"
-                                            style={{
-                                                fontFamily:
-                                                    'Orbitron, sans-serif',
-                                                color: 'var(--text-primary)',
-                                                fontSize: '1.4rem',
-                                            }}
+                                            className="text-2xl font-bold"
+                                            style={{ color: 'var(--text-primary)' }}
                                         >
                                             {stat.value}
                                         </p>
                                         <p
                                             className="mt-0.5 text-xs"
-                                            style={{
-                                                color: 'var(--text-muted)',
-                                                fontFamily:
-                                                    'Rajdhani, sans-serif',
-                                                letterSpacing: '0.05em',
-                                            }}
+                                            style={{ color: 'var(--text-muted)' }}
                                         >
                                             {stat.label}
                                         </p>
@@ -523,59 +327,39 @@ export default function Home({
 
                 {/* ── OPEN TOURNAMENTS ── */}
                 {openTournaments.length > 0 && (
-                    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-                        <div className="mb-8 flex items-center justify-between">
+                    <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+                        <div className="mb-7 flex items-center justify-between">
                             <div>
                                 <div className="mb-1 flex items-center gap-2">
                                     <div
-                                        className="h-2 w-6 rounded-full"
-                                        style={{
-                                            background: 'var(--accent-primary)',
-                                            boxShadow:
-                                                '0 0 6px var(--accent-primary-glow)',
-                                        }}
+                                        className="accent-bar h-5 w-1"
                                     />
                                     <span
-                                        className="text-xs font-bold tracking-widest uppercase"
-                                        style={{
-                                            color: 'var(--accent-primary)',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                        }}
+                                        className="text-xs font-semibold uppercase tracking-widest"
+                                        style={{ color: 'var(--accent-primary)' }}
                                     >
-                                        Open Registration
+                                        Pendaftaran Dibuka
                                     </span>
                                 </div>
                                 <h2
-                                    className="text-2xl font-black"
-                                    style={{
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                        color: 'var(--text-primary)',
-                                    }}
+                                    className="text-2xl font-bold"
+                                    style={{ color: 'var(--text-primary)' }}
                                 >
                                     Turnamen{' '}
-                                    <span
-                                        style={{
-                                            color: 'var(--accent-primary)',
-                                            textShadow:
-                                                '0 0 8px var(--accent-primary-glow)',
-                                        }}
-                                    >
+                                    <span style={{ color: 'var(--accent-primary)' }}>
                                         Terbuka
                                     </span>
                                 </h2>
                                 <p
                                     className="mt-1 text-sm"
-                                    style={{
-                                        color: 'var(--text-muted)',
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                    }}
+                                    style={{ color: 'var(--text-muted)' }}
                                 >
                                     Daftar sekarang sebelum kuota penuh
                                 </p>
                             </div>
                             <Link
                                 href="/tournaments"
-                                className="nav-link-sw flex items-center gap-1 text-sm font-semibold transition-all duration-200"
+                                className="nav-link-sw flex items-center gap-1 text-sm font-medium transition-all duration-200"
                                 style={{ color: 'var(--accent-primary)' }}
                             >
                                 Lihat Semua <ChevronRight className="h-4 w-4" />
@@ -595,43 +379,27 @@ export default function Home({
 
                 {/* ── ONGOING TOURNAMENTS ── */}
                 {ongoingTournaments.length > 0 && (
-                    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
-                        <div className="mb-8">
+                    <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+                        <div className="mb-7">
                             <div className="mb-1 flex items-center gap-2">
-                                <div
+                                <span
                                     className="h-2 w-2 animate-pulse rounded-full"
-                                    style={{
-                                        background: 'var(--status-cancel-text)',
-                                        boxShadow:
-                                            '0 0 6px var(--accent-primary-glow)',
-                                    }}
+                                    style={{ background: '#EF4444' }}
                                 />
                                 <span
-                                    className="text-xs font-bold tracking-widest uppercase"
-                                    style={{
-                                        color: 'var(--status-cancel-text)',
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                    }}
+                                    className="text-xs font-semibold uppercase tracking-widest"
+                                    style={{ color: '#EF4444' }}
                                 >
-                                    Live
+                                    Sedang Berlangsung
                                 </span>
                             </div>
                             <h2
-                                className="text-2xl font-black"
-                                style={{
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                    color: 'var(--text-primary)',
-                                }}
+                                className="text-2xl font-bold"
+                                style={{ color: 'var(--text-primary)' }}
                             >
-                                Sedang{' '}
-                                <span
-                                    style={{
-                                        color: 'var(--status-ongoing-text)',
-                                        textShadow:
-                                            '0 0 8px var(--accent-primary-glow)',
-                                    }}
-                                >
-                                    Berlangsung
+                                Turnamen{' '}
+                                <span style={{ color: 'var(--status-ongoing-text)' }}>
+                                    Live
                                 </span>
                             </h2>
                         </div>
@@ -649,124 +417,76 @@ export default function Home({
 
                 {/* ── CTA SECTION ── */}
                 {!auth.user && (
-                    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6">
+                    <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6">
                         <div
                             className="relative overflow-hidden rounded-2xl p-12 text-center"
                             style={{
-                                background: 'var(--gaming-gradient)',
-                                border: '1px solid var(--border-accent)',
-                                backdropFilter: 'blur(10px)',
+                                background: 'var(--accent-primary)',
                             }}
                         >
-                            {/* Top line accent */}
-                            <div
-                                className="absolute top-0 right-16 left-16 h-px"
-                                style={{
-                                    background:
-                                        'linear-gradient(90deg, transparent, var(--accent-primary), transparent)',
-                                }}
-                            />
-                            <div className="hero-grid absolute inset-0 opacity-5" />
+                            {/* Subtle grid overlay */}
+                            <div className="dot-grid absolute inset-0 opacity-10" />
+
                             <div className="relative">
                                 <h2
-                                    className="mb-4 text-3xl font-black"
-                                    style={{
-                                        fontFamily: 'Rajdhani, sans-serif',
-                                        color: 'var(--text-primary)',
-                                        letterSpacing: '0.05em',
-                                        textTransform: 'uppercase',
-                                    }}
+                                    className="mb-3 text-3xl font-bold"
+                                    style={{ color: '#ffffff' }}
                                 >
-                                    Siap Menguasai{' '}
-                                    <span
-                                        style={{
-                                            color: 'var(--accent-primary)',
-                                            textShadow:
-                                                '0 0 12px var(--accent-primary-glow)',
-                                        }}
-                                    >
-                                        Galaksi?
-                                    </span>
+                                    Siap Berkompetisi?
                                 </h2>
                                 <p
-                                    className="mx-auto mb-8 max-w-lg"
-                                    style={{
-                                        color: 'var(--text-secondary)',
-                                        fontFamily: 'Inter, sans-serif',
-                                    }}
+                                    className="mx-auto mb-7 max-w-md text-base"
+                                    style={{ color: 'rgba(255,255,255,0.85)' }}
                                 >
-                                    Bergabung dengan ribuan pejuang terbaik di
-                                    galaksi dan buktikan kekuatanmu di arena
-                                    turnamen resmi. May the force be with you.
+                                    Bergabung dengan ribuan pemain dan buktikan kemampuan
+                                    terbaik kamu di turnamen resmi KyberCup.
                                 </p>
                                 <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                                     <Link
                                         href={register()}
-                                        className="inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-bold transition-all duration-300 hover:scale-105"
+                                        className="inline-flex items-center gap-2 rounded-xl px-8 py-3 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5"
                                         style={{
-                                            background: 'var(--accent-primary)',
-                                            color: 'var(--bg-page)',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                            letterSpacing: '0.08em',
-                                            textTransform: 'uppercase',
-                                            boxShadow:
-                                                '0 0 30px var(--accent-primary-glow)',
+                                            background: '#ffffff',
+                                            color: 'var(--accent-primary)',
+                                            boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.boxShadow =
-                                                '0 0 50px var(--accent-primary-glow)';
+                                            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0,0,0,0.2)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.boxShadow =
-                                                '0 0 30px var(--accent-primary-glow)';
+                                            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.15)';
                                         }}
                                     >
-                                        <Zap className="h-5 w-5" />
+                                        <Zap className="h-4 w-4" />
                                         Mulai Sekarang — Gratis
                                     </Link>
                                     <Link
                                         href={login()}
-                                        className="inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-base font-bold transition-all duration-300"
+                                        className="inline-flex items-center gap-2 rounded-xl px-8 py-3 text-sm font-semibold transition-all duration-200"
                                         style={{
                                             background: 'transparent',
-                                            border: '1px solid var(--border-default)',
-                                            color: 'var(--text-secondary)',
-                                            fontFamily: 'Rajdhani, sans-serif',
-                                            letterSpacing: '0.08em',
-                                            textTransform: 'uppercase',
+                                            border: '1px solid rgba(255,255,255,0.4)',
+                                            color: 'rgba(255,255,255,0.9)',
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.currentTarget.style.borderColor =
-                                                'var(--border-strong)';
-                                            e.currentTarget.style.color =
-                                                'var(--text-primary)';
+                                            e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)';
                                         }}
                                         onMouseLeave={(e) => {
-                                            e.currentTarget.style.borderColor =
-                                                'var(--border-default)';
-                                            e.currentTarget.style.color =
-                                                'var(--text-secondary)';
+                                            e.currentTarget.style.background = 'transparent';
+                                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)';
                                         }}
                                     >
-                                        Sudah punya akun? Login
+                                        Sudah punya akun? Masuk
                                     </Link>
                                 </div>
                             </div>
-                            {/* Bottom line accent */}
-                            <div
-                                className="absolute right-16 bottom-0 left-16 h-px"
-                                style={{
-                                    background:
-                                        'linear-gradient(90deg, transparent, var(--border-accent), transparent)',
-                                }}
-                            />
                         </div>
                     </section>
                 )}
 
                 {/* ── FOOTER ── */}
                 <footer
-                    className="transition-colors duration-500"
                     style={{ borderTop: '1px solid var(--border-default)' }}
                 >
                     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
@@ -776,17 +496,12 @@ export default function Home({
                                     loading="lazy"
                                     src="/logo-kyber.png"
                                     alt="KyberCup"
-                                    className="h-8 w-8 object-contain"
-                                    style={{
-                                        filter: 'drop-shadow(0 0 4px var(--accent-primary-glow))',
-                                    }}
+                                    className="h-7 w-7 object-contain"
                                 />
                                 <span
-                                    className="text-sm font-bold tracking-widest uppercase"
+                                    className="logo-kybercup text-sm"
                                     style={{
-                                        fontFamily: 'Orbitron, sans-serif',
                                         color: 'var(--text-primary)',
-                                        fontSize: '0.7rem',
                                     }}
                                 >
                                     KyberCup
@@ -794,22 +509,9 @@ export default function Home({
                             </div>
                             <p
                                 className="text-xs"
-                                style={{
-                                    color: 'var(--text-muted)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                }}
+                                style={{ color: 'var(--text-muted)' }}
                             >
-                                © 2026 KyberCup — Platform Manajemen Turnamen di
-                                Galaksi Jauh, Jauh Sekali.
-                            </p>
-                            <p
-                                className="text-xs italic"
-                                style={{
-                                    color: 'var(--accent-gold)',
-                                    fontFamily: 'Rajdhani, sans-serif',
-                                }}
-                            >
-                                "A long time ago in a galaxy far, far away..."
+                                © 2026 KyberCup — Platform Manajemen Turnamen Esport.
                             </p>
                         </div>
                     </div>

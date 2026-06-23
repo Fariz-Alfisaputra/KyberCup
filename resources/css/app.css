@@ -9,7 +9,7 @@
 
 @theme {
     --font-sans:
-        'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
+        'Inter', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
 
@@ -62,51 +62,55 @@
 }
 
 /* ============================================================
-   STAR WARS DESIGN SYSTEM — KyberCup
+   KYBERCUP — MODERN CLEAN DESIGN SYSTEM
+   Light mode: neutral whites & slates
+   Dark mode: deep slate grays
+   Accent: consistent blue (#3B82F6) + amber for awards
    ============================================================ */
+
 :root,
-[data-theme='light'],
-[data-theme='light-side'] {
-    /* BACKGROUNDS — layering hangat dari sand & robe */
-    --bg-page: #f2ead8; /* pasir Tatooine — background halaman utama */
-    --bg-surface: #ede3cc; /* jubah cokelat muda — surface/card bg */
-    --bg-surface-2: #e2d5b5; /* layer lebih dalam untuk input, dropdown */
-    --bg-navbar: #d8ccb0; /* navbar: lebih gelap dari page, bukan putih */
-    --bg-hover: #d4c9a8; /* hover state */
+[data-theme='light'] {
+    /* BACKGROUNDS */
+    --bg-page: #F8FAFC;
+    --bg-surface: #FFFFFF;
+    --bg-surface-2: #F1F5F9;
+    --bg-navbar: #FFFFFF;
+    --bg-hover: #F1F5F9;
 
-    /* TEKS */
-    --text-primary: #1e130a; /* cokelat tua hampir hitam — teks utama */
-    --text-secondary: #5c4425; /* cokelat medium — teks sekunder/label */
-    --text-muted: #8c6e4a; /* tan muted — hint/placeholder */
+    /* TEXT */
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-muted: #94A3B8;
 
-    /* AKSEN UTAMA — Lightsaber Biru Obi-Wan */
-    --accent-primary: #2d7abf; /* biru saber */
-    --accent-primary-hover: #1d5f9e; /* biru lebih dalam saat hover */
-    --accent-primary-glow: rgba(45, 122, 191, 0.2); /* subtle glow */
-    --accent-primary-light: #d0e8f7; /* biru sangat muda untuk badge bg */
+    /* ACCENT — single consistent blue */
+    --accent-primary: #3B82F6;
+    --accent-primary-hover: #2563EB;
+    --accent-primary-glow: rgba(59, 130, 246, 0.15);
+    --accent-primary-light: #EFF6FF;
 
-    /* AKSEN SEKUNDER — Emas Jedi Temple */
-    --accent-gold: #b8860b; /* emas gelap Jedi */
-    --accent-gold-bg: #f5e6bb; /* bg badge emas */
+    /* ACCENT SECONDARY — amber for rankings/awards */
+    --accent-gold: #F59E0B;
+    --accent-gold-bg: #FFFBEB;
 
-    /* BORDER */
-    --border-default: rgba(92, 68, 37, 0.25); /* cokelat muda */
-    --border-strong: rgba(92, 68, 37, 0.45);
-    --border-accent: rgba(45, 122, 191, 0.4); /* border aksen biru */
+    /* BORDERS */
+    --border-default: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --border-accent: rgba(59, 130, 246, 0.35);
 
     /* STATUS BADGES */
-    --status-open-bg: #d0e8f7;
-    --status-open-text: #1d5f9e;
-    --status-ongoing-bg: #f5e6bb;
-    --status-ongoing-text: #7a5500;
-    --status-done-bg: #e0d8c8;
-    --status-done-text: #5c4425;
-    --status-cancel-bg: #f5d5d0;
-    --status-cancel-text: #8c2010;
+    --status-open-bg: #EFF6FF;
+    --status-open-text: #1D4ED8;
+    --status-ongoing-bg: #FFFBEB;
+    --status-ongoing-text: #B45309;
+    --status-done-bg: #F0FDF4;
+    --status-done-text: #15803D;
+    --status-cancel-bg: #FEF2F2;
+    --status-cancel-text: #DC2626;
 
-    /* SHADOW — sangat subtle, hangat */
-    --shadow-card: 0 2px 10px rgba(92, 68, 37, 0.1);
-    --shadow-hover: 0 4px 16px rgba(45, 122, 191, 0.15);
+    /* SHADOWS */
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-hover: 0 4px 12px rgba(59, 130, 246, 0.12);
+    --shadow-card-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
 
     /* STANDARD TAILWIND/SHADCN MAPPING */
     --background: var(--bg-page);
@@ -128,7 +132,7 @@
     --border: var(--border-default);
     --input: var(--bg-surface-2);
     --ring: var(--accent-primary-glow);
-    --radius: 0.625rem;
+    --radius: 0.5rem;
 
     --sidebar: var(--bg-navbar);
     --sidebar-foreground: var(--text-primary);
@@ -139,84 +143,57 @@
     --sidebar-border: var(--border-default);
     --sidebar-ring: var(--accent-primary-glow);
 
-    /* Gaming / Glow system / Lightsabers */
-    --sw-black: #1e130a;
-    --sw-dark: #5c4425;
-    --sw-gray: #8c6e4a;
-    --sw-blue-neon: var(--accent-primary);
-    --sw-gold: var(--accent-gold);
-    --sw-red-sith: #8c2010;
-    --sw-white: #f2ead8;
-    --sw-purple: #6d28d9;
-    --sw-glow-blue: var(--accent-primary-glow);
-    --sw-glow-red: rgba(140, 32, 16, 0.15);
-    --sw-glow-gold: rgba(184, 134, 11, 0.15);
-
-    --gaming-gradient: linear-gradient(
-        135deg,
-        var(--accent-primary) 0%,
-        var(--accent-gold) 100%
-    );
-    --gaming-glow: 0 0 20px rgba(45, 122, 191, 0.2);
-    --primary-glow-color: var(--accent-primary);
-    --lightsaber-jedi:
-        0 0 15px var(--accent-primary), 0 0 5px rgba(255, 255, 255, 0.8),
-        0 0 30px var(--accent-primary-glow);
-    --lightsaber-sith:
-        0 0 15px #8c2010, 0 0 5px rgba(255, 255, 255, 0.8),
-        0 0 30px rgba(140, 32, 16, 0.3);
-    --lightsaber-gold:
-        0 0 15px var(--accent-gold), 0 0 5px rgba(255, 255, 255, 0.8),
-        0 0 30px rgba(184, 134, 11, 0.3);
+    /* CHART COLORS */
+    --chart-1: #3B82F6;
+    --chart-2: #10B981;
+    --chart-3: #F59E0B;
+    --chart-4: #8B5CF6;
+    --chart-5: #EF4444;
 }
 
 [data-theme='dark'],
-[data-theme='dark-side'],
 .dark {
-    /* BACKGROUNDS — void & kegelapan absolut */
-    --bg-page: #070004; /* void hitam ungu — background halaman */
-    --bg-surface: #110008; /* permukaan sedikit ungu gelap — card bg */
-    --bg-surface-2: #1c000f; /* layer lebih dalam */
-    --bg-navbar: #0e0006; /* navbar lebih gelap dari surface */
-    --bg-hover: #250012; /* hover state merah gelap */
+    /* BACKGROUNDS */
+    --bg-page: #0F172A;
+    --bg-surface: #1E293B;
+    --bg-surface-2: #273344;
+    --bg-navbar: #1E293B;
+    --bg-hover: #273344;
 
-    /* TEKS */
-    --text-primary: #f5dde2; /* merah muda sangat pucat — teks utama */
-    --text-secondary: #c98090; /* merah muted — teks sekunder */
-    --text-muted: #7a3a4a; /* merah sangat redup — hint/placeholder */
+    /* TEXT */
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
 
-    /* AKSEN UTAMA — Lightsaber Merah Sith */
-    --accent-primary: #e8002a; /* merah saber murni */
-    --accent-primary-hover: #ff1a42; /* lebih terang saat hover */
-    --accent-primary-glow: rgba(232, 0, 42, 0.25);
-    --accent-primary-light: #2e0010; /* bg badge merah gelap */
+    /* ACCENT — same blue, lighter for dark bg */
+    --accent-primary: #60A5FA;
+    --accent-primary-hover: #3B82F6;
+    --accent-primary-glow: rgba(96, 165, 250, 0.15);
+    --accent-primary-light: rgba(59, 130, 246, 0.1);
 
-    /* AKSEN SEKUNDER — Force Lightning Ungu */
-    --accent-purple: #8b2fc9; /* ungu Force Lightning */
-    --accent-purple-bg: #1a0030;
+    /* ACCENT SECONDARY — amber */
+    --accent-gold: #FCD34D;
+    --accent-gold-bg: rgba(245, 158, 11, 0.1);
 
-    /* For compatibility in dark mode */
-    --accent-gold: #8b2fc9; /* Map gold to purple in dark mode to match second theme accent */
-    --accent-gold-bg: #1a0030;
-
-    /* BORDER */
-    --border-default: rgba(180, 0, 40, 0.2);
-    --border-strong: rgba(232, 0, 42, 0.4);
-    --border-accent: rgba(232, 0, 42, 0.55);
+    /* BORDERS */
+    --border-default: #334155;
+    --border-strong: #475569;
+    --border-accent: rgba(96, 165, 250, 0.35);
 
     /* STATUS BADGES */
-    --status-open-bg: #2e0010;
-    --status-open-text: #ff6680;
-    --status-ongoing-bg: #1a0030;
-    --status-ongoing-text: #b070e8;
-    --status-done-bg: #180010;
-    --status-done-text: #7a3a4a;
-    --status-cancel-bg: #200000;
-    --status-cancel-text: #cc4455;
+    --status-open-bg: rgba(59, 130, 246, 0.1);
+    --status-open-text: #93C5FD;
+    --status-ongoing-bg: rgba(245, 158, 11, 0.1);
+    --status-ongoing-text: #FCD34D;
+    --status-done-bg: rgba(16, 185, 129, 0.1);
+    --status-done-text: #6EE7B7;
+    --status-cancel-bg: rgba(239, 68, 68, 0.1);
+    --status-cancel-text: #FCA5A5;
 
-    /* SHADOW */
-    --shadow-card: 0 2px 12px rgba(232, 0, 42, 0.08);
-    --shadow-hover: 0 4px 20px rgba(232, 0, 42, 0.2);
+    /* SHADOWS */
+    --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-hover: 0 4px 12px rgba(96, 165, 250, 0.1);
+    --shadow-card-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
 
     /* STANDARD TAILWIND/SHADCN MAPPING */
     --background: var(--bg-page);
@@ -226,7 +203,7 @@
     --popover: var(--bg-surface);
     --popover-foreground: var(--text-primary);
     --primary: var(--accent-primary);
-    --primary-foreground: #070004;
+    --primary-foreground: #0F172A;
     --secondary: var(--bg-surface-2);
     --secondary-foreground: var(--text-secondary);
     --muted: var(--bg-surface-2);
@@ -234,7 +211,7 @@
     --accent: var(--accent-primary-light);
     --accent-foreground: var(--accent-primary);
     --destructive: var(--status-cancel-text);
-    --destructive-foreground: #ffffff;
+    --destructive-foreground: #0F172A;
     --border: var(--border-default);
     --input: var(--bg-surface-2);
     --ring: var(--accent-primary-glow);
@@ -242,90 +219,18 @@
     --sidebar: var(--bg-navbar);
     --sidebar-foreground: var(--text-primary);
     --sidebar-primary: var(--accent-primary);
-    --sidebar-primary-foreground: #070004;
+    --sidebar-primary-foreground: #0F172A;
     --sidebar-accent: var(--bg-hover);
     --sidebar-accent-foreground: var(--text-primary);
     --sidebar-border: var(--border-default);
     --sidebar-ring: var(--accent-primary-glow);
 
-    /* Gaming / Glow system / Lightsabers */
-    --sw-black: #070004;
-    --sw-dark: #110008;
-    --sw-gray: #1c000f;
-    --sw-blue-neon: #00d4ff; /* maintain blue/cyan neon where explicitly referenced */
-    --sw-gold: var(--accent-purple);
-    --sw-red-sith: var(--accent-primary);
-    --sw-white: #f5dde2;
-    --sw-purple: var(--accent-purple);
-    --sw-glow-blue: rgba(0, 212, 255, 0.15);
-    --sw-glow-red: var(--accent-primary-glow);
-    --sw-glow-gold: rgba(139, 47, 201, 0.15);
-
-    --gaming-gradient: linear-gradient(
-        135deg,
-        var(--accent-primary) 0%,
-        var(--accent-purple) 100%
-    );
-    --gaming-glow: 0 0 20px rgba(232, 0, 42, 0.3);
-    --primary-glow-color: var(--accent-primary);
-    --lightsaber-jedi:
-        0 0 15px #00d4ff, 0 0 5px rgba(255, 255, 255, 0.8),
-        0 0 30px rgba(0, 212, 255, 0.4);
-    --lightsaber-sith:
-        0 0 15px var(--accent-primary), 0 0 5px rgba(255, 255, 255, 0.8),
-        0 0 30px var(--accent-primary-glow);
-    --lightsaber-gold:
-        0 0 15px var(--accent-purple), 0 0 5px rgba(255, 255, 255, 0.8),
-        0 0 30px rgba(139, 47, 201, 0.4);
-}
-
-/* ── Light Side specific overrides ── */
-/* Card shadow & navbar tint for Light Side (non-dark) */
-:not(.dark) .glass {
-    background: rgba(237, 227, 204, 0.7);
-    border: 1px solid var(--border-default);
-}
-
-:not(.dark) .glass-card {
-    background: rgba(237, 227, 204, 0.85);
-    border: 1px solid var(--border-strong);
-    box-shadow: var(--shadow-card);
-}
-
-/* Light Side badge status — darker + contrast */
-:not(.dark) .badge-active {
-    background: var(--status-open-bg);
-    color: var(--status-open-text);
-    border: 1px solid var(--border-accent);
-}
-:not(.dark) .badge-done {
-    background: var(--status-done-bg);
-    color: var(--status-done-text);
-    border: 1px solid var(--border-strong);
-}
-:not(.dark) .badge-cancelled {
-    background: var(--status-cancel-bg);
-    color: var(--status-cancel-text);
-    border: 1px solid var(--border-strong);
-}
-:not(.dark) .badge-ongoing {
-    background: var(--status-ongoing-bg);
-    color: var(--status-ongoing-text);
-    border: 1px solid var(--border-default);
-}
-
-/* Light Side sw-input */
-:not(.dark) .sw-input {
-    background: var(--bg-surface-2);
-    border: 1px solid var(--border-default);
-    color: var(--text-primary);
-}
-:not(.dark) .sw-input::placeholder {
-    color: var(--text-muted);
-}
-:not(.dark) .sw-input:focus {
-    border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px var(--accent-primary-glow);
+    /* CHART COLORS */
+    --chart-1: #60A5FA;
+    --chart-2: #34D399;
+    --chart-3: #FCD34D;
+    --chart-4: #A78BFA;
+    --chart-5: #F87171;
 }
 
 /* ============================================================
@@ -339,13 +244,20 @@
 
     body {
         @apply bg-background text-foreground;
-        font-family: 'Inter', 'Instrument Sans', sans-serif;
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     h1,
     h2,
-    h3 {
-        font-family: 'Rajdhani', 'Inter', sans-serif;
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+        font-weight: 700;
+        letter-spacing: -0.02em;
     }
 }
 
@@ -354,355 +266,108 @@
    ============================================================ */
 
 @layer utilities {
-    /* ── Brand Fonts ── */
-    .font-orbitron {
-        font-family: 'Orbitron', sans-serif;
-    }
-    .font-rajdhani {
-        font-family: 'Rajdhani', sans-serif;
+
+    /* ── Card utilities ── */
+    .app-card {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        border-radius: 0.75rem;
+        box-shadow: var(--shadow-card);
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
-    /* ── Gradient & Glow ── */
-    .gaming-gradient {
-        background: var(--gaming-gradient);
-    }
-    .gaming-glow {
-        box-shadow: var(--gaming-glow);
-    }
-    .gaming-glow-emerald {
-        box-shadow: 0 0 20px oklch(0.55 0.18 245 / 0.4);
+    .app-card:hover {
+        box-shadow: var(--shadow-hover);
+        border-color: var(--border-accent);
     }
 
-    /* ── Neon Glow helpers ── */
-    .glow-blue {
-        box-shadow:
-            0 0 12px var(--sw-blue-neon),
-            0 0 24px var(--sw-glow-blue);
-    }
-    .glow-red {
-        box-shadow:
-            0 0 12px var(--sw-red-sith),
-            0 0 24px var(--sw-glow-red);
-    }
-    .glow-gold {
-        box-shadow:
-            0 0 12px var(--sw-gold),
-            0 0 24px var(--sw-glow-gold);
-    }
-    .glow-primary {
-        box-shadow: 0 0 12px var(--primary-glow-color);
+    .card-hover {
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
-    .text-glow-blue {
-        text-shadow:
-            0 0 8px var(--sw-blue-neon),
-            0 0 20px rgba(0, 212, 255, 0.5);
-    }
-    .text-glow-gold {
-        text-shadow:
-            0 0 8px var(--sw-gold),
-            0 0 20px rgba(255, 232, 31, 0.5);
-    }
-    .text-glow-red {
-        text-shadow:
-            0 0 8px var(--sw-red-sith),
-            0 0 20px rgba(255, 45, 45, 0.5);
-    }
-    .text-glow-primary {
-        text-shadow: 0 0 8px var(--primary-glow-color);
+    .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--border-accent);
     }
 
-    /* ── Glassmorphism ── */
-    .glass {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 212, 255, 0.12);
-    }
-
-    .glass-dark {
-        background: rgba(10, 10, 15, 0.6);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(0, 212, 255, 0.15);
-    }
-
-    .glass-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(0, 212, 255, 0.18);
-        box-shadow:
-            0 4px 24px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    /* ── Starfield Background ── */
-    .starfield-bg {
-        background-color: #0a0a0f;
-        background-image:
-            radial-gradient(
-                1.5px 1.5px at 10% 15%,
-                rgba(255, 255, 255, 0.7) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                1px 1px at 25% 35%,
-                rgba(255, 255, 255, 0.5) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                2px 2px at 40% 10%,
-                rgba(255, 255, 255, 0.6) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                1px 1px at 60% 50%,
-                rgba(255, 255, 255, 0.4) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                1.5px 1.5px at 75% 25%,
-                rgba(255, 255, 255, 0.7) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                1px 1px at 85% 70%,
-                rgba(255, 255, 255, 0.5) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                2px 2px at 90% 90%,
-                rgba(0, 212, 255, 0.4) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                1px 1px at 5% 80%,
-                rgba(255, 232, 31, 0.3) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                1.5px 1.5px at 50% 60%,
-                rgba(255, 255, 255, 0.3) 0%,
-                transparent 100%
-            ),
-            radial-gradient(
-                1px 1px at 30% 90%,
-                rgba(255, 255, 255, 0.4) 0%,
-                transparent 100%
-            );
-        background-size: 400px 400px;
-        background-repeat: repeat;
-    }
-
-    /* ── Hero starfield dot grid ── */
-    .hero-grid {
-        background-image:
-            radial-gradient(
-                2px 2px at 20px 30px,
-                var(--foreground),
-                rgba(0, 0, 0, 0)
-            ),
-            radial-gradient(
-                2px 2px at 40px 70px,
-                var(--foreground),
-                rgba(0, 0, 0, 0)
-            ),
-            radial-gradient(
-                2px 2px at 50px 160px,
-                var(--foreground),
-                rgba(0, 0, 0, 0)
-            ),
-            radial-gradient(
-                2px 2px at 90px 40px,
-                var(--foreground),
-                rgba(0, 0, 0, 0)
-            ),
-            radial-gradient(
-                2px 2px at 130px 80px,
-                var(--foreground),
-                rgba(0, 0, 0, 0)
-            ),
-            radial-gradient(
-                2px 2px at 160px 120px,
-                var(--foreground),
-                rgba(0, 0, 0, 0)
-            );
-        background-repeat: repeat;
-        background-size: 200px 200px;
-    }
-
-    /* ── SW Neon border ── */
-    .border-neon-blue {
-        border: 1px solid rgba(0, 212, 255, 0.35);
-    }
-    .border-neon-red {
-        border: 1px solid rgba(255, 45, 45, 0.35);
-    }
-    .border-neon-gold {
-        border: 1px solid rgba(255, 232, 31, 0.35);
-    }
-
-    /* ── Bracket connector lines ── */
-    .bracket-connector::after {
-        content: '';
-        position: absolute;
-        right: -1px;
-        top: 50%;
-        width: 1px;
-        height: 50%;
-        border-right: 2px solid var(--border-accent);
-    }
-
-    .bracket-connector::before {
-        content: '';
-        position: absolute;
-        right: -1px;
-        bottom: 0;
-        width: 1px;
-        height: 50%;
-        border-right: 2px solid var(--border-accent);
-    }
-
-    /* ── Lightsaber Glows ── */
-    .lightsaber-jedi-glow {
-        box-shadow: var(--lightsaber-jedi);
-        background-color: #fff;
-    }
-
-    .lightsaber-sith-glow {
-        box-shadow: var(--lightsaber-sith);
-        background-color: #fff;
-    }
-
-    /* ── Lightsaber Button ── */
-    .btn-lightsaber {
-        position: relative;
+    /* ── Button utilities ── */
+    .btn-primary {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        padding: 0.6rem 1.5rem;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 600;
+        padding: 0.625rem 1.25rem;
         font-size: 0.875rem;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+        font-weight: 600;
         border-radius: 0.5rem;
-        border: 1px solid var(--accent-primary);
-        color: var(--accent-primary);
-        background: transparent;
-        cursor: pointer;
-        overflow: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .btn-lightsaber::before {
-        content: '';
-        position: absolute;
-        inset: 0;
         background: var(--accent-primary);
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        color: #ffffff;
+        border: 1px solid var(--accent-primary);
+        cursor: pointer;
+        transition: background 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .btn-lightsaber:hover {
-        color: var(--bg-page);
-        box-shadow:
-            0 0 20px var(--accent-primary),
-            0 0 40px var(--accent-primary-glow);
+    .btn-primary:hover {
+        background: var(--accent-primary-hover);
+        box-shadow: var(--shadow-hover);
     }
 
-    .btn-lightsaber:hover::before {
-        opacity: 1;
-    }
-    .btn-lightsaber > * {
-        position: relative;
-        z-index: 1;
-    }
-
-    .btn-sith {
-        border-color: var(--sw-red-sith);
-        color: var(--sw-red-sith);
-    }
-    .btn-sith::before {
-        background: var(--sw-red-sith);
-    }
-    .btn-sith:hover {
-        color: #fff;
-        box-shadow:
-            0 0 20px var(--sw-red-sith),
-            0 0 40px var(--accent-primary-glow);
-    }
-
-    .btn-gold {
-        border-color: var(--accent-gold);
-        color: var(--accent-gold);
-    }
-    .btn-gold::before {
-        background: var(--accent-gold);
-    }
-    .btn-gold:hover {
-        color: #0a0a0f;
-        box-shadow:
-            0 0 20px var(--accent-gold),
-            0 0 40px var(--accent-primary-glow);
-    }
-
-    /* ── Force Card (3D hover) ── */
-    .force-card {
-        transition:
-            transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-            box-shadow 0.4s ease,
-            border-color 0.4s ease;
-        transform-style: preserve-3d;
-        perspective: 1000px;
-    }
-
-    .force-card:hover {
-        transform: translateY(-5px) rotateX(2deg) rotateY(2deg);
-        box-shadow: var(--shadow-hover), var(--gaming-glow);
-        border-color: var(--primary);
-    }
-
-    .dark .force-card:hover {
-        box-shadow: var(--shadow-hover), var(--gaming-glow);
-    }
-
-    /* ── SW Status Badges ── */
-    .badge-active {
-        background: var(--status-open-bg);
-        color: var(--status-open-text);
-        border: 1px solid var(--border-accent);
-    }
-    .badge-done {
-        background: var(--status-done-bg);
-        color: var(--status-done-text);
-        border: 1px solid var(--border-strong);
-    }
-    .badge-cancelled {
-        background: var(--status-cancel-bg);
-        color: var(--status-cancel-text);
-        border: 1px solid var(--border-strong);
-    }
-    .badge-ongoing {
-        background: var(--status-ongoing-bg);
-        color: var(--status-ongoing-text);
+    .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.625rem 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        background: transparent;
+        color: var(--text-secondary);
         border: 1px solid var(--border-default);
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
-    /* ── Neon Input ── */
-    .sw-input {
-        background: var(--bg-surface-2);
+    .btn-secondary:hover {
+        background: var(--bg-hover);
+        border-color: var(--border-strong);
+        color: var(--text-primary);
+    }
+
+    /* ── Input ── */
+    .app-input {
+        background: var(--bg-surface);
         border: 1px solid var(--border-default);
         color: var(--text-primary);
         border-radius: 0.5rem;
         padding: 0.6rem 1rem;
         font-family: 'Inter', sans-serif;
         font-size: 0.875rem;
-        transition:
-            border-color 0.2s,
-            box-shadow 0.2s;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+        width: 100%;
+    }
+
+    .app-input::placeholder {
+        color: var(--text-muted);
+    }
+
+    .app-input:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px var(--accent-primary-glow);
+    }
+
+    /* Legacy alias for backward compat */
+    .sw-input {
+        background: var(--bg-surface);
+        border: 1px solid var(--border-default);
+        color: var(--text-primary);
+        border-radius: 0.5rem;
+        padding: 0.6rem 1rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.875rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
         outline: none;
     }
 
@@ -715,45 +380,114 @@
         box-shadow: 0 0 0 3px var(--accent-primary-glow);
     }
 
-    /* ── Scanline animation on cards ── */
-    .scanline-card {
-        position: relative;
-        overflow: hidden;
+    /* ── Status Badges ── */
+    .badge-active {
+        background: var(--status-open-bg);
+        color: var(--status-open-text);
+        border: 1px solid var(--border-accent);
     }
 
-    .scanline-card::after {
+    .badge-done {
+        background: var(--status-done-bg);
+        color: var(--status-done-text);
+        border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .badge-cancelled {
+        background: var(--status-cancel-bg);
+        color: var(--status-cancel-text);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .badge-ongoing {
+        background: var(--status-ongoing-bg);
+        color: var(--status-ongoing-text);
+        border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    /* ── Glassmorphism (subtle) ── */
+    .glass {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-default);
+    }
+
+    .dark .glass {
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid var(--border-default);
+    }
+
+    .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-default);
+        box-shadow: var(--shadow-card);
+    }
+
+    .dark .glass-card {
+        background: rgba(30, 41, 59, 0.85);
+    }
+
+    /* ── Bracket connector lines ── */
+    .bracket-connector::after {
         content: '';
         position: absolute;
-        top: -100%;
+        right: -1px;
+        top: 50%;
+        width: 1px;
+        height: 50%;
+        border-right: 2px solid var(--border-strong);
+    }
+
+    .bracket-connector::before {
+        content: '';
+        position: absolute;
+        right: -1px;
+        bottom: 0;
+        width: 1px;
+        height: 50%;
+        border-right: 2px solid var(--border-strong);
+    }
+
+    /* ── Navigation link ── */
+    .nav-link-app {
+        position: relative;
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        transition: color 0.2s;
+    }
+
+    .nav-link-app::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
         left: 0;
         right: 0;
-        height: 40%;
-        background: linear-gradient(
-            to bottom,
-            transparent,
-            var(--accent-primary-glow),
-            transparent
-        );
-        animation: scanline-sweep 6s linear infinite;
-        pointer-events: none;
+        height: 2px;
+        background: var(--accent-primary);
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+        border-radius: 1px;
     }
 
-    /* ── SW Logo text ── */
-    .logo-kybercup {
-        font-family: 'Orbitron', sans-serif;
-        font-weight: 900;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
+    .nav-link-app:hover {
+        color: var(--text-primary);
     }
 
-    /* ── Nav link with neon underline ── */
+    .nav-link-app:hover::after,
+    .nav-link-app.active::after {
+        transform: scaleX(1);
+    }
+
+    /* Legacy alias */
     .nav-link-sw {
         position: relative;
-        font-family: 'Rajdhani', sans-serif;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        font-size: 0.8rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--text-secondary);
         transition: color 0.2s;
     }
 
@@ -763,11 +497,11 @@
         bottom: -2px;
         left: 0;
         right: 0;
-        height: 1px;
+        height: 2px;
         background: var(--accent-primary);
         transform: scaleX(0);
         transition: transform 0.2s ease;
-        box-shadow: 0 0 6px var(--accent-primary-glow);
+        border-radius: 1px;
     }
 
     .nav-link-sw:hover::after,
@@ -775,45 +509,26 @@
         transform: scaleX(1);
     }
 
-    /* ── Crawl animation ── */
-    .crawl-perspective {
-        perspective: 350px;
-        overflow: hidden;
-        position: relative;
-    }
-    .crawl-scroll {
-        transform-origin: 50% 100%;
-        animation: starwars-crawl 55s linear forwards;
-    }
-
-    /* ── Custom Cursor ── */
-    @media (pointer: fine) {
-        .custom-cursor-active,
-        .custom-cursor-active * {
-            cursor: none !important;
-        }
-    }
-
-    /* ── SW Table ── */
+    /* ── Table utilities ── */
     .sw-table-header {
         background: var(--bg-surface-2);
         border-bottom: 1px solid var(--border-default);
-        color: var(--accent-primary);
-        font-family: 'Rajdhani', sans-serif;
+        color: var(--text-secondary);
         font-weight: 600;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
         font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
     }
 
     .sw-table-row {
         border-bottom: 1px solid var(--border-default);
-        transition: background 0.2s;
+        transition: background 0.15s;
     }
 
     .sw-table-row:hover {
         background: var(--bg-hover);
     }
+
     .sw-table-rank-1 {
         background: var(--accent-gold-bg);
     }
@@ -821,11 +536,42 @@
     /* ── Auth card ── */
     .sw-auth-card {
         background: var(--bg-surface);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid var(--border-strong);
-        box-shadow: var(--shadow-card);
+        border: 1px solid var(--border-default);
+        box-shadow: var(--shadow-card-md);
         border-radius: 1rem;
+    }
+
+    /* ── Hero background (subtle static) ── */
+    .hero-mesh {
+        background-image:
+            radial-gradient(at 40% 20%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+            radial-gradient(at 80% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+            radial-gradient(at 0% 50%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
+    }
+
+    .dark .hero-mesh {
+        background-image:
+            radial-gradient(at 40% 20%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+            radial-gradient(at 80% 0%, rgba(99, 102, 241, 0.06) 0px, transparent 50%),
+            radial-gradient(at 0% 50%, rgba(59, 130, 246, 0.04) 0px, transparent 50%);
+    }
+
+    /* ── Dot grid pattern ── */
+    .dot-grid {
+        background-image: radial-gradient(circle, var(--border-default) 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+
+    /* ── Logo text ── */
+    .logo-kybercup {
+        font-weight: 800;
+        letter-spacing: -0.03em;
+    }
+
+    /* ── Gradient accent bar ── */
+    .accent-bar {
+        background: linear-gradient(90deg, var(--accent-primary), rgba(99, 102, 241, 0.8));
+        border-radius: 2px;
     }
 }
 
@@ -833,85 +579,10 @@
    KEYFRAME ANIMATIONS
    ============================================================ */
 
-@keyframes saber-hum {
-    0%,
-    100% {
-        filter: brightness(0.95) drop-shadow(0 0 2px var(--primary-glow-color));
-    }
-    50% {
-        filter: brightness(1.2) drop-shadow(0 0 6px var(--primary-glow-color));
-    }
-}
-
-@keyframes force-pulse {
-    0%,
-    100% {
-        box-shadow: 0 0 10px var(--primary-glow-color);
-    }
-    50% {
-        box-shadow:
-            0 0 25px var(--primary-glow-color),
-            0 0 10px var(--primary-glow-color) inset;
-    }
-}
-
-@keyframes force-float {
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-@keyframes starwars-crawl {
-    0% {
-        transform: rotateX(25deg) translateY(100%) translateZ(0);
-        opacity: 1;
-    }
-    85% {
-        opacity: 1;
-    }
-    100% {
-        transform: rotateX(25deg) translateY(-220%) translateZ(-900px);
-        opacity: 0;
-    }
-}
-
-@keyframes scanline-sweep {
-    0% {
-        top: -40%;
-    }
-    100% {
-        top: 140%;
-    }
-}
-
-@keyframes neon-flicker {
-    0%,
-    95%,
-    100% {
-        opacity: 1;
-    }
-    96% {
-        opacity: 0.8;
-    }
-    97% {
-        opacity: 1;
-    }
-    98% {
-        opacity: 0.6;
-    }
-    99% {
-        opacity: 1;
-    }
-}
-
 @keyframes fadeInDown {
     from {
         opacity: 0;
-        transform: translateY(-16px);
+        transform: translateY(-12px);
     }
     to {
         opacity: 1;
@@ -922,7 +593,7 @@
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(12px);
     }
     to {
         opacity: 1;
@@ -933,7 +604,7 @@
 @keyframes slideInLeft {
     from {
         opacity: 0;
-        transform: translateX(-20px);
+        transform: translateX(-16px);
     }
     to {
         opacity: 1;
@@ -941,178 +612,30 @@
     }
 }
 
-/* ── Animation classes ── */
-.saber-humming {
-    animation: saber-hum 0.12s infinite alternate;
+@keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
 }
-.force-pulse {
-    animation: force-pulse 3s infinite ease-in-out;
-}
-.force-float {
-    animation: force-float 5s infinite ease-in-out;
-}
-.neon-flicker {
-    animation: neon-flicker 4s infinite;
-}
+
+/* ── Animation utility classes ── */
 .animate-fade-in-down {
-    animation: fadeInDown 0.5s ease forwards;
+    animation: fadeInDown 0.4s ease forwards;
 }
 .animate-fade-in-up {
-    animation: fadeInUp 0.5s ease forwards;
+    animation: fadeInUp 0.4s ease forwards;
 }
 .animate-slide-in-left {
-    animation: slideInLeft 0.4s ease forwards;
+    animation: slideInLeft 0.35s ease forwards;
+}
+.animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
 }
 
-/* ============================================================
-   LIGHTSABER CLASH — CINEMATIC ANIMATIONS
-   ============================================================ */
-
-/* Blade flicker: subtle realistic plasma flicker */
-@keyframes blade-flicker {
-    0% {
-        opacity: 1;
-        filter: brightness(1);
-    }
-    18% {
-        opacity: 0.88;
-        filter: brightness(0.92);
-    }
-    35% {
-        opacity: 1;
-        filter: brightness(1.08);
-    }
-    52% {
-        opacity: 0.93;
-        filter: brightness(0.96);
-    }
-    67% {
-        opacity: 1;
-        filter: brightness(1.04);
-    }
-    80% {
-        opacity: 0.9;
-        filter: brightness(0.93);
-    }
-    100% {
-        opacity: 1;
-        filter: brightness(1);
-    }
-}
-
-/* Jedi saber push-back: subtle recoil during clash */
-@keyframes saber-push-back-jedi {
-    0% {
-        transform: rotate(45deg) translateY(0);
-    }
-    15% {
-        transform: rotate(43deg) translateY(4px) translateX(-3px);
-    }
-    30% {
-        transform: rotate(46deg) translateY(-2px) translateX(1px);
-    }
-    50% {
-        transform: rotate(44deg) translateY(3px) translateX(-2px);
-    }
-    70% {
-        transform: rotate(45.5deg) translateY(-1px);
-    }
-    100% {
-        transform: rotate(45deg) translateY(0);
-    }
-}
-
-/* Sith saber push-back: mirror of jedi */
-@keyframes saber-push-back-sith {
-    0% {
-        transform: rotate(-45deg) translateY(0);
-    }
-    15% {
-        transform: rotate(-43deg) translateY(4px) translateX(3px);
-    }
-    30% {
-        transform: rotate(-46deg) translateY(-2px) translateX(-1px);
-    }
-    50% {
-        transform: rotate(-44deg) translateY(3px) translateX(2px);
-    }
-    70% {
-        transform: rotate(-45.5deg) translateY(-1px);
-    }
-    100% {
-        transform: rotate(-45deg) translateY(0);
-    }
-}
-
-/* Contact flash ring: expand from clash point and fade */
-@keyframes clash-flash {
-    0% {
-        transform: scale(0.1);
-        opacity: 1;
-    }
-    40% {
-        opacity: 0.8;
-    }
-    100% {
-        transform: scale(3.5);
-        opacity: 0;
-    }
-}
-
-/* Secondary slower ring for depth */
-@keyframes clash-ring-slow {
-    0% {
-        transform: scale(0.1);
-        opacity: 0.6;
-    }
-    100% {
-        transform: scale(5);
-        opacity: 0;
-    }
-}
-
-/* Glow pulse at contact point */
-@keyframes clash-glow-pulse {
-    0%,
-    100% {
-        opacity: 0.6;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.15);
-    }
-}
-
-/* ── Clash animation utility classes ── */
-.blade-flicker {
-    animation: blade-flicker 0.18s infinite;
-}
-.clash-pushing-jedi {
-    animation: saber-push-back-jedi 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-        infinite;
-}
-.clash-pushing-sith {
-    animation: saber-push-back-sith 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-        infinite;
-}
-.clash-flash {
-    animation: clash-flash 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.clash-ring-slow {
-    animation: clash-ring-slow 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.clash-glow-pulse {
-    animation: clash-glow-pulse 1.8s ease-in-out infinite;
-}
-
-/* ── NProgress Lightsaber Glow ── */
+/* ── NProgress bar ── */
 #nprogress .bar {
     background: var(--accent-primary) !important;
-    height: 3px !important;
+    height: 2px !important;
 }
 #nprogress .peg {
-    box-shadow:
-        0 0 10px var(--accent-primary),
-        0 0 5px var(--accent-primary) !important;
+    box-shadow: 0 0 8px var(--accent-primary), 0 0 4px var(--accent-primary) !important;
 }
