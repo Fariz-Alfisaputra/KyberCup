@@ -8,7 +8,24 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\TournamentController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+
+// Temporary route to import database
+Route::get('/import-db', function () {
+    try {
+        $sqlPath = database_path('esport_tournament.sql');
+        if (! file_exists($sqlPath)) {
+            return 'File SQL tidak ditemukan di '.$sqlPath;
+        }
+        $sql = file_get_contents($sqlPath);
+        DB::unprepared($sql);
+
+        return 'Database berhasil diimpor!';
+    } catch (Exception $e) {
+        return 'Error saat impor: '.$e->getMessage();
+    }
+});
 
 // Public routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
