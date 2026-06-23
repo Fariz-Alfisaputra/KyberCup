@@ -1,8 +1,8 @@
-# 🌌 KyberCup - Galactic Esport Tournament Platform
+# 🏆 KyberCup - Modern Esports Tournament Platform
 
-**KyberCup** adalah sistem manajemen turnamen esport lengkap bertema fiksi ilmiah luar angkasa (*Star Wars*) yang dibangun menggunakan teknologi modern. Aplikasi ini mendukung pembuatan tim, pendaftaran peserta, *automatic bracket generation*, pengelolaan skor pertandingan secara real-time, serta visualisasi bagan pertandingan (*bracket tree*).
+**KyberCup** adalah platform manajemen turnamen esports modern dan profesional yang dibangun dengan teknologi terbaru. Aplikasi ini mendukung pembuatan tim, pendaftaran peserta, *automatic bracket generation*, pengelolaan skor pertandingan secara real-time, serta visualisasi bagan pertandingan (*bracket tree*) yang bersih dan responsif.
 
-Aplikasi web ini menghadirkan estetika premium dengan transisi interaktif antara **Light Side (Jedi Theme)** dan **Dark Side (Sith Theme)**, lengkap dengan animasi partikel canvas dan sintesis efek suara lightsaber secara real-time.
+Aplikasi ini menggunakan desain modern yang minimalis, intuitif, dan profesional (mengikuti estetika platform SaaS modern seperti Notion, Linear, atau Toornament) dengan dukungan mode gelap (*dark mode*) dan mode terang (*light mode*) yang elegan.
 
 ---
 
@@ -14,18 +14,97 @@ Aplikasi web ini menghadirkan estetika premium dengan transisi interaktif antara
   - 🛡️ **Member**: Bergabung ke tim menggunakan kode undangan dan melihat jadwal tanding.
 - **Automatic Single-Elimination Bracket**: Generator bagan tanding otomatis dengan penempatan *byes* apabila jumlah tim ganjil.
 - **Dynamic Brackets & Standings**: Tampilan visual bagan turnamen interaktif (*Bracket Tree*) dan tabel klasemen otomatis untuk turnamen berformat *Round Robin*.
-- **Interactive Star Wars Aesthetics**:
-  - 🌓 **Dua Tema**: Mode Cerah (*Jedi Blue/Green*) dan Mode Gelap (*Sith Red/Yellow*) dengan tombol switch 3D emblem Aliansi Rebel vs Kekaisaran Empire.
-  - 🌌 **Starfield Background**: Canvas dinamis di latar belakang yang merespons koordinat pergerakan kursor mouse (*Hyperspace effect*).
-  - ⚔️ **Lightsaber Clash Widget**: Animasi benturan pedang laser interaktif di bagian Hero dengan percikan partikel energi (*sparks*) dan sintesis audio dengung (*lightsaber humming/clashing*) real-time melalui *Web Audio API*.
-  - 💎 **Force Hover Cards**: Efek kemiringan 3D (*Parallax*) pada kartu turnamen saat disorot kursor mouse.
+- **Premium SaaS Dashboard**: Antarmuka responsif dan modern dengan transisi mulus antara Light Mode dan Dark Mode.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Laravel 13 (PHP 8.3+)
+- **Backend**: Laravel 13 (PHP 8.4)
 - **Frontend**: React 19 + TypeScript
 - **State & Routing**: Inertia.js v3 (Single Page Application)
-- **Styling**: Tailwind CSS v4 + shadcn/ui
-- **Database**: MySQL / SQLite (untuk development)
+- **Styling**: Tailwind CSS v4
+- **Database**: MySQL / MariaDB
+
+---
+
+## ⚙️ Cara Menjalankan Project (Panduan Dosen / Penguji)
+
+Untuk menjalankan project ini secara lokal, ikuti langkah-langkah di bawah ini:
+
+### 1. Persiapan Awal
+Pastikan Anda sudah menginstal:
+- PHP >= 8.4
+- Composer
+- Node.js & npm
+- MySQL / MariaDB (XAMPP / MAMP / Laragon)
+
+### 2. Kloning Repository
+```bash
+git clone https://github.com/Fariz-Alfisaputra/KyberCup.git
+cd KyberCup
+```
+
+### 3. Mengunduh Library / Dependency
+Karena folder `vendor` dan `node_modules` tidak diunggah ke Git (sesuai standar pengembangan software profesional untuk menghindari ukuran file yang terlalu besar), unduh library menggunakan perintah berikut:
+
+- **Instal library PHP (Composer):**
+  ```bash
+  composer install
+  ```
+- **Instal library Javascript (npm):**
+  ```bash
+  npm install
+  ```
+
+### 4. Konfigurasi Environment (`.env`)
+Salin file `.env.example` menjadi `.env`:
+```bash
+cp .env.example .env
+```
+Buka file `.env` dan sesuaikan kredensial database MySQL Anda:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=esport_tournament
+DB_USERNAME=root
+DB_PASSWORD=
+```
+Setelah itu, generate application key:
+```bash
+php artisan key:generate
+```
+
+### 5. Import Database (SQL Dump)
+Kami telah menyediakan dump database di folder `database/esport_tournament.sql`.
+1. Buat database kosong bernama `esport_tournament` di MySQL/phpMyAdmin Anda.
+2. Import file `database/esport_tournament.sql` ke database tersebut.
+   * *Alternatif:* Anda juga bisa menjalankan migrasi & seeder bawaan Laravel jika ingin memulai dengan database bersih:
+     ```bash
+     php artisan migrate --seed
+     ```
+
+### 6. Jalankan Aplikasi
+Jalankan server backend Laravel dan server frontend Vite secara bersamaan:
+
+- **Jalankan Laravel Backend:**
+  ```bash
+  php artisan serve
+  ```
+- **Jalankan Vite Frontend Compilation:**
+  ```bash
+  npm run dev
+  ```
+
+Buka browser Anda di `http://127.0.0.1:8000`.
+
+---
+
+## 🔑 Akun Uji Coba (Demo Accounts)
+
+Anda dapat masuk menggunakan akun demo berikut:
+- **Admin**: `admin@esport.id` (Password: `password`)
+- **Captain**: `budi@esport.id` (Password: `password`)
+- **Member**: `rini@esport.id` (Password: `password`)
+
